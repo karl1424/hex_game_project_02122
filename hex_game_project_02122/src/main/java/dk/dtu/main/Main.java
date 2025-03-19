@@ -12,15 +12,26 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Main extends Application {
 
+public class Main extends Application {
+    public static GameBoard gameBoard;
+    
     public static void main(String[] args) throws InterruptedException {
+        gameBoard = new GameBoard(5, 5);
+        gameBoard.printBoard(gameBoard.board);
+        gameBoard.pickSpot("1,1", 1, 1, 2); // Get this input somewhere else...
+        gameBoard.printBoard(gameBoard.board);
+        gameBoard.pickSpot("3,1", 3, 1, 2); // Get this input somewhere else...
+        gameBoard.printBoard(gameBoard.board);
         Space inbox = new SequentialSpace();
         inbox.put("Hello World!");
         Object[] tuple = inbox.get(new FormalField(String.class));
         System.out.println(tuple[0]);
         launch(args);
     }
+
+
+    
 
     private int counter = 0;
     private Button button = new Button();
