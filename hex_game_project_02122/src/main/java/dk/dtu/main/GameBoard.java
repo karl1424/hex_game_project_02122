@@ -93,8 +93,8 @@ public class GameBoard {
     
     public static boolean exploreNeighbors(Coordinate start, Map<String, Coordinate> board, int turn) {
         // Neighbour ruleset
-        int[] directionsX = {-1, 0, -1, 1, 0, 1};  
-        int[] directionsY = {-1, -1, 0, 0, 1, 1};  
+        int[] directionsX = {0, 0, -1, 1, -1, 1};  
+        int[] directionsY = {1, -1, 0, 0, 1, -1}; 
     
         // Queue for the BFS
         Queue<Coordinate> queue = new LinkedList<>();

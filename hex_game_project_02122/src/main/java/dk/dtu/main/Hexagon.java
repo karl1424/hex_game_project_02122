@@ -46,12 +46,12 @@ public class Hexagon extends Polygon {
                 } else {
                     this.setFill(Color.BLUE);
                 }
-                gamePanel.changeTurn();
             }
             System.out.println(xCor + ", " + yCor);
             String spot = yCor + "," + xCor;
             gameBoard.pickSpot(spot, yCor, xCor, gamePanel.getTurn() ? 1 : 2);
             gameBoard.printBoard(gameBoard.board);
+            gamePanel.changeTurn();
         });
     }
 
