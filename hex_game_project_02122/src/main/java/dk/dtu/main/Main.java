@@ -11,57 +11,27 @@ import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import javafx.stage.WindowEvent;
 
 public class Main extends Application {
-    public static GameBoard gameBoard;
-    
-    public static void main(String[] args) throws InterruptedException {
-        gameBoard = new GameBoard(5, 5);
-        gameBoard.printBoard(gameBoard.board);
-        gameBoard.pickSpot("1,1", 1, 1, 2); // Get this input somewhere else...
-        gameBoard.printBoard(gameBoard.board);
-        gameBoard.pickSpot("3,1", 3, 1, 2); // Get this input somewhere else...
-        gameBoard.printBoard(gameBoard.board);
-        Space inbox = new SequentialSpace();
-        inbox.put("Hello World!");
-        Object[] tuple = inbox.get(new FormalField(String.class));
-        System.out.println(tuple[0]);
+    public static void main(String[] args) {
         launch(args);
     }
 
-
-    
-
-    private int counter = 0;
-    private Button button = new Button();
-
     @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Hello World!");
-        this.button.setText("Im a counter! Click ME!!!");
-        this.button.setOnAction(this::handleClick);
-        StackPane root = new StackPane();
-        root.getChildren().add(this.button);
-        Scene scene = new Scene(root, 300, 250);
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, this::handleKey);
+    public void start(Stage primaryStage) throws Exception {
+        GamePanel gamePanel = new GamePanel();
+        Scene scene = new Scene(gamePanel);
+
+        primaryStage.setTitle("HEX Game");
+        primaryStage.setResizable(false);
         primaryStage.setScene(scene);
+        primaryStage.centerOnScreen();
+        primaryStage.setOnCloseRequest((WindowEvent _) -> {
+            System.exit(0);
+        });
         primaryStage.show();
-    }
-
-    private void handleClick(ActionEvent event) {
-        this.counter++;
-        this.button.setText("" + this.counter);
-    }
-
-    private void handleKey(KeyEvent event) {
-        if (event.getCode() == KeyCode.UP) {
-            this.counter++;
-        } else if (event.getCode() == KeyCode.DOWN) {
-            this.counter--;
-        } else {
-            return;
-        }
-        this.button.setText("" + this.counter);
+        gamePanel.requestFocus();
     }
 }
+ 

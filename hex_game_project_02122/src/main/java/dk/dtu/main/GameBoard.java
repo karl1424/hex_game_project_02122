@@ -24,7 +24,7 @@ public class GameBoard {
         }
         
         //#region TEST!  
-        board.put("0,1", new Coordinate(0, 1, 2));  
+       /*  board.put("0,1", new Coordinate(0, 1, 2));  
         board.put("1,0", new Coordinate(1, 0, 2));  
         board.put("0,2", new Coordinate(0, 2, 2)); 
         board.put("1,2", new Coordinate(1, 2, 2)); 
@@ -35,7 +35,7 @@ public class GameBoard {
         board.put("4,0", new Coordinate(4, 0, 1)); 
         board.put("4,1", new Coordinate(4, 1, 2)); 
         board.put("3,2", new Coordinate(3, 2, 1)); 
-        board.put("2,3", new Coordinate(2, 3, 1));  
+        board.put("2,3", new Coordinate(2, 3, 1));   */
         //pickSpot("1,4", 1, 4, 1);
         //#endregion
 
