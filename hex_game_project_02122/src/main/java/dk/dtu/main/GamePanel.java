@@ -13,7 +13,7 @@ public class GamePanel extends Pane{
     private boolean isPlayerOneTurn = true;
     private GUI gui;
     private GameBoard gameBoard;
-    private int gridSize = 5;
+    private int gridSize = 13;
 
     public GamePanel(){
         startGame();

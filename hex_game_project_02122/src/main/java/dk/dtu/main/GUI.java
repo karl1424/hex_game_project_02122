@@ -28,7 +28,7 @@ public class GUI extends Pane {
         for (int row = -GRID_HEIGHT / 2; row <= GRID_HEIGHT / 2; row++) {
             for (int col = -GRID_WIDTH / 2; col <= GRID_WIDTH / 2; col++) {
                 Hexagon hexagon = new Hexagon(col, row, boardOffset, HEX_RADIUS, (col + GRID_HEIGHT/2), (row + GRID_WIDTH/2), gamePanel, gameBoard);
-                getChildren().add(hexagon);
+                getChildren().add(hexagon.getHexGroup());
             }
         }
     }
