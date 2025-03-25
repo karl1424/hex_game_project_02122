@@ -2,19 +2,19 @@ package dk.dtu.main;
 import java.util.*;
 
 public class GameBoard {
-    public static boolean BFSDebug = true;
-    public static Map<String, Coordinate> board;
-        public static int boardM; //5
-        public  static int boardN; // 5
+    public boolean BFSDebug = true;
+    public Map<String, Coordinate> board;
+        public int boardM; //5
+        public int boardN; // 5
     
     
         GameBoard (int boardM, int boardN) {
-            GameBoard.boardM = boardM;
-            GameBoard.boardN = boardN;
+            this.boardM = boardM;
+            this.boardN = boardN;
             initializeBoard();
         }
     
-        public static void initializeBoard(){
+        public void initializeBoard(){
             board = new HashMap<>();
         for (int m = 0; m < boardM; m++){
             for (int n = 0; n < boardN; n++){
@@ -91,7 +91,7 @@ public class GameBoard {
         }
     }
     
-    public static boolean exploreNeighbors(Coordinate start, Map<String, Coordinate> board, int turn) {
+    public boolean exploreNeighbors(Coordinate start, Map<String, Coordinate> board, int turn) {
         // Neighbour ruleset
         int[] directionsX = {0, 0, -1, 1, -1, 1};  
         int[] directionsY = {1, -1, 0, 0, 1, -1}; 

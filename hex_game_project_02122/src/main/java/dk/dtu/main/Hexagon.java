@@ -4,16 +4,18 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.StrokeLineCap;
 
 public class Hexagon extends Polygon {
     int col, row, xCor, yCor;
     double boardOffset, HEX_RADIUS;
-    
+
     GamePanel gamePanel;
     GameBoard gameBoard;
-    private Group hexGroup; 
+    private Group hexGroup;
 
-    public Hexagon(int col, int row, double boardOffset, double HEX_RADIUS, int xCor, int yCor, GamePanel gamePanel, GameBoard gameBoard) {
+    public Hexagon(int col, int row, double boardOffset, double HEX_RADIUS, int xCor, int yCor, GamePanel gamePanel,
+            GameBoard gameBoard) {
         this.col = col;
         this.row = row;
         this.boardOffset = boardOffset;
@@ -43,21 +45,21 @@ public class Hexagon extends Polygon {
 
         this.setFill(Color.LIGHTGREY);
         this.setStroke(Color.BLACK);
-        this.setStrokeWidth(2);
+        this.setStrokeWidth(HEX_RADIUS / 20.0);
 
         // Create a Group to store hexagon + edge lines
         hexGroup = new Group(this);
 
         boolean isTopEdge = (yCor == gameBoard.boardN - 1);
-        boolean isBottomEdge = (yCor == 0 );
+        boolean isBottomEdge = (yCor == 0);
         boolean isLeftEdge = (xCor == 0);
         boolean isRightEdge = (xCor == gameBoard.boardM - 1);
 
         // Add color to specific edges only
         if (isTopEdge) {
-           drawEdge(points[0], points[1], Color.BLUE);
-           drawEdge(points[1], points[2], Color.BLUE);
-            
+            drawEdge(points[0], points[1], Color.BLUE);
+            drawEdge(points[1], points[2], Color.BLUE);
+
         }
 
         if (isBottomEdge) {
@@ -78,20 +80,21 @@ public class Hexagon extends Polygon {
         this.setOnMouseClicked(_ -> {
             if (this.getFill().equals(Color.LIGHTGREY)) {
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
+                System.out.println(xCor + ", " + yCor);
+                String spot = yCor + "," + xCor;
+                gameBoard.pickSpot(spot, yCor, xCor, gamePanel.getTurn() ? 1 : 2);
+                gameBoard.printBoard(gameBoard.board);
+                gamePanel.changeTurn();
             }
-            System.out.println(xCor + ", " + yCor);
-            String spot = yCor + "," + xCor;
-            gameBoard.pickSpot(spot, yCor, xCor, gamePanel.getTurn() ? 1 : 2);
-            gameBoard.printBoard(gameBoard.board);
-            gamePanel.changeTurn();
         });
     }
 
     private void drawEdge(double[] p1, double[] p2, Color color) {
         Line line = new Line(p1[0], p1[1], p2[0], p2[1]);
         line.setStroke(color);
-        line.setStrokeWidth(2);
-        hexGroup.getChildren().add(line); 
+        line.setStrokeWidth(HEX_RADIUS / 15.0);
+        line.setStrokeLineCap(StrokeLineCap.ROUND);
+        hexGroup.getChildren().add(line);
     }
 
     public Group getHexGroup() {
