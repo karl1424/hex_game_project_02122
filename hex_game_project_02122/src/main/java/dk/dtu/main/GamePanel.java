@@ -3,6 +3,7 @@ package dk.dtu.main;
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.Pane;
 
@@ -11,6 +12,7 @@ public class GamePanel extends Pane {
     private GUI gui;
     private GameBoard gameBoard;
     private int gridSize;
+    private ComputerOpponent computerOpponent;
 
     public GamePanel() {
         this.gridSize = 0;
@@ -47,14 +49,18 @@ public class GamePanel extends Pane {
     private void startGame() {
         gameBoard = new GameBoard(gridSize, gridSize);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
+        computerOpponent = new ComputerOpponent(gameBoard, 1, gui);
+        gui.setComputerOpponent(computerOpponent);
+        
         getChildren().add(gui);
+        System.out.println("Initial empty board:");
         gameBoard.printBoard(gameBoard.board);
-
-        // gameBoard.printBoard(gameBoard.board);
-        // gameBoard.pickSpot("1,1", 1, 1, 2); // Get this input somewhere else...
-        // gameBoard.printBoard(gameBoard.board);
-        // gameBoard.pickSpot("3,1", 3, 1, 2); // Get this input somewhere else...
-        // gameBoard.printBoard(gameBoard.board);
+        
+        // Let computer go first if it's player 1
+        if (computerOpponent.getPlayerNumber() == 1) {
+            computerOpponent.makeMove();
+            changeTurn();
+        }
     }
 
     private void showError(String message) {
@@ -64,6 +70,14 @@ public class GamePanel extends Pane {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    
+    // public void showGameOver(int winner) {
+    //     Alert alert = new Alert(AlertType.INFORMATION);
+    //     alert.setTitle("Game Over");
+    //     alert.setHeaderText("Game Finished");
+    //     alert.setContentText("Player " + winner + " (" + (winner == 1 ? "Red" : "Blue") + ") has won the game!");
+    //     alert.showAndWait();
+    // }
 
     public boolean getTurn() {
         return isPlayerOneTurn;
@@ -71,5 +85,9 @@ public class GamePanel extends Pane {
 
     public void changeTurn() {
         isPlayerOneTurn = !isPlayerOneTurn;
+    }
+
+    public ComputerOpponent getComputerOpponent() {
+        return computerOpponent;
     }
 }

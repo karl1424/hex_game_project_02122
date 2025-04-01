@@ -9,9 +9,11 @@ import javafx.scene.shape.StrokeLineCap;
 public class Hexagon extends Polygon {
     int col, row, xCor, yCor;
     double boardOffset, HEX_RADIUS;
+    String key;
 
     GamePanel gamePanel;
     GameBoard gameBoard;
+
     private Group hexGroup;
 
     public Hexagon(int col, int row, double boardOffset, double HEX_RADIUS, int xCor, int yCor, GamePanel gamePanel,
@@ -22,6 +24,7 @@ public class Hexagon extends Polygon {
         this.HEX_RADIUS = HEX_RADIUS;
         this.xCor = xCor;
         this.yCor = yCor;
+        key = yCor + "," + xCor;
         this.gamePanel = gamePanel;
         this.gameBoard = gameBoard;
         createHexagon();
@@ -59,7 +62,6 @@ public class Hexagon extends Polygon {
         if (isTopEdge) {
             drawEdge(points[0], points[1], Color.BLUE);
             drawEdge(points[1], points[2], Color.BLUE);
-
         }
 
         if (isBottomEdge) {
@@ -78,13 +80,42 @@ public class Hexagon extends Polygon {
         }
 
         this.setOnMouseClicked(_ -> {
-            if (this.getFill().equals(Color.LIGHTGREY)) {
+            if (gameBoard.getWinner() == 0 && gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
-                System.out.println(xCor + ", " + yCor);
+                System.out.println("Human move at: " + yCor + ", " + xCor);
                 String spot = yCor + "," + xCor;
                 gameBoard.pickSpot(spot, yCor, xCor, gamePanel.getTurn() ? 1 : 2);
+        
+                ComputerOpponent comp = gamePanel.getComputerOpponent();
+                if (comp != null) {
+                    comp.setLastHumanMove(yCor, xCor);
+                }
+        
+                System.out.println("Board after human move:");
                 gameBoard.printBoard(gameBoard.board);
-                gamePanel.changeTurn();
+        
+                if (gameBoard.getWinner() == 0) {
+                    gamePanel.changeTurn();
+        
+                    // Modified condition to correctly check if it's computer's turn
+                    if (comp != null) {
+                        // Check if it's computer's turn based on computer's player number
+                        boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
+                                (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
+        
+                        if (isComputerTurn) {
+                            comp.makeMove();
+        
+                            // Computer move board status - print the board AFTER the computer's move
+                            System.out.println("Board after computer move:");
+                            gameBoard.printBoard(gameBoard.board);
+        
+                            gamePanel.changeTurn();
+                        }
+                    }
+                } else {
+                    System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
+                }
             }
         });
     }
@@ -99,5 +130,9 @@ public class Hexagon extends Polygon {
 
     public Group getHexGroup() {
         return hexGroup;
+    }
+
+    public void setFill(Color color) {
+        super.setFill(color);
     }
 }
