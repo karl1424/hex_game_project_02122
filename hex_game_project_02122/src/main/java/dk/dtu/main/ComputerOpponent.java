@@ -107,106 +107,105 @@ public class ComputerOpponent {
         return candidates;
     }
 
-
     private boolean isConnectedToComputerMove(int x, int y) {
         int[] directionsX = { 0, 0, -1, 1, -1, 1 };
         int[] directionsY = { 1, -1, 0, 0, 1, -1 };
-        
+
         for (Coordinate computerMove : computerMoves) {
             for (int i = 0; i < 6; i++) {
                 int neighborX = x + directionsX[i];
                 int neighborY = y + directionsY[i];
-                
+
                 if (neighborX == computerMove.getX() && neighborY == computerMove.getY()) {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
 
-        private List<Coordinate> filterMovesNearLastHumanMove(List<Coordinate> candidates) {
-            List<Coordinate> filteredMoves = new ArrayList<>();
-            
-            if (lastHumanMove == null) {
-                return candidates;
+    private List<Coordinate> filterMovesNearLastHumanMove(List<Coordinate> candidates) {
+        List<Coordinate> filteredMoves = new ArrayList<>();
+
+        if (lastHumanMove == null) {
+            return candidates;
+        }
+
+        int[] directionsX = { 0, 0, -1, 1, -1, 1 };
+        int[] directionsY = { 1, -1, 0, 0, 1, -1 };
+
+        for (Coordinate candidate : candidates) {
+            boolean isAdjacentToLastMove = false;
+
+            for (int i = 0; i < 6; i++) {
+                int neighborX = lastHumanMove.getX() + directionsX[i];
+                int neighborY = lastHumanMove.getY() + directionsY[i];
+
+                if (candidate.getX() == neighborX && candidate.getY() == neighborY) {
+                    isAdjacentToLastMove = true;
+                    break;
+                }
             }
-    
-            int[] directionsX = { 0, 0, -1, 1, -1, 1 };
-            int[] directionsY = { 1, -1, 0, 0, 1, -1 };
-            
-            for (Coordinate candidate : candidates) {
-                boolean isAdjacentToLastMove = false;
-                
-                for (int i = 0; i < 6; i++) {
-                    int neighborX = lastHumanMove.getX() + directionsX[i];
-                    int neighborY = lastHumanMove.getY() + directionsY[i];
-                    
-                    if (candidate.getX() == neighborX && candidate.getY() == neighborY) {
-                        isAdjacentToLastMove = true;
-                        break;
+
+            if (isAdjacentToLastMove) {
+                filteredMoves.add(candidate);
+            }
+        }
+
+        System.out.println("Filtered " + filteredMoves.size() + " moves that are adjacent to the last human move");
+
+        if (filteredMoves.isEmpty()) {
+            System.out.println("No moves adjacent to last human move, returning all candidates");
+            return candidates;
+        }
+
+        return filteredMoves;
+    }
+
+    private boolean placeFirstValidMove(List<Coordinate> moves) {
+        if (gameBoard.getWinner() != 0) {
+            return false;
+        }
+
+        int[][] priorityCoords = {
+                { 0, 0 }, { 1, 0 }, { 2, 0 },
+                { 0, 2 }, { 1, 2 }, { 2, 2 }
+        };
+
+        for (int[] coord : priorityCoords) {
+            int priorityX = coord[0];
+            int priorityY = coord[1];
+
+            for (Coordinate move : moves) {
+                if (move.getX() == priorityX && move.getY() == priorityY) {
+                    String key = move.getX() + "," + move.getY();
+                    if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+                        gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
+                        System.out.println("Computer placed priority move at: " + key);
+                        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
+                        gui.updateHexagonColor(key, compColor);
+                        computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
+                        return true;
                     }
                 }
-                
-                if (isAdjacentToLastMove) {
-                    filteredMoves.add(candidate);
-                }
             }
-    
-            System.out.println("Filtered " + filteredMoves.size() + " moves that are adjacent to the last human move");
-            
-            if (filteredMoves.isEmpty()) {
-                System.out.println("No moves adjacent to last human move, returning all candidates");
-                return candidates;
-            }
-            
-            return filteredMoves;
         }
 
-private boolean placeFirstValidMove(List<Coordinate> moves) {
-    if (gameBoard.getWinner() != 0) {
-        return false;
-    }
-    
-    int[][] priorityCoords = {
-        {0, 0}, {1, 0}, {2, 0},
-        {0, 2}, {1, 2}, {2, 2}
-    };
-    
-    for (int[] coord : priorityCoords) {
-        int priorityX = coord[0];
-        int priorityY = coord[1];
-        
         for (Coordinate move : moves) {
-            if (move.getX() == priorityX && move.getY() == priorityY) {
-                String key = move.getX() + "," + move.getY();
-                if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
-                    gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
-                    System.out.println("Computer placed priority move at: " + key);
-                    Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                    gui.updateHexagonColor(key, compColor);
-                    computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
-                    return true;
-                }
+            String key = move.getX() + "," + move.getY();
+            if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+                gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
+                System.out.println("Computer placed regular move at: " + key);
+                Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
+                gui.updateHexagonColor(key, compColor);
+                computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
+                return true;
             }
         }
+
+        return false;
     }
-    
-    for (Coordinate move : moves) {
-        String key = move.getX() + "," + move.getY();
-        if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
-            gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
-            System.out.println("Computer placed regular move at: " + key);
-            Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-            gui.updateHexagonColor(key, compColor);
-            computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
-            return true;
-        }
-    }
-    
-    return false;
-}
 
     public int getPlayerNumber() {
         return playerNumber;
