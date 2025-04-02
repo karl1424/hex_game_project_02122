@@ -29,7 +29,7 @@ public class GUI extends Pane {
             for (int col = -GRID_WIDTH / 2; col <= GRID_WIDTH / 2; col++) {
                 int xCor = col + GRID_HEIGHT / 2;
                 int yCor = row + GRID_WIDTH / 2;
-                String key = yCor + "," + xCor;
+                String key = xCor + "," + yCor;
                 Hexagon hexagon = new Hexagon(col, row, boardOffset, HEX_RADIUS, xCor, yCor, gamePanel, gameBoard);
                 getChildren().add(hexagon.getHexGroup());
 

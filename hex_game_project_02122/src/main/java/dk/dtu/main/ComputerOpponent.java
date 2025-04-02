@@ -27,8 +27,8 @@ public class ComputerOpponent {
         }
 
         if (isFirstMove && playerNumber == 1) {
-            int x = gameBoard.boardM / 2;
-            int y = gameBoard.boardN / 2;
+            int x = gameBoard.boardN / 2;
+            int y = gameBoard.boardM / 2;
             String key = x + "," + y;
             if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
                 gameBoard.pickSpot(key, x, y, playerNumber);
@@ -66,8 +66,8 @@ public class ComputerOpponent {
         }
 
         List<String> emptySpots = new ArrayList<>();
-        for (int x = 0; x < gameBoard.boardM; x++) {
-            for (int y = 0; y < gameBoard.boardN; y++) {
+        for (int x = 0; x < gameBoard.boardN; x++) {
+            for (int y = 0; y < gameBoard.boardM; y++) {
                 String key = x + "," + y;
                 if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
                     emptySpots.add(key);
@@ -94,8 +94,8 @@ public class ComputerOpponent {
      */
     private List<Coordinate> getCandidateMoves() {
         List<Coordinate> candidates = new ArrayList<>();
-        for (int x = 0; x < gameBoard.boardM; x++) {
-            for (int y = 0; y < gameBoard.boardN; y++) {
+        for (int x = 0; x < gameBoard.boardN; x++) {
+            for (int y = 0; y < gameBoard.boardM; y++) {
                 String key = x + "," + y;
                 if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
                     if (isConnectedToComputerMove(x, y)) {
@@ -169,8 +169,8 @@ public class ComputerOpponent {
         }
 
         int[][] priorityCoords = {
-                { 0, 0 }, { 1, 0 }, { 2, 0 },
-                { 0, 2 }, { 1, 2 }, { 2, 2 }
+                { 0, 0 }, { 0, 1 }, { 0, 2 },
+                { 2, 0 }, { 2, 1 }, { 2, 2 }
         };
 
         for (int[] coord : priorityCoords) {

@@ -24,7 +24,7 @@ public class Hexagon extends Polygon {
         this.HEX_RADIUS = HEX_RADIUS;
         this.xCor = xCor;
         this.yCor = yCor;
-        key = yCor + "," + xCor;
+        key = xCor + "," + yCor;
         this.gamePanel = gamePanel;
         this.gameBoard = gameBoard;
         createHexagon();
@@ -82,13 +82,13 @@ public class Hexagon extends Polygon {
         this.setOnMouseClicked(_ -> {
             if (gameBoard.getWinner() == 0 && gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
-                System.out.println("Human move at: " + yCor + ", " + xCor);
-                String spot = yCor + "," + xCor;
-                gameBoard.pickSpot(spot, yCor, xCor, gamePanel.getTurn() ? 1 : 2);
+                System.out.println("Human move at: " + xCor + ", " + yCor);
+                String spot = xCor + "," + yCor;
+                gameBoard.pickSpot(spot, xCor, yCor, gamePanel.getTurn() ? 1 : 2);
         
                 ComputerOpponent comp = gamePanel.getComputerOpponent();
                 if (comp != null) {
-                    comp.setLastHumanMove(yCor, xCor);
+                    comp.setLastHumanMove(xCor, yCor);
                 }
         
                 System.out.println("Board after human move:");
