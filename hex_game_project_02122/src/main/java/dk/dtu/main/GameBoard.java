@@ -8,10 +8,12 @@ public class GameBoard {
     public int boardM; // 5
     public int boardN; // 5
     private int winner = 0;
+    private GamePanel gamePanel;
 
-    GameBoard(int boardM, int boardN) {
+    GameBoard(int boardM, int boardN, GamePanel gamePanel) {
         this.boardM = boardM;
         this.boardN = boardN;
+        this.gamePanel = gamePanel;
         initializeBoard();
     }
 
@@ -93,6 +95,7 @@ public class GameBoard {
         } else {
             System.out.println("No winning path");
         }
+        gamePanel.checkGameOver();
     }
 
     public boolean exploreNeighbors(Coordinate start, Map<String, Coordinate> board, int turn) {
