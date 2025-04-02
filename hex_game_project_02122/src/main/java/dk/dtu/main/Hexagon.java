@@ -106,7 +106,7 @@ public class Hexagon extends Polygon {
         
                 if (gameBoard.getWinner() == 0) {
                     gamePanel.changeTurn();
-                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
                         if (comp != null) {
                             boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
                                                        (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
