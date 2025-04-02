@@ -49,7 +49,7 @@ public class GamePanel extends Pane {
     private void startGame() {
         gameBoard = new GameBoard(gridSize, gridSize);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
-        computerOpponent = new ComputerOpponent(gameBoard, 1, gui);
+        computerOpponent = new ComputerOpponent(gameBoard, 2, gui);
         gui.setComputerOpponent(computerOpponent);
         
         getChildren().add(gui);
