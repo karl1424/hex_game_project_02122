@@ -26,7 +26,7 @@ public class ComputerOpponent {
             return;
         }
 
-        if (isFirstMove && playerNumber == 1) {
+        if (isFirstMove && playerNumber == 1 && gameBoard.boardM == 3 && gameBoard.boardN == 3) {
             int x = gameBoard.boardN / 2;
             int y = gameBoard.boardM / 2;
             String key = x + "," + y;
