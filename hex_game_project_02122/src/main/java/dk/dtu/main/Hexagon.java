@@ -1,5 +1,8 @@
 package dk.dtu.main;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -80,7 +83,14 @@ public class Hexagon extends Polygon {
         }
 
         this.setOnMouseClicked(_ -> {
-            if (gameBoard.getWinner() == 0 && gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+            if (gameBoard.getWinner() == 0 &&
+                    gameBoard.board.containsKey(key) &&
+                    gameBoard.board.get(key).getState() == 0 &&
+                    ((gamePanel.getTurn() && gamePanel.getComputerPlayer() == 2) || 
+                    (!gamePanel.getTurn() && gamePanel.getComputerPlayer() == 1 ))) {
+                
+        
+                // Human move code
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
                 System.out.println("Human move at: " + xCor + ", " + yCor);
                 String spot = xCor + "," + yCor;
@@ -96,23 +106,21 @@ public class Hexagon extends Polygon {
         
                 if (gameBoard.getWinner() == 0) {
                     gamePanel.changeTurn();
+                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+                        if (comp != null) {
+                            boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
+                                                       (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
         
-                    // Modified condition to correctly check if it's computer's turn
-                    if (comp != null) {
-                        // Check if it's computer's turn based on computer's player number
-                        boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
-                                (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
-        
-                        if (isComputerTurn) {
-                            comp.makeMove();
-        
-                            // Computer move board status - print the board AFTER the computer's move
-                            System.out.println("Board after computer move:");
-                            gameBoard.printBoard(gameBoard.board);
-        
-                            gamePanel.changeTurn();
+                            if (isComputerTurn && gameBoard.getWinner() == 0) {
+                                comp.makeMove();
+                                System.out.println("Board after computer move:");
+                                gameBoard.printBoard(gameBoard.board);
+                                gamePanel.changeTurn();
+                            }
                         }
-                    }
+                    }));
+                    delay.setCycleCount(1);
+                    delay.play();
                 } else {
                     System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
                 }

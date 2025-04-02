@@ -58,10 +58,10 @@ public class GamePanel extends Pane {
                 try {
                     gridSize = Integer.parseInt(result.get());
 
-                    if (gridSize >= 3 && gridSize % 2 != 0) {
+                    if (gridSize >= 3 && gridSize <= 99 && gridSize % 2 != 0) {
                         validInput = true;
                     } else {
-                        showError("The number must be an odd integer bigger or equal than 3. Try again.");
+                        showError("The number must be an odd integer bigger or equal than 3 and smaller than 100. Try again.");
                     }
                 } catch (NumberFormatException e) {
                     showError("The number must be an odd integer bigger or equal than 3. Try again.");
@@ -122,5 +122,9 @@ public class GamePanel extends Pane {
 
     public ComputerOpponent getComputerOpponent() {
         return computerOpponent;
+    }
+
+    public int getComputerPlayer() {
+        return computerPlayer;
     }
 }

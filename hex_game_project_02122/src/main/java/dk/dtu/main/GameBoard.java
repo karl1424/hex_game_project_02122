@@ -2,6 +2,8 @@ package dk.dtu.main;
 
 import java.util.*;
 
+import javafx.application.Platform;
+
 public class GameBoard {
     public boolean BFSDebug = true;
     public Map<String, Coordinate> board;
@@ -95,7 +97,10 @@ public class GameBoard {
         } else {
             System.out.println("No winning path");
         }
-        gamePanel.checkGameOver();
+        Platform.runLater(() -> {
+            gamePanel.checkGameOver();
+        });
+       
     }
 
     public boolean exploreNeighbors(Coordinate start, Map<String, Coordinate> board, int turn) {
