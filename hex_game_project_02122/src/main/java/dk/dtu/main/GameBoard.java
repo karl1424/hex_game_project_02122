@@ -17,10 +17,10 @@ public class GameBoard {
 
     public void initializeBoard() {
         board = new HashMap<>();
-        for (int m = 0; m < boardM; m++) {
-            for (int n = 0; n < boardN; n++) {
-                String spot = m + "," + n; // Use consistent format
-                board.put(spot, new Coordinate(m, n, 0));
+        for (int n = 0; n < boardN; n++) {
+            for (int m = 0; m < boardM; m++) {
+                String spot = n + "," + m; // Use consistent format
+                board.put(spot, new Coordinate(n, m, 0));
             }
         }
 
@@ -57,7 +57,7 @@ public class GameBoard {
         }
 
         // Create 2D array with default spots
-        int[][] grid = new int[maxY + 1][maxX + 1];
+        int[][] grid = new int[maxX + 1][maxY + 1];
         for (int i = 0; i <= maxY; i++) {
             Arrays.fill(grid[i], -1);
         }
@@ -71,10 +71,10 @@ public class GameBoard {
         System.out.println("Game Board:");
         for (int y = 0; y <= maxY; y++) {
             for (int x = 0; x <= maxX; x++) {
-                if (grid[y][x] == -1) {
+                if (grid[x][y] == -1) {
                     System.out.print(". "); // Print empty space as "."
                 } else {
-                    System.out.print(grid[y][x] + " "); // Print state (0, 1, 2)
+                    System.out.print(grid[x][y] + " "); // Print state (0, 1, 2)
                 }
             }
             System.out.println();
@@ -115,14 +115,14 @@ public class GameBoard {
 
             // Determine the winning condition based on the player's state
             if (turn == 2) { // Player 2: Check Top-to-Bottom (X-based)
-                if (current.getX() == 0)
-                    reachedStartEdge = true;
-                if (current.getX() == boardM - 1)
-                    reachedEndEdge = true;
-            } else if (turn == 1) { // Player 1: Check Left-to-Right (Y-based)
                 if (current.getY() == 0)
                     reachedStartEdge = true;
-                if (current.getY() == boardN - 1)
+                if (current.getY() == boardM - 1)
+                    reachedEndEdge = true;
+            } else if (turn == 1) { // Player 1: Check Left-to-Right (Y-based)
+                if (current.getX() == 0)
+                    reachedStartEdge = true;
+                if (current.getX() == boardN - 1)
                     reachedEndEdge = true;
             }
 
