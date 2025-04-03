@@ -20,7 +20,11 @@ public class GamePanel extends Pane {
 
     public GamePanel() {
         this.gridSize = 0;
+        gameInit();
+    }
 
+    private void gameInit() {
+        this.getChildren().clear();
         chooseBoardSize();
         choosePlayerNumber();
         startGame();
@@ -81,7 +85,7 @@ public class GamePanel extends Pane {
 
         getChildren().add(gui);
         System.out.println("Initial empty board:");
-        gameBoard.printBoard(gameBoard.board);
+        gameBoard.printBoard();
 
         // Let computer go first if it's player 1
         if (computerOpponent.getPlayerNumber() == 1) {
@@ -110,6 +114,7 @@ public class GamePanel extends Pane {
         alert.setHeaderText("Game Finished");
         alert.setContentText("Player " + winner + " (" + (winner == 1 ? "Red" : "Blue") + ") has won the game!");
         alert.showAndWait();
+        gameInit();
     }
 
     public boolean getTurn() {

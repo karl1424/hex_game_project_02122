@@ -84,8 +84,7 @@ public class Hexagon extends Polygon {
 
         this.setOnMouseClicked(_ -> {
             if (gameBoard.getWinner() == 0 &&
-                    gameBoard.board.containsKey(key) &&
-                    gameBoard.board.get(key).getState() == 0 &&
+                    gameBoard.getBoard()[xCor][yCor].getState() == 0 &&
                     ((gamePanel.getTurn() && gamePanel.getComputerPlayer() == 2) || 
                     (!gamePanel.getTurn() && gamePanel.getComputerPlayer() == 1 ))) {
                 
@@ -102,11 +101,11 @@ public class Hexagon extends Polygon {
                 }
         
                 System.out.println("Board after human move:");
-                gameBoard.printBoard(gameBoard.board);
+                gameBoard.printBoard();
         
                 if (gameBoard.getWinner() == 0) {
                     gamePanel.changeTurn();
-                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
+                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), _ -> {
                         if (comp != null) {
                             boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
                                                        (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
@@ -114,7 +113,7 @@ public class Hexagon extends Polygon {
                             if (isComputerTurn && gameBoard.getWinner() == 0) {
                                 comp.makeMove();
                                 System.out.println("Board after computer move:");
-                                gameBoard.printBoard(gameBoard.board);
+                                gameBoard.printBoard();
                                 gamePanel.changeTurn();
                             }
                         }
