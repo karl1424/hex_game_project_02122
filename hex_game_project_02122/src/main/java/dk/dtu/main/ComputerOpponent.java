@@ -30,14 +30,14 @@ public class ComputerOpponent {
             int x = gameBoard.boardN / 2;
             int y = gameBoard.boardM / 2;
             String key = x + "," + y;
-            if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+            if (gameBoard.getBoard()[x][y].getState() == 0) {
                 gameBoard.pickSpot(key, x, y, playerNumber);
                 System.out.println("Computer takes center move at: " + key);
                 Color computerColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
                 gui.updateHexagonColor(key, computerColor);
                 computerMoves.add(new Coordinate(x, y, playerNumber));
                 System.out.println("Board after computer's first move:");
-                gameBoard.printBoard(gameBoard.board);
+                gameBoard.printBoard();
                 isFirstMove = false;
                 return;
             }
@@ -69,7 +69,7 @@ public class ComputerOpponent {
         for (int x = 0; x < gameBoard.boardN; x++) {
             for (int y = 0; y < gameBoard.boardM; y++) {
                 String key = x + "," + y;
-                if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+                if (gameBoard.getBoard()[x][y].getState() == 0) {
                     emptySpots.add(key);
                 }
             }
@@ -97,7 +97,7 @@ public class ComputerOpponent {
         for (int x = 0; x < gameBoard.boardN; x++) {
             for (int y = 0; y < gameBoard.boardM; y++) {
                 String key = x + "," + y;
-                if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+                if (gameBoard.getBoard()[x][y].getState() == 0) {
                     if (isConnectedToComputerMove(x, y)) {
                         candidates.add(new Coordinate(x, y, playerNumber));
                     }
@@ -180,7 +180,7 @@ public class ComputerOpponent {
             for (Coordinate move : moves) {
                 if (move.getX() == priorityX && move.getY() == priorityY) {
                     String key = move.getX() + "," + move.getY();
-                    if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
                         gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
                         System.out.println("Computer placed priority move at: " + key);
                         Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
@@ -194,7 +194,7 @@ public class ComputerOpponent {
 
         for (Coordinate move : moves) {
             String key = move.getX() + "," + move.getY();
-            if (gameBoard.board.containsKey(key) && gameBoard.board.get(key).getState() == 0) {
+            if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
                 gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
                 System.out.println("Computer placed regular move at: " + key);
                 Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
