@@ -95,7 +95,7 @@ public class GameBoard {
      * }
      */
 
-    public void pickSpot(String spot, int x, int y, int turn) {
+    public void pickSpot(int x, int y, int turn) {
         board[x][y] = new Coordinate(x, y, turn);
         Coordinate start = board[x][y]; // The chosen spot
 
