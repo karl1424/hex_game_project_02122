@@ -21,7 +21,6 @@ public class ComputerOpponent {
         this.playerNumber = playerNumber;
         this.gui = gui;
         rand = new Random();
-
     }
 
     public void makeMove() {
@@ -34,10 +33,8 @@ public class ComputerOpponent {
             int x = gameBoard.boardN / 2;
             int y = gameBoard.boardM / 2;
             if (gameBoard.getBoard()[x][y].getState() == 0) {
-                gameBoard.pickSpot(x, y, playerNumber);
+                updateSpot(x, y);
                 System.out.println("Computer takes center move at: " + x + ", " + y);
-                Color computerColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                gui.updateHexagonColor(x, y, computerColor);
                 computerMoves.add(new Coordinate(x, y, playerNumber));
                 System.out.println("Board after computer's first move:");
                 gameBoard.printBoard();
@@ -80,11 +77,8 @@ public class ComputerOpponent {
         if (!emptySpots.isEmpty()) {
             int i = rand.nextInt(emptySpots.size());
             Coordinate spot = emptySpots.get(i);
-
-            gameBoard.pickSpot(spot.getX(), spot.getY(), playerNumber);
+            updateSpot(spot.getX(), spot.getY());
             System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
-            Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-            gui.updateHexagonColor(spot.getX(), spot.getY(), compColor);
         }
     }
 
@@ -121,7 +115,6 @@ public class ComputerOpponent {
                 }
             }
         }
-
         return false;
     }
 
@@ -159,7 +152,6 @@ public class ComputerOpponent {
             System.out.println("No moves adjacent to last human move, returning all candidates");
             return candidates;
         }
-
         return filteredMoves;
     }
 
@@ -179,12 +171,11 @@ public class ComputerOpponent {
 
             for (Coordinate move : moves) {
                 if (move.getX() == priorityX && move.getY() == priorityY) {
-                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                        gameBoard.pickSpot(move.getX(), move.getY(), playerNumber);
-                        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                        gui.updateHexagonColor(move.getX(), move.getY(), compColor);
+                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {                    
+                        updateSpot(move.getX(), move.getY());
                         computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
                         return true;
+
                     }
                 }
             }
@@ -192,15 +183,19 @@ public class ComputerOpponent {
 
         for (Coordinate move : moves) {
             if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                gameBoard.pickSpot(move.getX(), move.getY(), playerNumber);
-                Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                gui.updateHexagonColor(move.getX(), move.getY(), compColor);
+                updateSpot(move.getX(), move.getY());
                 computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
                 return true;
             }
         }
 
         return false;
+    }
+
+    private void updateSpot(int x, int y) {
+        gameBoard.pickSpot(x, y, playerNumber);
+        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
+        gui.updateHexagonColor(x, y, compColor);
     }
 
     public int getPlayerNumber() {
