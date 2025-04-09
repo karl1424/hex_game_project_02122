@@ -14,7 +14,6 @@ public class Server {
     public static int lobbyID;
 
     public static void main(String[] args) throws IOException {
-
         setUpServerSapce();
         lobbyRequests = new RemoteSpace(getUri("lobbyRequests"));
         while (true) {

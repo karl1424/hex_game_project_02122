@@ -6,14 +6,10 @@ import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
 public class Client {
-
     private static Space server, lobbySpace;
-
     private static int lobbyID;
     private static int port = 31145;
-
     private static String ServerIP = "localhost";
-
     private static boolean isHost = true;
 
     public static void main(String[] args) {
@@ -49,7 +45,6 @@ public class Client {
         return Uri;
     }
 
-    // Connect to lobby
     public static void connectToLobby(int lobbyID) throws InterruptedException, IOException {
         establishConnectionToLobby(lobbyID);
         if (!lobbyHandShake()) {
@@ -62,7 +57,6 @@ public class Client {
         String uriLobby = getUri(lobbyID + "lobby");
         lobbySpace = new RemoteSpace(uriLobby);
     }
-
 
     public static boolean lobbyHandShake() throws InterruptedException {
         lobbySpace.put("join/leave", "try to connect");
