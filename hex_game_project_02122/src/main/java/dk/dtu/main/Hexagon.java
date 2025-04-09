@@ -92,8 +92,7 @@ public class Hexagon extends Polygon {
                 // Human move code
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
                 System.out.println("Human move at: " + xCor + ", " + yCor);
-                String spot = xCor + "," + yCor;
-                gameBoard.pickSpot(spot, xCor, yCor, gamePanel.getTurn() ? 1 : 2);
+                gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
         
                 ComputerOpponent comp = gamePanel.getComputerOpponent();
                 if (comp != null) {

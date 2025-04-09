@@ -2,6 +2,7 @@ package dk.dtu.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.paint.Color;
@@ -13,11 +14,14 @@ public class ComputerOpponent {
     private GUI gui;
     private Coordinate lastHumanMove = null;
     private List<Coordinate> computerMoves = new ArrayList<>();
+    private Random rand;
 
     public ComputerOpponent(GameBoard gameBoard, int playerNumber, GUI gui) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
+        rand = new Random();
+
     }
 
     public void makeMove() {
@@ -29,12 +33,11 @@ public class ComputerOpponent {
         if (isFirstMove && playerNumber == 1 && gameBoard.boardM == 3 && gameBoard.boardN == 3) {
             int x = gameBoard.boardN / 2;
             int y = gameBoard.boardM / 2;
-            String key = x + "," + y;
             if (gameBoard.getBoard()[x][y].getState() == 0) {
-                gameBoard.pickSpot(key, x, y, playerNumber);
-                System.out.println("Computer takes center move at: " + key);
+                gameBoard.pickSpot(x, y, playerNumber);
+                System.out.println("Computer takes center move at: " + x + ", " + y);
                 Color computerColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                gui.updateHexagonColor(key, computerColor);
+                gui.updateHexagonColor(x, y, computerColor);
                 computerMoves.add(new Coordinate(x, y, playerNumber));
                 System.out.println("Board after computer's first move:");
                 gameBoard.printBoard();
@@ -65,26 +68,23 @@ public class ComputerOpponent {
             return;
         }
 
-        List<String> emptySpots = new ArrayList<>();
+        List<Coordinate> emptySpots = new ArrayList<>();
         for (int x = 0; x < gameBoard.boardN; x++) {
             for (int y = 0; y < gameBoard.boardM; y++) {
-                String key = x + "," + y;
                 if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    emptySpots.add(key);
+                    emptySpots.add(gameBoard.getBoard()[x][y]);
                 }
             }
         }
 
         if (!emptySpots.isEmpty()) {
-            String randomKey = emptySpots.get(ThreadLocalRandom.current().nextInt(emptySpots.size()));
-            String[] parts = randomKey.split(",");
-            int x = Integer.parseInt(parts[0]);
-            int y = Integer.parseInt(parts[1]);
+            int i = rand.nextInt(emptySpots.size());
+            Coordinate spot = emptySpots.get(i);
 
-            gameBoard.pickSpot(randomKey, x, y, playerNumber);
-            System.out.println("Computer placed random move at: " + randomKey);
+            gameBoard.pickSpot(spot.getX(), spot.getY(), playerNumber);
+            System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
             Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-            gui.updateHexagonColor(randomKey, compColor);
+            gui.updateHexagonColor(spot.getX(), spot.getY(), compColor);
         }
     }
 
@@ -179,12 +179,10 @@ public class ComputerOpponent {
 
             for (Coordinate move : moves) {
                 if (move.getX() == priorityX && move.getY() == priorityY) {
-                    String key = move.getX() + "," + move.getY();
                     if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                        gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
-                        System.out.println("Computer placed priority move at: " + key);
+                        gameBoard.pickSpot(move.getX(), move.getY(), playerNumber);
                         Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                        gui.updateHexagonColor(key, compColor);
+                        gui.updateHexagonColor(move.getX(), move.getY(), compColor);
                         computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
                         return true;
                     }
@@ -193,12 +191,10 @@ public class ComputerOpponent {
         }
 
         for (Coordinate move : moves) {
-            String key = move.getX() + "," + move.getY();
             if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                gameBoard.pickSpot(key, move.getX(), move.getY(), playerNumber);
-                System.out.println("Computer placed regular move at: " + key);
+                gameBoard.pickSpot(move.getX(), move.getY(), playerNumber);
                 Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-                gui.updateHexagonColor(key, compColor);
+                gui.updateHexagonColor(move.getX(), move.getY(), compColor);
                 computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
                 return true;
             }
