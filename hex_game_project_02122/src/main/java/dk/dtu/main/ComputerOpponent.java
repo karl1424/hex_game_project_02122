@@ -3,7 +3,6 @@ package dk.dtu.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.scene.paint.Color;
 
@@ -90,7 +89,6 @@ public class ComputerOpponent {
         List<Coordinate> candidates = new ArrayList<>();
         for (int x = 0; x < gameBoard.boardN; x++) {
             for (int y = 0; y < gameBoard.boardM; y++) {
-                String key = x + "," + y;
                 if (gameBoard.getBoard()[x][y].getState() == 0) {
                     if (isConnectedToComputerMove(x, y)) {
                         candidates.add(new Coordinate(x, y, playerNumber));
