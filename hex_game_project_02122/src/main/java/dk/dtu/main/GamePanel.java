@@ -1,6 +1,10 @@
 package dk.dtu.main;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GamePanel extends Pane {
@@ -50,7 +54,15 @@ public class GamePanel extends Pane {
 
     public void checkGameOver() {
         if (gameBoard.getWinner() != 0) {
-            menu.showGameOver(gameBoard.getWinner(), this);
+            Color winnerColor = gameBoard.getWinner() == 1 ? Color.RED : Color.BLUE;
+
+            gui.animateWinningPath(gameBoard.getWinningPath(), winnerColor);
+
+            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
+                menu.showGameOver(gameBoard.getWinner(), this);
+            }));
+            delay.setCycleCount(1);
+            delay.play();
         }
     }
 

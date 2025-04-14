@@ -95,6 +95,7 @@ public class Menu extends Pane {
         player1CheckBox = Help.creatCheckBox("1", true);
         player2CheckBox = Help.creatCheckBox("2", false);
 
+        
         player1CheckBox.setOnAction(e -> {
             if (player1CheckBox.isSelected())
                 player2CheckBox.setSelected(false);
@@ -175,6 +176,7 @@ public class Menu extends Pane {
         localSizeLargeCheckBox = Help.creatCheckBox("Large", false);
 
         CheckBox[] localSizeCheckBoxes = { localSizeSmallCheckBox, localSizeMediumCheckBox, localSizeLargeCheckBox };
+        //We can ensure that only one checkbox is selected at a time
         for (CheckBox cb : localSizeCheckBoxes) {
             cb.setOnAction(e -> {
                 for (CheckBox otherCb : localSizeCheckBoxes) {

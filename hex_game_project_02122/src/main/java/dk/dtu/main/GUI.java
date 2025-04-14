@@ -1,8 +1,12 @@
 package dk.dtu.main;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
@@ -47,6 +51,40 @@ public class GUI extends Pane {
         } else {
             System.out.println("Warning: No hexagon found at key " + x + ", " + y);
         }
+    }
+
+    public void animateWinningPath(List<Coordinate> winningPath, Color playerColor) {
+        if (winningPath == null || winningPath.isEmpty()) {
+            return;
+        }
+
+        Color flashColor = Color.WHITE;
+        Color originalColor = playerColor;
+
+        Timeline timeline = new Timeline();
+        int totalCycles = 6; 
+        Duration cycleDuration = Duration.millis(200); 
+
+        
+        for (int i = 0; i < totalCycles; i++) {
+            Duration time = cycleDuration.multiply(i);
+            Color targetColor = (i % 2 == 0) ? flashColor : originalColor;
+
+            for (Coordinate coord : winningPath) {
+                int x = coord.getX();
+                int y = coord.getY();
+
+                KeyFrame keyFrame = new KeyFrame(time, e -> {
+                    if (hexagons[x][y] != null) {
+                        hexagons[x][y].setFill(targetColor);
+                    }
+                });
+                timeline.getKeyFrames().add(keyFrame);
+            }
+        }
+
+        timeline.setCycleCount(1);
+        timeline.play();
     }
 
     public void setComputerOpponent(ComputerOpponent comp) {
