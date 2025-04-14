@@ -13,8 +13,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        GamePanel gamePanel = new GamePanel();
-        Scene scene = new Scene(gamePanel);
+        GamePanel gamePanel = new GamePanel(primaryStage);
+        Menu menu = gamePanel.getMenu();
+        Scene scene = new Scene(menu);
 
         primaryStage.setTitle("HEX Game");
         primaryStage.setResizable(false);

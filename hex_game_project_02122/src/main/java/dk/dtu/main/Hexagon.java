@@ -83,47 +83,50 @@ public class Hexagon extends Polygon {
         }
 
         this.setOnMouseClicked(_ -> {
-            if (gameBoard.getWinner() == 0 &&
-                    gameBoard.getBoard()[xCor][yCor].getState() == 0 &&
-                    ((gamePanel.getTurn() && gamePanel.getComputerPlayer() == 2) || 
-                    (!gamePanel.getTurn() && gamePanel.getComputerPlayer() == 1 ))) {
-                
-        
-                // Human move code
+            if (gameBoard.getWinner() != 0 ||
+                    gameBoard.getBoard()[xCor][yCor].getState() != 0) {
+                return;
+            }
+
+            boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
+            boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
+                    (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
+
+            if (isLocalGame || isHumanTurn) {
                 this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
                 System.out.println("Human move at: " + xCor + ", " + yCor);
                 gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
-        
+
                 ComputerOpponent comp = gamePanel.getComputerOpponent();
                 if (comp != null) {
                     comp.setLastHumanMove(xCor, yCor);
                 }
-        
+
                 System.out.println("Board after human move:");
                 gameBoard.printBoard();
-        
-                if (gameBoard.getWinner() == 0) {
-                    gamePanel.changeTurn();
-                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), _ -> {
-                        if (comp != null) {
-                            boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
-                                                       (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
-        
-                            if (isComputerTurn && gameBoard.getWinner() == 0) {
-                                comp.makeMove();
-                                System.out.println("Board after computer move:");
-                                gameBoard.printBoard();
-                                gamePanel.changeTurn();
-                            }
+
+                gamePanel.changeTurn();
+
+                if (gameBoard.getWinner() == 0 && comp != null) {
+                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), _2 -> {
+                        boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
+                                (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
+
+                        if (isComputerTurn && gameBoard.getWinner() == 0) {
+                            comp.makeMove();
+                            System.out.println("Board after computer move:");
+                            gameBoard.printBoard();
+                            gamePanel.changeTurn();
                         }
                     }));
                     delay.setCycleCount(1);
                     delay.play();
-                } else {
+                } else if (gameBoard.getWinner() != 0) {
                     System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
                 }
             }
         });
+
     }
 
     private void drawEdge(double[] p1, double[] p2, Color color) {
