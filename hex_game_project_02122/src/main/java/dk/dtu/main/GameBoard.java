@@ -193,12 +193,17 @@ public class GameBoard {
             path.add(current);
             current = parentMap.get(current);
         }
+        Collections.reverse(path);
+
+        // Build end-to-root path until meeting the existing path
+        List<Coordinate> endPath = new ArrayList<>();
         current = endNode;
         while (current != null && !path.contains(current)) {
             endPath.add(current);
             current = parentMap.get(current);
         }
         Collections.reverse(endPath);
+        winningPath.clear();
 
         // Combine
         winningPath.clear();
