@@ -1,5 +1,6 @@
 package dk.dtu.main;
 
+import dk.dtu.Connection.Client;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -17,9 +18,12 @@ import javafx.stage.Stage;
 public class Menu extends Pane {
     private GamePanel gamePanel;
     private Stage primaryStage;
+    private Client client;
 
     private BorderPane computerSetupPane;
     private BorderPane localSetUpPane;
+    private BorderPane lobbySetup;
+    private VBox onlineSetupPane;
     private VBox mainMenuPane;
     private StackPane gameOverPane;
     private CheckBox player1CheckBox;
@@ -33,7 +37,10 @@ public class Menu extends Pane {
     private CheckBox localSizeMediumCheckBox;
     private CheckBox localSizeLargeCheckBox;
 
-    public Menu(GamePanel gamePanel, Stage primaryStage) {
+    private int lobbyID;
+
+    public Menu(GamePanel gamePanel, Client client, Stage primaryStage) {
+        this.client = client;
         this.gamePanel = gamePanel;
         this.primaryStage = primaryStage;
 
@@ -41,6 +48,7 @@ public class Menu extends Pane {
         setupMainMenu();
         computerOpponentSetup();
         localGameSetup();
+        setUpOnlineMenu();
         setupGameOver();
 
         showMainMenu();
@@ -65,12 +73,46 @@ public class Menu extends Pane {
         mainMenuPane.layoutXProperty().bind(widthProperty().subtract(mainMenuPane.widthProperty()).divide(2));
         mainMenuPane.layoutYProperty().bind(heightProperty().subtract(mainMenuPane.heightProperty()).divide(2));
 
-        playVsComputerBtn.setOnAction(e -> showComputerSetup());
-        playLocalBtn.setOnAction(e -> showLocalSetUp());
-        playOnlineBtn.setOnAction(e -> {
-            System.out.println("Not implemented yet");
+        playVsComputerBtn.setOnAction(_ -> showComputerSetup());
+        playLocalBtn.setOnAction(_ -> showLocalSetUp());
+        playOnlineBtn.setOnAction(_ -> showOnlineSetup());
+        exitBtn.setOnAction(_ -> System.exit(0));
+    }
+
+    private void setupLobby() {
+        lobbySetup = new BorderPane();
+        lobbySetup.setPrefSize(600, 600);
+        lobbySetup.setPadding(new Insets(40));
+        Label titleLabel = Help.createTitleLabel(client.getLobbyID() + "", 60);
+        lobbySetup.setTop(titleLabel);
+    }
+
+    private void setUpOnlineMenu() {
+        onlineSetupPane = new VBox(20);
+        onlineSetupPane.setAlignment(Pos.CENTER);
+        onlineSetupPane.setPadding(new Insets(50));
+        onlineSetupPane.setPrefSize(600, 600);
+
+        Label titleLabel = Help.createTitleLabel("HEX GAME", 60);
+
+        Button hostBtn = Help.createButton("Host", 200, 40, true);
+        Button joinBtn = Help.createButton("Join", 200, 40, true);
+        Button backBtn = Help.createButton("Back", 200, 40, true);
+
+        onlineSetupPane.getChildren().addAll(titleLabel, hostBtn, joinBtn, backBtn);
+
+        // Center the VBox in the Pane
+        onlineSetupPane.layoutXProperty().bind(widthProperty().subtract(onlineSetupPane.widthProperty()).divide(2));
+        onlineSetupPane.layoutYProperty().bind(heightProperty().subtract(onlineSetupPane.heightProperty()).divide(2));
+
+        hostBtn.setOnAction(_ -> {
+            client.establishConnetion(true);
+            System.out.println(client.getLobbyID());
+            setupLobby();
+            showLobby();
         });
-        exitBtn.setOnAction(e -> System.exit(0));
+        joinBtn.setOnAction(_ -> System.out.println("not implemented"));
+        backBtn.setOnAction(_ -> showMainMenu());
     }
 
     private void computerOpponentSetup() {
@@ -277,6 +319,16 @@ public class Menu extends Pane {
         getChildren().add(computerSetupPane);
     }
 
+    private void showOnlineSetup() {
+        getChildren().clear();
+        getChildren().add(onlineSetupPane);
+    }
+
+    private void showLobby() {
+        getChildren().clear();
+        getChildren().add(lobbySetup);
+    }
+
     private void showLocalSetUp() {
         getChildren().clear();
         getChildren().add(localSetUpPane);
@@ -311,4 +363,5 @@ public class Menu extends Pane {
         gamePanel.gameInit(gridSize, 0);
         primaryStage.getScene().setRoot(gamePanel);
     }
+
 }

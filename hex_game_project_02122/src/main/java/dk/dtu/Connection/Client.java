@@ -5,18 +5,20 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
+import dk.dtu.main.Menu;
+
 public class Client {
-    private static Space server, lobbySpace;
-    private static int lobbyID;
-    private static int port = 31145;
-    private static String ServerIP = "localhost";
-    private static boolean isHost = true;
+    private Space server, lobbySpace;
+    private int lobbyID;
+    private int port = 31145;
+    private String ServerIP = "localhost";
+    private boolean isHost;
+    private Menu menu;
 
-    public static void main(String[] args) {
-        establishConnetion();
-    }
+    public Client() {}
 
-    public static void establishConnetion(){
+    public void establishConnetion(boolean isHost){
+        this.isHost = isHost;
         try {
             if (isHost) {
                 connectHost(getUri("lobbyRequests"));
@@ -27,7 +29,7 @@ public class Client {
         }
     }
 
-    public static void connectHost(String uri) {
+    public void connectHost(String uri) {
         try {
             server = new RemoteSpace(uri);
             server.put("host");
@@ -40,12 +42,12 @@ public class Client {
 
     }
 
-    public static String getUri(String name) {
+    public String getUri(String name) {
         String Uri = "tcp://" + ServerIP + ":" + port + "/" + name + "?conn";
         return Uri;
     }
 
-    public static void connectToLobby(int lobbyID) throws InterruptedException, IOException {
+    public void connectToLobby(int lobbyID) throws InterruptedException, IOException {
         establishConnectionToLobby(lobbyID);
         if (!lobbyHandShake()) {
             throw new IllegalStateException();
@@ -53,15 +55,19 @@ public class Client {
         System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
     }
 
-    public static void establishConnectionToLobby(int lobbyID) throws InterruptedException, IOException {
+    public void establishConnectionToLobby(int lobbyID) throws InterruptedException, IOException {
         String uriLobby = getUri(lobbyID + "lobby");
         lobbySpace = new RemoteSpace(uriLobby);
     }
 
-    public static boolean lobbyHandShake() throws InterruptedException {
+    public boolean lobbyHandShake() throws InterruptedException {
         lobbySpace.put("join/leave", "try to connect");
         Object[] connection = lobbySpace.get(new ActualField("connection"), new FormalField(String.class));
         return (((String) connection[1]).equals("Connected"));
+    }
+
+    public int getLobbyID() {
+        return lobbyID;
     }
 
 }

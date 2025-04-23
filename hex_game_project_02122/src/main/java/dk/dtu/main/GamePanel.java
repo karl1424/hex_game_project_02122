@@ -1,5 +1,6 @@
 package dk.dtu.main;
 
+import dk.dtu.Connection.Client;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -16,10 +17,12 @@ public class GamePanel extends Pane {
     private int computerPlayer;
     private Stage primaryStage;
     private Menu menu;
+    private Client client;
 
     public GamePanel(Stage primaryStage) {
+        this.client = new Client();
         this.primaryStage = primaryStage;
-        this.menu = new Menu(this, primaryStage);
+        this.menu = new Menu(this, client, primaryStage);
     }
 
     public void gameInit(int gridSize, int computerPlayer) {

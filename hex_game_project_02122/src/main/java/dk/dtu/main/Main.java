@@ -1,5 +1,6 @@
 package dk.dtu.main;
 
+import dk.dtu.Connection.Client;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

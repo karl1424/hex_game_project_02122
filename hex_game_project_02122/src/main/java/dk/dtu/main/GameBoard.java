@@ -188,25 +188,14 @@ public class GameBoard {
     private void reconstructPath(Map<Coordinate,Coordinate> parentMap, Coordinate startNode, Coordinate endNode) {
         List<Coordinate> path = new ArrayList<>();
 
-        Coordinate current = startNode;
+        Coordinate current = endNode;
         while (current != null) {
             path.add(current);
             current = parentMap.get(current);
         }
-        Collections.reverse(path); // Reverse to get from start to middle
-        
-        // Path from middle to end edge
-        current = endNode;
-        List<Coordinate> endPath = new ArrayList<>();
-        while (current != null && !path.contains(current)) {
-            endPath.add(current);
-            current = parentMap.get(current);
-        }
-        Collections.reverse(endPath); // Reverse to get correct order
         
         // Combine paths
         winningPath.addAll(path);
-        winningPath.addAll(endPath);
     }
 
     public List<Coordinate> getWinningPath() {

@@ -15,6 +15,7 @@ public class Help {
         button.setPrefHeight(height);
         FontWeight weight = bold ? FontWeight.BOLD : FontWeight.NORMAL;
         button.setFont(Font.font("Arial", weight, 16));
+        button.setFocusTraversable(false);
         return button;
     }
 
@@ -41,6 +42,7 @@ public class Help {
         CheckBox checkBox = new CheckBox(text);
         checkBox.setFont(Font.font("Arial", FontWeight.NORMAL, 16));
         checkBox.setSelected(selected);
+        checkBox.setFocusTraversable(false);
         return checkBox;
     }
 
