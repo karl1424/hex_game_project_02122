@@ -116,11 +116,9 @@ public class GameBoard {
     }
 
     public boolean exploreNeighbors(Coordinate start, int turn) {
-        // Neighbour ruleset
         int[] directionsX = { 0, 0, -1, 1, -1, 1 };
         int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
-        // Queue for the BFS
         Queue<Coordinate> queue = new LinkedList<>();
         boolean[][] visited = new boolean[boardM][boardN];
         Map<Coordinate, Coordinate> parentMap = new HashMap<>();
@@ -130,74 +128,83 @@ public class GameBoard {
 
         boolean reachedStartEdge = false;
         boolean reachedEndEdge = false;
-        Coordinate starCoordinate = null;
+        Coordinate startEdgeCoordinate = null;
         Coordinate endEdgeCoordinate = null;
 
-        // Running through the queue
         while (!queue.isEmpty()) {
             Coordinate current = queue.poll();
 
-            // Determine the winning condition based on the player's state
-            if (turn == 2) { // Player 2: Check Top-to-Bottom (X-based)
-                if (current.getY() == 0)
+            // Check edge conditions with proper braces
+            if (turn == 2) { // Player 2: Top-to-Bottom
+                if (current.getY() == 0) {
                     reachedStartEdge = true;
-                    starCoordinate = current;
-                if (current.getY() == boardN - 1)
+                    startEdgeCoordinate = current;
+                }
+                if (current.getY() == boardN - 1) {
                     reachedEndEdge = true;
                     endEdgeCoordinate = current;
-            } else if (turn == 1) { // Player 1: Check Left-to-Right (Y-based)
-                if (current.getX() == 0)
+                }
+            } else { // Player 1: Left-to-Right
+                if (current.getX() == 0) {
                     reachedStartEdge = true;
-                    starCoordinate = current;
-                if (current.getX() == boardM - 1)
+                    startEdgeCoordinate = current;
+                }
+                if (current.getX() == boardM - 1) {
                     reachedEndEdge = true;
                     endEdgeCoordinate = current;
+                }
             }
 
             if (BFSDebug)
                 System.out.println("Processing: " + current);
 
-            // If both conditions are met, a winning path is found
             if (reachedStartEdge && reachedEndEdge) {
-                System.out.println("Winning Path Found!");
-                winningPath.clear();
-                reconstructPath(parentMap,starCoordinate, endEdgeCoordinate);
+                if (BFSDebug)
+                    System.out.println("Winning Path Found!");
+                reconstructPath(parentMap, startEdgeCoordinate, endEdgeCoordinate);
                 return true;
             }
 
-            // Check all 6 neighbors
             for (int i = 0; i < 6; i++) {
                 int neighborX = current.getX() + directionsX[i];
                 int neighborY = current.getY() + directionsY[i];
 
-                // Ensure the neighbor exists, is not visited and belongs to the same player
                 if (neighborX >= 0 && neighborX < boardM && neighborY >= 0 && neighborY < boardN) {
-                    if (!visited[neighborX][neighborY] && board[neighborX][neighborY].getState() == turn) { // Check only player's own spots
-                        queue.add(board[neighborX][neighborY]);
+                    if (!visited[neighborX][neighborY] && board[neighborX][neighborY].getState() == turn) {
+                        Coordinate neighbor = board[neighborX][neighborY];
+                        queue.add(neighbor);
                         visited[neighborX][neighborY] = true;
-                        parentMap.put(board[neighborX][neighborY], current);
+                        parentMap.put(neighbor, current);
                         if (BFSDebug)
-                            System.out.println("Adding neighbor: " + board[neighborX][neighborY]);
+                            System.out.println("Adding neighbor: " + neighbor);
                     }
                 }
             }
         }
-        return false; // No winning path found
+        return false;
     }
 
-    private void reconstructPath(Map<Coordinate,Coordinate> parentMap, Coordinate startNode, Coordinate endNode) {
+    private void reconstructPath(Map<Coordinate, Coordinate> parentMap, Coordinate startNode, Coordinate endNode) {
         List<Coordinate> path = new ArrayList<>();
 
-        Coordinate current = endNode;
+        // Build start-to-root path
+        Coordinate current = startNode;
         while (current != null) {
             path.add(current);
             current = parentMap.get(current);
         }
-        
-        // Combine paths
+        current = endNode;
+        while (current != null && !path.contains(current)) {
+            endPath.add(current);
+            current = parentMap.get(current);
+        }
+        Collections.reverse(endPath);
+
+        // Combine
+        winningPath.clear();
         winningPath.addAll(path);
     }
-
+    
     public List<Coordinate> getWinningPath() {
         return winningPath;
     }
