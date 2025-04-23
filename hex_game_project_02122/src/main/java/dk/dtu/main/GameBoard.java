@@ -193,7 +193,7 @@ public class GameBoard {
             path.add(current);
             current = parentMap.get(current);
         }
-        Collections.reverse(path);
+     //   Collections.reverse(path);
 
         // Build end-to-root path until meeting the existing path
         List<Coordinate> endPath = new ArrayList<>();
@@ -202,12 +202,13 @@ public class GameBoard {
             endPath.add(current);
             current = parentMap.get(current);
         }
-        Collections.reverse(endPath);
-        winningPath.clear();
+      //  Collections.reverse(endPath);
+       // winningPath.clear();
 
         // Combine
         winningPath.clear();
         winningPath.addAll(path);
+        winningPath.addAll(endPath);
     }
     
     public List<Coordinate> getWinningPath() {
