@@ -5,7 +5,6 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
-import dk.dtu.main.Menu;
 
 public class Client {
     private Space server, lobbySpace;
@@ -13,7 +12,6 @@ public class Client {
     private int port = 31145;
     private String ServerIP = "localhost";
     private boolean isHost;
-    private Menu menu;
 
     public Client() {}
 
