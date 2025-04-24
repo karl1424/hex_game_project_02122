@@ -12,6 +12,7 @@ public class Client {
     private int port = 31145;
     private String ServerIP = "localhost";
     private boolean isHost;
+    private boolean isOffline = false;
 
     public Client() {}
 
@@ -23,7 +24,8 @@ public class Client {
             }
             connectToLobby(lobbyID);
         } catch (Exception e) {
-            e.printStackTrace();
+            return;
+            //e.printStackTrace();
         }
     }
 
@@ -35,7 +37,9 @@ public class Client {
             lobbyID = (int) lobby[1];
             System.out.println("Lobby ID: " + lobbyID);
         } catch (Exception e) {
-            e.printStackTrace();
+            isOffline = true;
+            return;
+            //e.printStackTrace();
         }
 
     }
@@ -64,8 +68,11 @@ public class Client {
         return (((String) connection[1]).equals("Connected"));
     }
 
-    public int getLobbyID() {
-        return lobbyID;
+    public String getLobbyID() {
+        if (isOffline) {
+            return "Server is down!";
+        }
+        return lobbyID + "";
     }
 
 }

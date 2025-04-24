@@ -7,6 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class OnlineGameMenu extends MenuPanel{
@@ -55,8 +56,35 @@ public class OnlineGameMenu extends MenuPanel{
         lobbySetup = new BorderPane();
         lobbySetup.setPrefSize(600, 600);
         lobbySetup.setPadding(new Insets(40));
-        Label titleLabel = Help.createLabel(client.getLobbyID() + "", 60,false);
-        lobbySetup.setTop(titleLabel);
+
+        Label titleLabel = Help.createTitleLabel("HEX GAME", 60);
+        VBox titleBox = new VBox(titleLabel);
+        titleBox.setAlignment(Pos.CENTER);
+        titleBox.setPadding(new Insets(0, 0, -120, 0));
+        lobbySetup.setTop(titleBox);
+
+        Label lobbyID = Help.createLabel(client.getLobbyID(), 40,false);
+        VBox lobbyIDBox = new VBox(lobbyID);
+        lobbyIDBox.setAlignment(Pos.CENTER);
+        lobbyIDBox.setPadding(new Insets(0, 0, 200, 0));
+        lobbySetup.setCenter(lobbyIDBox);
+
+        HBox buttonBox = new HBox(30);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        Button backBtn = Help.createButton("Back", 150, 40, false);
+
+        buttonBox.getChildren().add(backBtn);
+        lobbySetup.setBottom(buttonBox);
+        BorderPane.setAlignment(buttonBox, Pos.CENTER);
+
+        backBtn.setOnAction(_ -> {
+            lobbySetup.getChildren().clear();
+            createUI();
+            manager.showOnlineSetup();
+        });
+        getChildren().add(lobbySetup);
+
     }
 
     private void showLobby() {
