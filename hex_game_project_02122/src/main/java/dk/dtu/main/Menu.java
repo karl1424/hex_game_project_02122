@@ -1,6 +1,7 @@
 package dk.dtu.main;
 
 import dk.dtu.Connection.Client;
+import dk.dtu.Menu.Help;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -83,7 +84,7 @@ public class Menu extends Pane {
         lobbySetup = new BorderPane();
         lobbySetup.setPrefSize(600, 600);
         lobbySetup.setPadding(new Insets(40));
-        Label titleLabel = Help.createTitleLabel(client.getLobbyID() + "", 60);
+        Label titleLabel = Help.createLabel(client.getLobbyID() + "", 60,false);
         lobbySetup.setTop(titleLabel);
     }
 

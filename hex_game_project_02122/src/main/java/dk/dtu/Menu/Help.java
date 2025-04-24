@@ -1,4 +1,4 @@
-package dk.dtu.main;
+package dk.dtu.Menu;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;

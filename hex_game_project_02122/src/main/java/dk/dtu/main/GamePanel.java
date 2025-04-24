@@ -1,6 +1,7 @@
 package dk.dtu.main;
 
 import dk.dtu.Connection.Client;
+import dk.dtu.Menu.MenuManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -16,13 +17,13 @@ public class GamePanel extends Pane {
     private ComputerOpponent computerOpponent;
     private int computerPlayer;
     private Stage primaryStage;
-    private Menu menu;
+    private MenuManager menuManager;
     private Client client;
 
     public GamePanel(Stage primaryStage) {
         this.client = new Client();
         this.primaryStage = primaryStage;
-        this.menu = new Menu(this, client, primaryStage);
+        this.menuManager = new MenuManager(this, client, primaryStage);
     }
 
     public void gameInit(int gridSize, int computerPlayer) {
@@ -62,7 +63,7 @@ public class GamePanel extends Pane {
             gui.animateWinningPath(gameBoard.getWinningPath(), winnerColor);
 
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
-                menu.showGameOver(gameBoard.getWinner(), this);
+                menuManager.showGameOver(gameBoard.getWinner());
             }));
             delay.setCycleCount(1);
             delay.play();
@@ -89,7 +90,7 @@ public class GamePanel extends Pane {
         gameInit(gridSize, computerPlayer);
     }
 
-    public Menu getMenu() {
-        return menu;
+    public MenuManager getMenuManager() {
+        return menuManager;
     }
 }
