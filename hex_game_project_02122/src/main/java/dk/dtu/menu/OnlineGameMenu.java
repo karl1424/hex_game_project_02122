@@ -1,5 +1,8 @@
 package dk.dtu.menu;
 
+import java.io.IOException;
+import java.util.function.UnaryOperator;
+
 import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import javafx.geometry.Insets;
@@ -7,11 +10,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class OnlineGameMenu extends MenuPanel{
+public class OnlineGameMenu extends MenuPanel {
     private Client client;
 
     private VBox onlineSetupPane;
@@ -53,7 +57,7 @@ public class OnlineGameMenu extends MenuPanel{
             showJoin();
         });
         backBtn.setOnAction(_ -> manager.showMainMenu());
-        
+
         getChildren().add(onlineSetupPane);
     }
 
@@ -68,7 +72,7 @@ public class OnlineGameMenu extends MenuPanel{
         titleBox.setPadding(new Insets(0, 0, -120, 0));
         lobbySetup.setTop(titleBox);
 
-        Label lobbyID = Help.createLabel(client.getLobbyID(), 40,false);
+        Label lobbyID = Help.createLabel(client.getLobbyID(), 40, false);
         VBox lobbyIDBox = new VBox(lobbyID);
         lobbyIDBox.setAlignment(Pos.CENTER);
         lobbyIDBox.setPadding(new Insets(0, 0, 200, 0));
@@ -103,14 +107,25 @@ public class OnlineGameMenu extends MenuPanel{
         titleBox.setPadding(new Insets(0, 0, -120, 0));
         joinSetup.setTop(titleBox);
 
-        HBox inputFieldBox = new HBox(30);
+        HBox inputFieldBox = new HBox(20);
         inputFieldBox.setAlignment(Pos.CENTER);
         TextField inputField = new TextField();
         inputField.setPromptText("Skriv noget her...");
 
+        UnaryOperator<TextFormatter.Change> integerFilter = change -> {
+            String newText = change.getControlNewText();
+            if (newText.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        };
+
+        TextFormatter<String> integerFormatter = new TextFormatter<>(integerFilter);
+        inputField.setTextFormatter(integerFormatter);
+
         HBox buttonBoxJoin = new HBox(30);
         buttonBoxJoin.setAlignment(Pos.CENTER);
-        Button joinButton = Help.createButton("Join", 100, 40, false);
+        Button joinButton = Help.createButton("Join", 150, 0, false);
 
         HBox buttonBox = new HBox(30);
         buttonBox.setAlignment(Pos.CENTER);
@@ -124,6 +139,14 @@ public class OnlineGameMenu extends MenuPanel{
             joinSetup.getChildren().clear();
             createUI();
             manager.showOnlineSetup();
+        });
+        joinButton.setOnAction(_ -> {
+            try {
+                client.setLobbyID(Integer.parseInt(inputField.getText()));
+                client.establishConnetion(false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
         getChildren().add(joinSetup);
 

@@ -75,4 +75,8 @@ public class Client {
         return lobbyID + "";
     }
 
+    public void setLobbyID(int lobbyID) {
+        this.lobbyID = lobbyID;
+    }
+
 }
