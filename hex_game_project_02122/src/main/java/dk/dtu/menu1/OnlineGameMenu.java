@@ -1,6 +1,6 @@
-package dk.dtu.menu;
+package dk.dtu.menu1;
 
-import dk.dtu.connection.Client;
+import dk.dtu.connect.Client;
 import dk.dtu.main.GamePanel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -103,14 +103,20 @@ public class OnlineGameMenu extends MenuPanel{
         titleBox.setPadding(new Insets(0, 0, -120, 0));
         joinSetup.setTop(titleBox);
 
+        HBox inputFieldBox = new HBox(30);
+        inputFieldBox.setAlignment(Pos.CENTER);
         TextField inputField = new TextField();
         inputField.setPromptText("Skriv noget her...");
+
+        HBox buttonBoxJoin = new HBox(30);
+        buttonBoxJoin.setAlignment(Pos.CENTER);
+        Button joinButton = Help.createButton("Join", 100, 40, false);
 
         HBox buttonBox = new HBox(30);
         buttonBox.setAlignment(Pos.CENTER);
         Button backBtn = Help.createButton("Back", 150, 40, false);
 
-        buttonBox.getChildren().addAll(backBtn, inputField);
+        buttonBox.getChildren().addAll(backBtn, inputField, joinButton);
         joinSetup.setBottom(buttonBox);
         BorderPane.setAlignment(buttonBox, Pos.CENTER);
 

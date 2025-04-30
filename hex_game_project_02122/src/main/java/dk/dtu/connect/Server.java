@@ -1,4 +1,4 @@
-package dk.dtu.connection;
+package dk.dtu.connect;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

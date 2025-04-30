@@ -1,4 +1,4 @@
-package dk.dtu.connection;
+package dk.dtu.connect;
 import java.io.IOException;
 import org.jspace.ActualField;
 import org.jspace.FormalField;

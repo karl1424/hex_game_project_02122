@@ -1,7 +1,7 @@
 package dk.dtu.main;
 
-import dk.dtu.connection.Client;
-import dk.dtu.menu.MenuManager;
+import dk.dtu.connect.Client;
+import dk.dtu.menu1.MenuManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
