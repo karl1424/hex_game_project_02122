@@ -1,11 +1,11 @@
 package dk.dtu.main;
 import java.util.*;
 
-class Coordinate {
+public class Coordinate {
     int x, y;
     int state;
 
-    Coordinate(int x, int y, int state){
+    public Coordinate(int x, int y, int state){
         this.x = x;
         this.y = y;
         this.state = state;
