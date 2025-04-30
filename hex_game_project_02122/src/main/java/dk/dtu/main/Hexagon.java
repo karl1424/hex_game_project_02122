@@ -1,6 +1,7 @@
 package dk.dtu.main;
 
-import dk.dtu.computer_opponent.ComputerOpponent;
+import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.computer_opponent.SmallBoardStrategy;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -98,7 +99,7 @@ public class Hexagon extends Polygon {
                 System.out.println("Human move at: " + xCor + ", " + yCor);
                 gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
 
-                ComputerOpponent comp = gamePanel.getComputerOpponent();
+                ComputerManager comp = gamePanel.getComputerOpponent();
                 if (comp != null) {
                     comp.setLastHumanMove(xCor, yCor);
                 }

@@ -1,6 +1,7 @@
 package dk.dtu.main;
 
-import dk.dtu.computer_opponent.ComputerOpponent;
+import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.computer_opponent.SmallBoardStrategy;
 import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;
@@ -15,7 +16,7 @@ public class GamePanel extends Pane {
     private GUI gui;
     private GameBoard gameBoard;
     private int gridSize;
-    private ComputerOpponent computerOpponent;
+    private ComputerManager computerOpponent;
     private int computerPlayer;
     private Stage primaryStage;
     private MenuManager menuManager;
@@ -39,7 +40,7 @@ public class GamePanel extends Pane {
         gameBoard = new GameBoard(gridSize, gridSize, this);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
         if (computerPlayer != 0) {
-            computerOpponent = new ComputerOpponent(gameBoard, computerPlayer, gui);
+            computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui);
             gui.setComputerOpponent(computerOpponent);
 
             // Let computer go first if it's player 1
@@ -79,7 +80,7 @@ public class GamePanel extends Pane {
         isPlayerOneTurn = !isPlayerOneTurn;
     }
 
-    public ComputerOpponent getComputerOpponent() {
+    public ComputerManager getComputerOpponent() {
         return computerOpponent;
     }
 

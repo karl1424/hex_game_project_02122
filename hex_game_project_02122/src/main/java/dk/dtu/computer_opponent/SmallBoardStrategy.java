@@ -9,29 +9,22 @@ import dk.dtu.main.GUI;
 import dk.dtu.main.GameBoard;
 import javafx.scene.paint.Color;
 
-public class ComputerOpponent {
+public class SmallBoardStrategy {
     private GameBoard gameBoard;
     private int playerNumber;
     private boolean isFirstMove = true;
     private GUI gui;
     private Coordinate lastHumanMove = null;
     private List<Coordinate> computerMoves = new ArrayList<>();
-    private Random rand;
 
-    public ComputerOpponent(GameBoard gameBoard, int playerNumber, GUI gui) {
+    public SmallBoardStrategy(GameBoard gameBoard, int playerNumber, GUI gui) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
-        rand = new Random();
     }
 
     public void makeMove() {
-        if (gameBoard.getWinner() != 0) {
-            System.out.println("Game is won by Player " + gameBoard.getWinner());
-            return;
-        }
-
-        if (isFirstMove && playerNumber == 1 && gameBoard.boardM == 3 && gameBoard.boardN == 3) {
+        if (isFirstMove && playerNumber == 1) {
             int x = gameBoard.boardN / 2;
             int y = gameBoard.boardM / 2;
             if (gameBoard.getBoard()[x][y].getState() == 0) {
@@ -44,45 +37,15 @@ public class ComputerOpponent {
                 return;
             }
         }
-
-        if (playerNumber == 1 && gameBoard.boardM == 3 && gameBoard.boardN == 3) {
             List<Coordinate> candidateMoves = getCandidateMoves();
             List<Coordinate> priorityMoves = filterMovesNearLastHumanMove(candidateMoves);
             if (!priorityMoves.isEmpty() && placeFirstValidMove(priorityMoves)) {
                 isFirstMove = false;
                 return;
             }
-        }
-
-        else {
-            makeRandomMove();
-            isFirstMove = false;
-            return;
-        }
-
     }
 
-    private void makeRandomMove() {
-        if (gameBoard.getWinner() != 0) {
-            return;
-        }
-
-        List<Coordinate> emptySpots = new ArrayList<>();
-        for (int x = 0; x < gameBoard.boardN; x++) {
-            for (int y = 0; y < gameBoard.boardM; y++) {
-                if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    emptySpots.add(gameBoard.getBoard()[x][y]);
-                }
-            }
-        }
-
-        if (!emptySpots.isEmpty()) {
-            int i = rand.nextInt(emptySpots.size());
-            Coordinate spot = emptySpots.get(i);
-            updateSpot(spot.getX(), spot.getY());
-            System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
-        }
-    }
+    
 
     /**
      * Scans the entire board (using x as the first coordinate and y as the second)

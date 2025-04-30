@@ -2,7 +2,8 @@ package dk.dtu.main;
 
 import java.util.List;
 
-import dk.dtu.computer_opponent.ComputerOpponent;
+import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.computer_opponent.SmallBoardStrategy;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -17,7 +18,7 @@ public class GUI extends Pane {
 
     private GameBoard gameBoard;
     private GamePanel gamePanel;
-    private ComputerOpponent computerOpponent;
+    private ComputerManager computerOpponent;
 
     private Hexagon[][] hexagons;
 
@@ -86,7 +87,7 @@ public class GUI extends Pane {
         timeline.play();
     }
 
-    public void setComputerOpponent(ComputerOpponent comp) {
+    public void setComputerOpponent(ComputerManager comp) {
         this.computerOpponent = comp;
     }
 }
