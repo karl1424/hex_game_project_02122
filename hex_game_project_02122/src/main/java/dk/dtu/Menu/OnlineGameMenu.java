@@ -1,11 +1,12 @@
-package dk.dtu.Menu;
+package dk.dtu.menu;
 
-import dk.dtu.Connection.Client;
+import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -15,6 +16,7 @@ public class OnlineGameMenu extends MenuPanel{
 
     private VBox onlineSetupPane;
     private BorderPane lobbySetup;
+    private BorderPane joinSetup;
 
     public OnlineGameMenu(MenuManager manager, GamePanel gamePanel, Client client) {
         super(manager, gamePanel);
@@ -46,7 +48,10 @@ public class OnlineGameMenu extends MenuPanel{
             setupLobby();
             showLobby();
         });
-        joinBtn.setOnAction(_ -> System.out.println("not implemented"));
+        joinBtn.setOnAction(_ -> {
+            setupJoin();
+            showJoin();
+        });
         backBtn.setOnAction(_ -> manager.showMainMenu());
         
         getChildren().add(onlineSetupPane);
@@ -87,8 +92,44 @@ public class OnlineGameMenu extends MenuPanel{
 
     }
 
+    private void setupJoin() {
+        joinSetup = new BorderPane();
+        joinSetup.setPrefSize(600, 600);
+        joinSetup.setPadding(new Insets(40));
+
+        Label titleLabel = Help.createTitleLabel("HEX GAME Join", 60);
+        VBox titleBox = new VBox(titleLabel);
+        titleBox.setAlignment(Pos.CENTER);
+        titleBox.setPadding(new Insets(0, 0, -120, 0));
+        joinSetup.setTop(titleBox);
+
+        TextField inputField = new TextField();
+        inputField.setPromptText("Skriv noget her...");
+
+        HBox buttonBox = new HBox(30);
+        buttonBox.setAlignment(Pos.CENTER);
+        Button backBtn = Help.createButton("Back", 150, 40, false);
+
+        buttonBox.getChildren().addAll(backBtn, inputField);
+        joinSetup.setBottom(buttonBox);
+        BorderPane.setAlignment(buttonBox, Pos.CENTER);
+
+        backBtn.setOnAction(_ -> {
+            joinSetup.getChildren().clear();
+            createUI();
+            manager.showOnlineSetup();
+        });
+        getChildren().add(joinSetup);
+
+    }
+
     private void showLobby() {
         getChildren().clear();
         getChildren().add(lobbySetup);
+    }
+
+    private void showJoin() {
+        getChildren().clear();
+        getChildren().add(joinSetup);
     }
 }

@@ -1,4 +1,4 @@
-package dk.dtu.Menu;
+package dk.dtu.menu;
 
 import dk.dtu.main.GamePanel;
 import javafx.geometry.Insets;

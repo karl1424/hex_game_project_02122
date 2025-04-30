@@ -1,7 +1,7 @@
 package dk.dtu.main;
 
-import dk.dtu.Connection.Client;
-import dk.dtu.Menu.MenuManager;
+import dk.dtu.connection.Client;
+import dk.dtu.menu.MenuManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
