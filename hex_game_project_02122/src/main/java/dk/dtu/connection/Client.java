@@ -75,8 +75,45 @@ public class Client {
         return lobbyID + "";
     }
 
-    public void setLobbyID(int lobbyID) {
-        this.lobbyID = lobbyID;
+    public void sendSpot(int x, int y, int player) {
+        try {
+            lobbySpace.put(x, y, player);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Object[] getSpot(int player){
+        int opponent = player == 1 ? 2 : 1;
+        Object[] spot = null;
+        try {
+            spot = lobbySpace.get(new FormalField(Integer.class), new FormalField(Integer.class), new ActualField(opponent));
+            System.out.println(spot[0] + ", " + spot[1]);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return spot;
+    }
+
+    public void sendStartGame(Runnable onStartGame) {
+        try {
+            lobbySpace.put("start game");
+            onStartGame.run();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getStartGame(Runnable onStartGame) {
+        new Thread(() -> {
+            try {
+                Object[] spot = lobbySpace.get(new ActualField("start game"));
+                System.out.println(spot[0]);
+                onStartGame.run();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 }

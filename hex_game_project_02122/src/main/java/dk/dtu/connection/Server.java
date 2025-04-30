@@ -78,6 +78,9 @@ class lobbyHandler implements Runnable {
             lobbySpace.get(new ActualField("join/leave"), new ActualField("try to connect"));
             lobbySpace.put("connection", "Connected");
             System.out.println("The host has joined Lobby: " + lobbyID);
+            lobbySpace.get(new ActualField("join/leave"), new ActualField("try to connect"));
+            lobbySpace.put("connection", "Connected");
+            System.out.println("Player 2 has joined Lobby: " + lobbyID);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package dk.dtu.menu;
 
 import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
+import dk.dtu.menu.online.OnlineGameMenu;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
