@@ -1,5 +1,6 @@
 package dk.dtu.main;
 
+import dk.dtu.computer_opponent.ComputerOpponent;
 import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;

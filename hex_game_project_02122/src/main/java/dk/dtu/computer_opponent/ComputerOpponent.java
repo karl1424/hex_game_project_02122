@@ -1,9 +1,12 @@
-package dk.dtu.main;
+package dk.dtu.computer_opponent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dk.dtu.main.Coordinate;
+import dk.dtu.main.GUI;
+import dk.dtu.main.GameBoard;
 import javafx.scene.paint.Color;
 
 public class ComputerOpponent {

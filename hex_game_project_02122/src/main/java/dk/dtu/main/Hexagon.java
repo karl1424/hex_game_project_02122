@@ -1,5 +1,6 @@
 package dk.dtu.main;
 
+import dk.dtu.computer_opponent.ComputerOpponent;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
