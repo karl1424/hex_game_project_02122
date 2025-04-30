@@ -1,4 +1,4 @@
-package dk.dtu.menu1;
+package dk.dtu.menu;
 
 import dk.dtu.main.GamePanel;
 import javafx.scene.layout.Pane;

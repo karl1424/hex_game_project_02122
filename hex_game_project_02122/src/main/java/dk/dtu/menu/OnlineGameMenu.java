@@ -1,6 +1,6 @@
-package dk.dtu.menu1;
+package dk.dtu.menu;
 
-import dk.dtu.connect.Client;
+import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
