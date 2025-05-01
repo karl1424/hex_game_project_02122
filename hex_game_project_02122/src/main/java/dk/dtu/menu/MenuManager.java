@@ -64,8 +64,8 @@ public class MenuManager extends Pane {
         getChildren().add(panel);
     }
     
-    public void startGame(int gridSize, int computerPlayer) {
-        gamePanel.gameInit(gridSize, computerPlayer);
+    public void startGame(int gridSize, int computerPlayer, int playerNumber) {
+        gamePanel.gameInit(gridSize, computerPlayer, playerNumber);
         primaryStage.getScene().setRoot(gamePanel);
     }
     

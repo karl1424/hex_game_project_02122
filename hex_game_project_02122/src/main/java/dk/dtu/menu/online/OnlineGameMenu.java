@@ -20,6 +20,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void showOnlineSetup() {
+        gamePanel.isOnline = false;
         getChildren().clear();
         getChildren().add(new OnlineSetupPane(this));
     }
@@ -35,6 +36,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void onHost() {
+        gamePanel.isOnline = true;
         client.establishConnetion(true);
         System.out.println(client.getLobbyID());
         showLobby();
@@ -52,9 +54,10 @@ public class OnlineGameMenu extends MenuPanel {
         try {
             int lobbyID = Integer.parseInt(lobbyIDText);
             client.connectToLobby(lobbyID);
+            gamePanel.isOnline = true;
             showLobby();
             client.getStartGame(() -> {
-                initGame();
+                initGame(2);
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -62,12 +65,11 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void onstartGame() {
-        client.sendStartGame(() -> {
-            initGame();
-        });
+        client.sendStartGame();
+        initGame(1);
     }
 
-    public void initGame(){
+    public void initGame(int playerNumber){
         int gridSize = 7;
         /* if (sizeSmallCheckBox.isSelected()) {
             gridSize = 3;
@@ -76,6 +78,10 @@ public class OnlineGameMenu extends MenuPanel {
         } else if (sizeLargeCheckBox.isSelected()) {
             gridSize = 11;
         } */
-        manager.startGame(gridSize, 0);
+        manager.startGame(gridSize, 0, playerNumber);
+        client.getSpot(playerNumber, spot -> {
+            System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
+            gamePanel.changeTurn();
+        });
     }
 }

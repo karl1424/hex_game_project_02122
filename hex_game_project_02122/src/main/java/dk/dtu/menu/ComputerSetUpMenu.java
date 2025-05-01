@@ -116,6 +116,9 @@ public class ComputerSetUpMenu extends MenuPanel{
             gridSize = 11;
         }
 
-        manager.startGame(gridSize, computerPlayer);
+        int number = player1CheckBox.isSelected() ? 1 : 2;
+        System.out.println("Player number: " + number);
+
+        manager.startGame(gridSize, computerPlayer, number);
     }
 }

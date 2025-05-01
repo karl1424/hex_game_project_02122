@@ -12,7 +12,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GamePanel extends Pane {
-    private boolean isPlayerOneTurn = true;
     private GUI gui;
     private GameBoard gameBoard;
     private int gridSize;
@@ -22,21 +21,27 @@ public class GamePanel extends Pane {
     private MenuManager menuManager;
     private Client client;
 
+    public boolean isOnline = false;
+    private int playerNumber;
+    private int curentPlayerTurn;
+
     public GamePanel(Stage primaryStage) {
         this.client = new Client();
         this.primaryStage = primaryStage;
         this.menuManager = new MenuManager(this, client, primaryStage);
     }
 
-    public void gameInit(int gridSize, int computerPlayer) {
+    public void gameInit(int gridSize, int computerPlayer, int playerNumber) {
         this.getChildren().clear();
         this.gridSize = gridSize;
         this.computerPlayer = computerPlayer;
-        isPlayerOneTurn = true;
+        this.playerNumber = playerNumber;
+        //isPlayerOneTurn = true;
         startGame();
     }
 
     private void startGame() {
+        curentPlayerTurn = 1;
         gameBoard = new GameBoard(gridSize, gridSize, this);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
         if (computerPlayer != 0) {
@@ -46,7 +51,7 @@ public class GamePanel extends Pane {
             // Let computer go first if it's player 1
             if (computerOpponent.getPlayerNumber() == 1) {
                 computerOpponent.makeMove();
-                changeTurn();
+                //changeTurn();
             }
         } else {
             computerOpponent = null;
@@ -73,11 +78,23 @@ public class GamePanel extends Pane {
     }
 
     public boolean getTurn() {
-        return isPlayerOneTurn;
+        return curentPlayerTurn == playerNumber;
+    }
+
+    public int getPlayerNumber(){
+        return playerNumber;
+    }
+
+    public int getCurrentPlayerTurn(){
+        return curentPlayerTurn;
     }
 
     public void changeTurn() {
-        isPlayerOneTurn = !isPlayerOneTurn;
+        curentPlayerTurn = curentPlayerTurn == 1 ? 2 : 1;
+    }
+
+    public boolean getIsOnline(){
+        return isOnline;
     }
 
     public ComputerManager getComputerOpponent() {
@@ -89,10 +106,22 @@ public class GamePanel extends Pane {
     }
 
     public void resetGame() {
-        gameInit(gridSize, computerPlayer);
+        gameInit(gridSize, computerPlayer, playerNumber);
     }
 
     public MenuManager getMenuManager() {
         return menuManager;
+    }
+
+    public void sendCoordinates(int x, int y, int player){
+        client.sendSpot(x, y, player);
+    }
+
+    public void beginGettingCoordinates(){
+        client.getSpot(playerNumber, spot -> {
+            System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
+            changeTurn();
+        });
+        
     }
 }

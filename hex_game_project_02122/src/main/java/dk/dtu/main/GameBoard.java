@@ -100,6 +100,7 @@ public class GameBoard {
         board[x][y] = new Coordinate(x, y, turn);
         Coordinate start = board[x][y]; // The chosen spot
         winningPath.clear();
+        //gamePanel.changeTurn();
 
         // Check win condition
         boolean win = exploreNeighbors(start, turn);
@@ -112,6 +113,7 @@ public class GameBoard {
         Platform.runLater(() -> {
             gamePanel.checkGameOver();
         });
+
 
     }
 

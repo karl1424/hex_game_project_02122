@@ -1,10 +1,12 @@
 package dk.dtu.connection;
+
 import java.io.IOException;
+import java.util.function.Consumer;
+
 import org.jspace.ActualField;
 import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
-
 
 public class Client {
     private Space server, lobbySpace;
@@ -14,9 +16,10 @@ public class Client {
     private boolean isHost;
     private boolean isOffline = false;
 
-    public Client() {}
+    public Client() {
+    }
 
-    public void establishConnetion(boolean isHost){
+    public void establishConnetion(boolean isHost) {
         this.isHost = isHost;
         try {
             if (isHost) {
@@ -25,7 +28,7 @@ public class Client {
             connectToLobby(lobbyID);
         } catch (Exception e) {
             return;
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
@@ -39,7 +42,7 @@ public class Client {
         } catch (Exception e) {
             isOffline = true;
             return;
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
 
     }
@@ -83,22 +86,23 @@ public class Client {
         }
     }
 
-    public Object[] getSpot(int player){
+    public void getSpot(int player, Consumer<Object[]> onSpotReceived) {
+    new Thread(() -> {
         int opponent = player == 1 ? 2 : 1;
         Object[] spot = null;
         try {
             spot = lobbySpace.get(new FormalField(Integer.class), new FormalField(Integer.class), new ActualField(opponent));
             System.out.println(spot[0] + ", " + spot[1]);
+            onSpotReceived.accept(spot); // <-- send spot back
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return spot;
-    }
+    }).start();
+}
 
-    public void sendStartGame(Runnable onStartGame) {
+    public void sendStartGame() {
         try {
             lobbySpace.put("start game");
-            onStartGame.run();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

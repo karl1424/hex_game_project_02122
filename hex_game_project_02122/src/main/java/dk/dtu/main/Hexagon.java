@@ -93,11 +93,24 @@ public class Hexagon extends Polygon {
             boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
             boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
                     (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
-
             if (isLocalGame || isHumanTurn) {
-                this.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
+
+                if(gamePanel.getIsOnline()){
+                    if(gamePanel.getTurn()){
+                        gameBoard.pickSpot(xCor, yCor, gamePanel.getPlayerNumber());
+                        gamePanel.sendCoordinates(xCor, yCor, gamePanel.getPlayerNumber());
+                        System.out.println("Player number: " + gamePanel.getPlayerNumber());
+                    }
+                    else {
+                        //gamePanel.beginGettingCoordinates();
+                        return;
+                    }
+                } else {
+                     gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
+                }
+                this.setFill(gamePanel.getTurn()  ? Color.RED : Color.BLUE);
                 System.out.println("Human move at: " + xCor + ", " + yCor);
-                gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
+               
 
                 ComputerManager comp = gamePanel.getComputerOpponent();
                 if (comp != null) {

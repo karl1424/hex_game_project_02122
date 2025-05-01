@@ -89,7 +89,7 @@ public class LocalGameMenu extends MenuPanel{
         } else if (sizeLargeCheckBox.isSelected()) {
             gridSize = 11;
         }
-        
-        manager.startGame(gridSize, 0);
+        int playerNumber = 1;
+        manager.startGame(gridSize, 0, playerNumber);
     }
 }
