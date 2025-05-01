@@ -13,7 +13,7 @@ public class GameBoard {
     private GamePanel gamePanel;
     private List<Coordinate> winningPath = new ArrayList<>();
 
-    GameBoard(int boardM, int boardN, GamePanel gamePanel) {
+    public GameBoard(int boardM, int boardN, GamePanel gamePanel) {
         this.boardM = boardM;
         this.boardN = boardN;
         this.gamePanel = gamePanel;
