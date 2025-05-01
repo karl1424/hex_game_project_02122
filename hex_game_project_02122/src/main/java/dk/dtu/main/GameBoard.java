@@ -3,6 +3,7 @@ package dk.dtu.main;
 import java.util.*;
 
 import javafx.application.Platform;
+import javafx.scene.paint.Color;
 
 public class GameBoard {
     public boolean BFSDebug = true;
@@ -95,6 +96,13 @@ public class GameBoard {
      * }
      * }
      */
+
+    //Implement it here, from SmallBoardStretegt
+    public void updateSpot(int x, int y, int playerNumber) {
+        pickSpot(x, y, playerNumber);
+        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
+        gamePanel.gui.updateHexagonColor(x, y, compColor);
+    }
 
     public void pickSpot(int x, int y, int turn) {
         board[x][y] = new Coordinate(x, y, turn);

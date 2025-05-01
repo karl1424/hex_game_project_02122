@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class GamePanel extends Pane {
-    private GUI gui;
+    public GUI gui;
     private GameBoard gameBoard;
     private int gridSize;
     private ComputerManager computerOpponent;

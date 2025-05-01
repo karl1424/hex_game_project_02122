@@ -68,17 +68,14 @@ public class Hexagon extends Polygon {
             drawEdge(points[0], points[1], Color.BLUE);
             drawEdge(points[1], points[2], Color.BLUE);
         }
-
         if (isBottomEdge) {
             drawEdge(points[3], points[4], Color.BLUE);
             drawEdge(points[4], points[5], Color.BLUE);
         }
-
         if (isLeftEdge) {
             drawEdge(points[1], points[2], Color.RED);
             drawEdge(points[2], points[3], Color.RED);
         }
-
         if (isRightEdge) {
             drawEdge(points[4], points[5], Color.RED);
             drawEdge(points[5], points[0], Color.RED);
@@ -93,20 +90,24 @@ public class Hexagon extends Polygon {
             boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
             boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
                     (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
+
             if (isLocalGame || isHumanTurn) {
 
                 if(gamePanel.getIsOnline()){
                     if(gamePanel.getTurn()){
+
                         gameBoard.pickSpot(xCor, yCor, gamePanel.getPlayerNumber());
                         gamePanel.sendCoordinates(xCor, yCor, gamePanel.getPlayerNumber());
                         System.out.println("Player number: " + gamePanel.getPlayerNumber());
+                        
                     }
                     else {
-                        //gamePanel.beginGettingCoordinates();
                         return;
                     }
                 } else {
+
                      gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
+
                 }
                 this.setFill(gamePanel.getTurn()  ? Color.RED : Color.BLUE);
                 System.out.println("Human move at: " + xCor + ", " + yCor);
