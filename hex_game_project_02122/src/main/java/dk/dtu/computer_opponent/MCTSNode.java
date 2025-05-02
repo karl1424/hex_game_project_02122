@@ -78,7 +78,7 @@ public class MCTSNode {
         return availableMoves;
     }
 
-    private void cloneGameBoard(GameBoard gameBoard) {
+    private GameBoard cloneGameBoard(GameBoard gameBoard) {
         GameBoard clone = new GameBoard(gameBoard.getBoardM(), gameBoard.getBoardN(),null);
         for(int x = 0; x < gameBoard.getBoardM(); x++) {
             for(int y = 0; y < gameBoard.getBoardN(); y++) {
