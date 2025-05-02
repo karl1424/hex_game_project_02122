@@ -60,6 +60,10 @@ public class MCTSNode {
     //     }
     // }
 
+    // public int simulation(GameBoard gameBoard) {
+    //     GameBoard simulationBoard = cloneGameBoard(gameBoard);
+        
+    // }
 
 
     private List<Coordinate> getAvailableMoves(GameBoard gameBoard) {
@@ -81,6 +85,7 @@ public class MCTSNode {
                 clone.getBoard()[x][y].setState(gameBoard.getBoard()[x][y].getState());
             }
         }
+        return clone;
     }
 
     
