@@ -45,15 +45,9 @@ public class MCTS {
         if (!emptySpots.isEmpty()) {
             int i = rand.nextInt(emptySpots.size());
             Coordinate spot = emptySpots.get(i);
-            updateSpot(spot.getX(), spot.getY());
+            gameBoard.updateSpot(spot.getX(), spot.getY(), playerNumber);
             System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
         }
-    }
-
-    private void updateSpot(int x, int y) {
-        gameBoard.pickSpot(x, y, playerNumber);
-        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-        gui.updateHexagonColor(x, y, compColor);
     }
 
 
