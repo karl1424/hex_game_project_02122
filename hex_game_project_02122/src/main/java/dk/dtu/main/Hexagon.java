@@ -58,10 +58,10 @@ public class Hexagon extends Polygon {
         // Create a Group to store hexagon + edge lines
         hexGroup = new Group(this);
 
-        boolean isTopEdge = (yCor == gameBoard.boardN - 1);
+        boolean isTopEdge = (yCor == gameBoard.getBoardN() - 1);
         boolean isBottomEdge = (yCor == 0);
         boolean isLeftEdge = (xCor == 0);
-        boolean isRightEdge = (xCor == gameBoard.boardM - 1);
+        boolean isRightEdge = (xCor == gameBoard.getBoardM() - 1);
 
         // Add color to specific edges only
         if (isTopEdge) {
@@ -82,65 +82,7 @@ public class Hexagon extends Polygon {
         }
 
         this.setOnMouseClicked(_ -> {
-            if (gameBoard.getWinner() != 0 ||
-                    gameBoard.getBoard()[xCor][yCor].getState() != 0) {
-                return;
-            }
-
-            boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
-            boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
-                    (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
-
-            if (isLocalGame || isHumanTurn) {
-
-                if(gamePanel.getIsOnline()){
-                    if(gamePanel.getTurn()){
-
-                        gameBoard.pickSpot(xCor, yCor, gamePanel.getPlayerNumber());
-                        gamePanel.sendCoordinates(xCor, yCor, gamePanel.getPlayerNumber());
-                        System.out.println("Player number: " + gamePanel.getPlayerNumber());
-                        
-                    }
-                    else {
-                        return;
-                    }
-                } else {
-
-                     gameBoard.pickSpot(xCor, yCor, gamePanel.getTurn() ? 1 : 2);
-
-                }
-                this.setFill(gamePanel.getTurn()  ? Color.RED : Color.BLUE);
-                System.out.println("Human move at: " + xCor + ", " + yCor);
-               
-
-                ComputerManager comp = gamePanel.getComputerOpponent();
-                if (comp != null) {
-                    comp.setLastHumanMove(xCor, yCor);
-                }
-
-                System.out.println("Board after human move:");
-                gameBoard.printBoard();
-
-                gamePanel.changeTurn();
-
-                if (gameBoard.getWinner() == 0 && comp != null) {
-                    Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), _2 -> {
-                        boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
-                                (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
-
-                        if (isComputerTurn && gameBoard.getWinner() == 0) {
-                            comp.makeMove();
-                            System.out.println("Board after computer move:");
-                            gameBoard.printBoard();
-                            gamePanel.changeTurn();
-                        }
-                    }));
-                    delay.setCycleCount(1);
-                    delay.play();
-                } else if (gameBoard.getWinner() != 0) {
-                    System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
-                }
-            }
+            gameBoard.hexagonHasBeenPressed(this);
         });
 
     }

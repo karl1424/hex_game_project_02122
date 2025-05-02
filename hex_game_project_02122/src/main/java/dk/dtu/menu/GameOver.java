@@ -55,6 +55,7 @@ public class GameOver extends MenuPanel {
         });
 
         mainMenuBtn.setOnAction(e -> {
+            gamePanel.getClient().stopReceivingSpots();
             Stage primaryStage = manager.getPrimaryStage();
             primaryStage.getScene().setRoot(manager);
             manager.showMainMenu();

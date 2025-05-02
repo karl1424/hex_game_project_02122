@@ -23,7 +23,7 @@ public class ComputerManager {
             System.out.println("Game is won by Player " + gameBoard.getWinner());
             return;
         }
-        if (gameBoard.boardM == 3 && gameBoard.boardN == 3 && playerNumber == 1) {
+        if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 1) {
             smallBoardStrategy.makeMove();
         } else {
             mcts.makeMove();

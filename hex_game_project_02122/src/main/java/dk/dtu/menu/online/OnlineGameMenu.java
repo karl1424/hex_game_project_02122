@@ -79,9 +79,6 @@ public class OnlineGameMenu extends MenuPanel {
             gridSize = 11;
         } */
         manager.startGame(gridSize, 0, playerNumber);
-        client.getSpot(playerNumber, spot -> {
-            System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
-            gamePanel.changeTurn();
-        });
+        gamePanel.beginGettingCoordinates();
     }
 }

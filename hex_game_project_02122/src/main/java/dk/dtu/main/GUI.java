@@ -25,7 +25,7 @@ public class GUI extends Pane {
     public GUI(int GRID_WIDTH, int GRID_HEIGHT, GameBoard gameBoard, GamePanel gamePanel) {
         this.gameBoard = gameBoard;
         this.gamePanel = gamePanel;
-        hexagons = new Hexagon[gameBoard.boardM][gameBoard.boardN];
+        hexagons = new Hexagon[gameBoard.getBoardM()][gameBoard.getBoardN()];
         HEX_RADIUS = MAX_DIMENSION / (Math.sqrt(3) * GRID_WIDTH);
         setPrefSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         double boardOffset = SCREEN_WIDTH / 2;

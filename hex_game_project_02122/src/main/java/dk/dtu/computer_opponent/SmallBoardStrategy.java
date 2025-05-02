@@ -25,8 +25,8 @@ public class SmallBoardStrategy {
 
     public void makeMove() {
         if (isFirstMove && playerNumber == 1) {
-            int x = gameBoard.boardN / 2;
-            int y = gameBoard.boardM / 2;
+            int x = gameBoard.getBoardN() / 2;
+            int y = gameBoard.getBoardM() / 2;
             if (gameBoard.getBoard()[x][y].getState() == 0) {
                 gameBoard.updateSpot(x, y, playerNumber);
                 System.out.println("Computer takes center move at: " + x + ", " + y);
@@ -53,8 +53,8 @@ public class SmallBoardStrategy {
      */
     private List<Coordinate> getCandidateMoves() {
         List<Coordinate> candidates = new ArrayList<>();
-        for (int x = 0; x < gameBoard.boardN; x++) {
-            for (int y = 0; y < gameBoard.boardM; y++) {
+        for (int x = 0; x < gameBoard.getBoardN(); x++) {
+            for (int y = 0; y < gameBoard.getBoardM(); y++) {
                 if (gameBoard.getBoard()[x][y].getState() == 0) {
                     if (isConnectedToComputerMove(x, y)) {
                         candidates.add(new Coordinate(x, y, playerNumber));
@@ -155,13 +155,6 @@ public class SmallBoardStrategy {
 
         return false;
     }
-
-    //Romve here!
-    /* private void updateSpot(int x, int y) {
-        gameBoard.pickSpot(x, y, playerNumber);
-        Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
-        gui.updateHexagonColor(x, y, compColor);
-    } */
 
     public int getPlayerNumber() {
         return playerNumber;

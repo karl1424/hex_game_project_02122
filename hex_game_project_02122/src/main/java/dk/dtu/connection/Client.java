@@ -8,6 +8,8 @@ import org.jspace.FormalField;
 import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
+import dk.dtu.main.GamePanel;
+
 public class Client {
     private Space server, lobbySpace;
     private int lobbyID;
@@ -15,6 +17,7 @@ public class Client {
     private String ServerIP = "localhost";
     private boolean isHost;
     private boolean isOffline = false;
+    private boolean running = false;
 
     public Client() {
     }
@@ -86,19 +89,37 @@ public class Client {
         }
     }
 
-    public void getSpot(int player, Consumer<Object[]> onSpotReceived) {
-    new Thread(() -> {
-        int opponent = player == 1 ? 2 : 1;
-        Object[] spot = null;
-        try {
-            spot = lobbySpace.get(new FormalField(Integer.class), new FormalField(Integer.class), new ActualField(opponent));
-            System.out.println(spot[0] + ", " + spot[1]);
-            onSpotReceived.accept(spot); // <-- send spot back
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }).start();
-}
+    public void getSpot(int player, GamePanel gamePanel, Consumer<Object[]> onSpotReceived) {
+        running = true;
+        new Thread(() -> {
+            int opponent = gamePanel.getPlayerNumber() == 1 ? 2 : 1;
+            while (running) {
+                boolean currentTurn = gamePanel.getTurn();
+                if (!currentTurn) {
+                    try {
+                        Object[] spot = lobbySpace.get(
+                            new FormalField(Integer.class),
+                            new FormalField(Integer.class),
+                            new ActualField(opponent)
+                        );
+                        System.out.println("Received: " + spot[0] + ", " + spot[1]);
+                        onSpotReceived.accept(spot);
+                    } catch (InterruptedException e) {
+                        break; 
+                    }
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    break; 
+                }
+            }
+        }).start();
+    }
+
+    public void stopReceivingSpots() {
+        running = false;
+    }
 
     public void sendStartGame() {
         try {

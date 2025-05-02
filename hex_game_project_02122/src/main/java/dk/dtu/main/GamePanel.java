@@ -1,7 +1,6 @@
 package dk.dtu.main;
 
 import dk.dtu.computer_opponent.ComputerManager;
-import dk.dtu.computer_opponent.SmallBoardStrategy;
 import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;
@@ -118,10 +117,19 @@ public class GamePanel extends Pane {
     }
 
     public void beginGettingCoordinates(){
-        client.getSpot(playerNumber, spot -> {
+        System.out.println("Player: " + playerNumber + "Has started recieving spots");
+        client.getSpot(playerNumber, this, spot -> {
             System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
+            getGameBoard().updateSpot((int) spot[0], (int) spot[1], playerNumber == 1 ? 2 : 1);
             changeTurn();
         });
-        
+    }
+
+    public GameBoard getGameBoard(){
+        return gameBoard;
+    }
+
+    public Client getClient(){
+        return client;
     }
 }

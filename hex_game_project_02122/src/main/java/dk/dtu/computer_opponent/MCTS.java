@@ -34,8 +34,8 @@ public class MCTS {
         }
 
         List<Coordinate> emptySpots = new ArrayList<>();
-        for (int x = 0; x < gameBoard.boardN; x++) {
-            for (int y = 0; y < gameBoard.boardM; y++) {
+        for (int x = 0; x < gameBoard.getBoardN(); x++) {
+            for (int y = 0; y < gameBoard.getBoardM(); y++) {
                 if (gameBoard.getBoard()[x][y].getState() == 0) {
                     emptySpots.add(gameBoard.getBoard()[x][y]);
                 }

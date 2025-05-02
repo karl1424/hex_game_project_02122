@@ -64,8 +64,8 @@ public class MCTSNode {
 
     private List<Coordinate> getAvailableMoves(GameBoard gameBoard) {
         List<Coordinate> availableMoves = new ArrayList<>();
-        for(int x = 0; x < gameBoard.boardM; x++) {
-            for(int y = 0; y < gameBoard.boardN; y++) {
+        for(int x = 0; x < gameBoard.getBoardM(); x++) {
+            for(int y = 0; y < gameBoard.getBoardN(); y++) {
                 if(gameBoard.getBoard()[x][y].getState() == 0) {
                     availableMoves.add(new Coordinate(x, y, 0));
                 }
@@ -75,9 +75,9 @@ public class MCTSNode {
     }
 
     private void cloneGameBoard(GameBoard gameBoard) {
-        GameBoard clone = new GameBoard(gameBoard.boardM, gameBoard.boardN,null);
-        for(int x = 0; x < gameBoard.boardM; x++) {
-            for(int y = 0; y < gameBoard.boardN; y++) {
+        GameBoard clone = new GameBoard(gameBoard.getBoardM(), gameBoard.getBoardN(),null);
+        for(int x = 0; x < gameBoard.getBoardM(); x++) {
+            for(int y = 0; y < gameBoard.getBoardN(); y++) {
                 clone.getBoard()[x][y].setState(gameBoard.getBoard()[x][y].getState());
             }
         }
