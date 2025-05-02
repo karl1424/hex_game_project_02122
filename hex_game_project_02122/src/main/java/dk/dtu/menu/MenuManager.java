@@ -14,7 +14,7 @@ public class MenuManager extends Pane {
     private MainMenu mainMenuPanel;
     private ComputerSetUpMenu computerSetupPanel;
     private LocalGameMenu localGamePanel;
-    private OnlineGameMenu onlinePanel;
+    public OnlineGameMenu onlinePanel;
     private GameOver gameOverPanel;
     
     public MenuManager(GamePanel gamePanel, Client client, Stage primaryStage) {
@@ -36,19 +36,19 @@ public class MenuManager extends Pane {
     }
     
     public void showMainMenu() {
-        showPanel(mainMenuPanel);
+        showPanel(mainMenuPanel, false);
     }
     
     public void showComputerSetup() {
-        showPanel(computerSetupPanel);
+        showPanel(computerSetupPanel, false);
     }
     
     public void showLocalSetup() {
-        showPanel(localGamePanel);
+        showPanel(localGamePanel, false);
     }
     
     public void showOnlineSetup() {
-        showPanel(onlinePanel);
+        showPanel(onlinePanel, true);
     }
     
     
@@ -59,9 +59,14 @@ public class MenuManager extends Pane {
         }
     }
     
-    private void showPanel(MenuPanel panel) {
+    private void showPanel(MenuPanel panel, boolean flag) {
         getChildren().clear();
-        getChildren().add(panel);
+        if(flag){
+            onlinePanel = new OnlineGameMenu(this, gamePanel, client);
+            getChildren().add(onlinePanel);
+        } else {
+            getChildren().add(panel);
+        }
     }
     
     public void startGame(int gridSize, int computerPlayer, int playerNumber) {

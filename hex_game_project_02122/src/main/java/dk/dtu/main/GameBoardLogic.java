@@ -142,11 +142,15 @@ public class GameBoardLogic {
             } else {
                 gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getTurn() ? 1 : 2);
             }
+
+
             if(gamePanel.getIsOnline()){
                 hexagon.setFill(gamePanel.getPlayerNumber() == 1 ? Color.RED : Color.BLUE);
             } else {
                 hexagon.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
             }
+
+            
             System.out.println("Human move at: " + hexagon.xCor + ", " + hexagon.yCor);
 
             ComputerManager comp = gamePanel.getComputerOpponent();
