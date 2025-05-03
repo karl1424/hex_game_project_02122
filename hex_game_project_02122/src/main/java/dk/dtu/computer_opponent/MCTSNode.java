@@ -11,6 +11,7 @@ public class MCTSNode {
     private Coordinate move;
     private MCTSNode parent;
     private List<MCTSNode> children;
+    private List<Coordinate> unexpandedMoves;
 
     private int visits;
     private int wins;
@@ -21,8 +22,7 @@ public class MCTSNode {
     private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
     private Random rand;
 
-
-    public MCTSNode(MCTSNode parent, Coordinate move,int playerNumber) {
+    public MCTSNode(MCTSNode parent, Coordinate move, int playerNumber) {
         this.move = move;
         this.parent = parent;
         this.playerNumber = playerNumber;
@@ -35,9 +35,9 @@ public class MCTSNode {
 
     public MCTSNode selection() {
         MCTSNode bestChild = null;
-        double currentBestScore = 0;
+        double currentBestScore = Double.MIN_VALUE;
 
-        for(MCTSNode child: children) {
+        for (MCTSNode child : children) {
             double exploitationTerm = child.wins / child.visits;
             double explorationTerm = EXPLORATION_PARAMETER * Math.sqrt(Math.log(this.visits) / child.visits);
             double uctScore = exploitationTerm + explorationTerm;
@@ -51,26 +51,52 @@ public class MCTSNode {
     }
 
     // public MCTSNode expansion(GameBoard gameBoard) {
-    //     List<Coordinate> availableMoves = getAvailableMoves(gameBoard);
-        
+    // List<Coordinate> availableMoves = getAvailableMoves(gameBoard);
 
-    //     if (availableMoves.isEmpty()) {
-    //         this.fullyExpanded = true;
-    //         return null;
-    //     }
+    // if (availableMoves.isEmpty()) {
+    // this.fullyExpanded = true;
+    // return null;
+    // }
     // }
 
-    // public int simulation(GameBoard gameBoard) {
-    //     GameBoard simulationBoard = cloneGameBoard(gameBoard);
-        
-    // }
+    public int simulation(GameBoard gameBoard) {
+        GameBoard simulationBoard = cloneGameBoard(gameBoard);
 
+        if(move != null && parent != null) {
+            simulationBoard.updateSpot(move.getX(), move.getY(), parent.getPlayerNumber());
+        }
+
+        int currentPlayerNumber = playerNumber;
+        List<Coordinate> availableMoves = new ArrayList<>();
+
+        while(simulationBoard.getWinner() == 0) {
+            availableMoves = getAvailableMoves(gameBoard);
+            int i = rand.nextInt(availableMoves.size());
+            Coordinate spot = availableMoves.get(i);
+            simulationBoard.updateSpot(spot.getX(), spot.getY(), currentPlayerNumber);
+            currentPlayerNumber = (currentPlayerNumber == 1) ? 2 : 1;
+        }
+
+        return simulationBoard.getWinner();
+    }
+
+    public void backpropagation(int result) {
+        incrementVisit();
+
+        if(result == playerNumber) {
+            addWin();
+        }
+
+        if(parent != null) {
+            parent.backpropagation(result);
+        }
+    }
 
     private List<Coordinate> getAvailableMoves(GameBoard gameBoard) {
         List<Coordinate> availableMoves = new ArrayList<>();
-        for(int x = 0; x < gameBoard.getBoardM(); x++) {
-            for(int y = 0; y < gameBoard.getBoardN(); y++) {
-                if(gameBoard.getBoard()[x][y].getState() == 0) {
+        for (int x = 0; x < gameBoard.getBoardM(); x++) {
+            for (int y = 0; y < gameBoard.getBoardN(); y++) {
+                if (gameBoard.getBoard()[x][y].getState() == 0) {
                     availableMoves.add(new Coordinate(x, y, 0));
                 }
             }
@@ -79,16 +105,15 @@ public class MCTSNode {
     }
 
     private GameBoard cloneGameBoard(GameBoard gameBoard) {
-        GameBoard clone = new GameBoard(gameBoard.getBoardM(), gameBoard.getBoardN(),null);
-        for(int x = 0; x < gameBoard.getBoardM(); x++) {
-            for(int y = 0; y < gameBoard.getBoardN(); y++) {
+        GameBoard clone = new GameBoard(gameBoard.getBoardM(), gameBoard.getBoardN(), null);
+        for (int x = 0; x < gameBoard.getBoardM(); x++) {
+            for (int y = 0; y < gameBoard.getBoardN(); y++) {
                 clone.getBoard()[x][y].setState(gameBoard.getBoard()[x][y].getState());
             }
         }
         return clone;
     }
 
-    
     public int getVisits() {
         return visits;
     }
@@ -112,9 +137,9 @@ public class MCTSNode {
     public void incrementVisit() {
         visits++;
     }
-    
+
     public void addWin() {
         wins++;
     }
-    
+
 }
