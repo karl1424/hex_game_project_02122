@@ -22,14 +22,7 @@ public class MCTS {
     }
 
     public void makeMove() {
-        List<Coordinate> availableMoves = getAvailableMoves();
-        
         MCTSNode rootNode = new MCTSNode(null, null, playerNumber);
-        
-        for (Coordinate move : availableMoves) {
-            MCTSNode child = new MCTSNode(rootNode, move, playerNumber == 1 ? 2 : 1);
-            rootNode.addChild(child);
-        }
         
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < MAX_ITERATIONS; i++) {
@@ -56,18 +49,6 @@ public class MCTS {
             " (Visits: " + bestChild.getVisits() + 
             ", Win ratio: " + (bestChild.getWins() / (double)bestChild.getVisits()) + ")");
         } 
-    }
-    
-    private List<Coordinate> getAvailableMoves() {
-        List<Coordinate> availableMoves = new ArrayList<>();
-        for (int x = 0; x < gameBoard.getBoardM(); x++) {
-            for (int y = 0; y < gameBoard.getBoardN(); y++) {
-                if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    availableMoves.add(new Coordinate(x, y, 0));
-                }
-            }
-        }
-        return availableMoves;
     }
 
     public int getPlayerNumber() {
