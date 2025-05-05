@@ -124,29 +124,35 @@ public class GameBoardLogic {
 
     public void handleHexagonPressed(Hexagon hexagon) {
         if (gameBoard.getWinner() != 0 || board[hexagon.xCor][hexagon.yCor].getState() != 0) return;
-
+        System.out.println("press1");
         GamePanel gamePanel = gameBoard.getGamePanel();
         boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
         boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
-                (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
-
+        (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
+        
         if (isLocalGame || isHumanTurn) {
+            System.out.println("press2");
             if (gamePanel.getIsOnline()) {
+                System.out.println("press3");
                 if (gamePanel.getTurn()) {
                     gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
                     gamePanel.sendCoordinates(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
                     System.out.println("Player number: " + gamePanel.getPlayerNumber());
                 } else {
+                    System.out.println("press4");
                     return;
                 }
             } else {
+                System.out.println("press5");
                 gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getTurn() ? 1 : 2);
             }
-
-
+            
+            
             if(gamePanel.getIsOnline()){
+                System.out.println("press6");
                 hexagon.setFill(gamePanel.getPlayerNumber() == 1 ? Color.RED : Color.BLUE);
             } else {
+                System.out.println("press7");
                 hexagon.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
             }
 

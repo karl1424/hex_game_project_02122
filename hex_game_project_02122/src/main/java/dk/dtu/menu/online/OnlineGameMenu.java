@@ -1,5 +1,7 @@
 package dk.dtu.menu.online;
 
+import java.io.IOException;
+
 import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
@@ -50,18 +52,15 @@ public class OnlineGameMenu extends MenuPanel {
         manager.showMainMenu();
     }
 
-    public void onJoinLobby(String lobbyIDText) {
-        try {
-            int lobbyID = Integer.parseInt(lobbyIDText);
-            client.connectToLobby(lobbyID);
-            gamePanel.isOnline = true;
-            showLobby();
-            client.getStartGame(() -> {
-                initGame(2);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void onJoinLobby(String lobbyIDText) throws InterruptedException, IOException {
+        int lobbyID = Integer.parseInt(lobbyIDText);
+        client.connectToLobby(lobbyID);
+        client.setLobbyID(lobbyID);
+        gamePanel.isOnline = true;
+        showLobby();
+        client.getStartGame(() -> {
+            initGame(2);
+        });
     }
 
     public void onstartGame() {
@@ -69,15 +68,17 @@ public class OnlineGameMenu extends MenuPanel {
         initGame(1);
     }
 
-    public void initGame(int playerNumber){
+    public void initGame(int playerNumber) {
         int gridSize = 7;
-        /* if (sizeSmallCheckBox.isSelected()) {
-            gridSize = 3;
-        } else if (sizeMediumCheckBox.isSelected()) {
-            gridSize = 7;
-        } else if (sizeLargeCheckBox.isSelected()) {
-            gridSize = 11;
-        } */
+        /*
+         * if (sizeSmallCheckBox.isSelected()) {
+         * gridSize = 3;
+         * } else if (sizeMediumCheckBox.isSelected()) {
+         * gridSize = 7;
+         * } else if (sizeLargeCheckBox.isSelected()) {
+         * gridSize = 11;
+         * }
+         */
         manager.startGame(gridSize, 0, playerNumber);
         gamePanel.beginGettingCoordinates();
     }

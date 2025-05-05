@@ -141,4 +141,8 @@ public class Client {
         }).start();
     }
 
+    public void setLobbyID(int lobbyID) {
+        this.lobbyID = lobbyID;
+    }
+
 }

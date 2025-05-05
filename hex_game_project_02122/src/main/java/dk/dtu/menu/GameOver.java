@@ -54,7 +54,8 @@ public class GameOver extends MenuPanel {
             gamePanel.resetGame();
         });
 
-        mainMenuBtn.setOnAction(e -> {
+        mainMenuBtn.setOnAction(_ -> {
+            gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
             gamePanel.getClient().stopReceivingSpots();
             Stage primaryStage = manager.getPrimaryStage();

@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
+
 import java.util.function.UnaryOperator;
 
 import dk.dtu.menu.Help;
@@ -47,6 +48,16 @@ public class JoinPane extends BorderPane {
         BorderPane.setAlignment(buttonBox, Pos.CENTER);
 
         backButton.setOnAction(_ -> parent.showOnlineSetup());
-        joinButton.setOnAction(_ -> parent.onJoinLobby(inputField.getText()));
+        joinButton.setOnAction(_ -> {
+            try {
+                parent.onJoinLobby(inputField.getText());
+            } catch (Exception e) {
+                Label label = Help.createLabel("Lobby does not exist", 40, false);
+                VBox labelBox = new VBox(label);
+                labelBox.setAlignment(Pos.CENTER);
+                labelBox.setPadding(new Insets(0, 0, 200, 0));
+                setCenter(labelBox);
+            }
+        });
     }
 }

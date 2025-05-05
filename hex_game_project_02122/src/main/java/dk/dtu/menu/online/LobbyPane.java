@@ -33,9 +33,7 @@ public class LobbyPane extends BorderPane {
         Button startButton = Help.createButton("Start", 150, 0, false);
         buttonBox.getChildren().addAll(backBtn, startButton);
         setBottom(buttonBox);
-        BorderPane.setAlignment(buttonBox, Pos.CENTER);
-
-        
+        BorderPane.setAlignment(buttonBox, Pos.CENTER);        
 
         backBtn.setOnAction(_ -> parent.showOnlineSetup());
         startButton.setOnAction(_ -> parent.onstartGame());
