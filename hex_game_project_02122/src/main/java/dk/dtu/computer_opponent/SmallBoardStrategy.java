@@ -7,45 +7,64 @@ import java.util.Random;
 import dk.dtu.main.Coordinate;
 import dk.dtu.main.GUI;
 import dk.dtu.main.GameBoard;
-import javafx.scene.paint.Color;
 
 public class SmallBoardStrategy {
     private GameBoard gameBoard;
     private int playerNumber;
-    private boolean isFirstMove = true;
     private GUI gui;
     private Coordinate lastHumanMove = null;
     private List<Coordinate> computerMoves = new ArrayList<>();
+    private Random rand;
 
     public SmallBoardStrategy(GameBoard gameBoard, int playerNumber, GUI gui) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
+        this.rand = new Random();
     }
 
     public void makeMove() {
-        if (isFirstMove && playerNumber == 1) {
-            int x = gameBoard.getBoardN() / 2;
-            int y = gameBoard.getBoardM() / 2;
-            if (gameBoard.getBoard()[x][y].getState() == 0) {
-                gameBoard.updateSpot(x, y, playerNumber);
-                System.out.println("Computer takes center move at: " + x + ", " + y);
-                computerMoves.add(new Coordinate(x, y, playerNumber));
-                System.out.println("Board after computer's first move:");
-                gameBoard.printBoard();
-                isFirstMove = false;
-                return;
-            }
+        if (gameBoard.getBoard()[1][1].getState() == 0) {
+            gameBoard.updateSpot(1, 1, playerNumber);
+            System.out.println("Computer takes center move at: " + 1 + ", " + 1);
+            computerMoves.add(new Coordinate(1, 1, playerNumber));
+            System.out.println("Board after computer's first move:");
+            gameBoard.printBoard();
+            return;
         }
-            List<Coordinate> candidateMoves = getCandidateMoves();
-            List<Coordinate> priorityMoves = filterMovesNearLastHumanMove(candidateMoves);
-            if (!priorityMoves.isEmpty() && placeFirstValidMove(priorityMoves)) {
-                isFirstMove = false;
-                return;
-            }
+        List<Coordinate> candidateMoves = getCandidateMoves();
+        List<Coordinate> priorityMoves = filterMovesNearLastHumanMove(candidateMoves);
+        if (!priorityMoves.isEmpty() && placeFirstValidMove(priorityMoves)) {
+            return;
+        }
     }
 
-    
+    public void makeRandomMove() {
+        if (gameBoard.getBoard()[1][1].getState() == 0) {
+            gameBoard.updateSpot(1, 1, playerNumber);
+            System.out.println("Computer takes center move at: " + 1 + ", " + 1);
+            computerMoves.add(new Coordinate(1, 1, playerNumber));
+            System.out.println("Board after computer's first move:");
+            gameBoard.printBoard();
+            return;
+        }
+
+        List<Coordinate> emptySpots = new ArrayList<>();
+        for (int x = 0; x < gameBoard.getBoardM(); x++) {
+            for (int y = 0; y < gameBoard.getBoardN(); y++) {
+                if (gameBoard.getBoard()[x][y].getState() == 0) {
+                    emptySpots.add(gameBoard.getBoard()[x][y]);
+                }
+            }
+        }
+
+        if (!emptySpots.isEmpty()) {
+            int i = rand.nextInt(emptySpots.size());
+            Coordinate spot = emptySpots.get(i);
+            gameBoard.updateSpot(spot.getX(), spot.getY(), playerNumber);
+            System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
+        }
+    }
 
     /**
      * Scans the entire board (using x as the first coordinate and y as the second)
@@ -135,7 +154,7 @@ public class SmallBoardStrategy {
 
             for (Coordinate move : moves) {
                 if (move.getX() == priorityX && move.getY() == priorityY) {
-                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {                    
+                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
                         gameBoard.updateSpot(move.getX(), move.getY(), playerNumber);
                         computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
                         return true;

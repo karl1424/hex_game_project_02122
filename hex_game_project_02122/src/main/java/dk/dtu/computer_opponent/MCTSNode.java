@@ -1,6 +1,7 @@
 package dk.dtu.computer_opponent;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,55 +12,89 @@ public class MCTSNode {
     private Coordinate move;
     private MCTSNode parent;
     private List<MCTSNode> children;
-    private List<Coordinate> unexpandedMoves;
+    private boolean expanded;
 
     private int visits;
-    private int wins;
+    private double wins;
 
     private int playerNumber;
-    private boolean fullyExpanded;
-
     private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
+    private static final double EPSILON = 1e-6;
     private Random rand;
 
     public MCTSNode(MCTSNode parent, Coordinate move, int playerNumber) {
         this.move = move;
         this.parent = parent;
         this.playerNumber = playerNumber;
-        children = new ArrayList<>();
-        visits = 0;
-        wins = 0;
-        rand = new Random();
-
+        this.children = new ArrayList<>();
+        this.visits = 0;
+        this.wins = 0;
+        this.expanded = false;
+        this.rand = new Random();
     }
 
-    public MCTSNode selection() {
-        MCTSNode bestChild = null;
-        double currentBestScore = Double.MIN_VALUE;
+    public void selectAction(GameBoard gameBoard) {
+        List<MCTSNode> visited = new LinkedList<>();
+        MCTSNode current = this;
+        visited.add(current);
+        
+        while (!current.isLeaf()) {
+            current = current.selection();
+            visited.add(current);
+        }
+        
+        if (!current.expanded) {
+            current.expansion(gameBoard);
+            current.expanded = true;
+        }
+        
+        MCTSNode nodeToRollout = current;
+        if (!current.children.isEmpty()) {
+            nodeToRollout = current.selection();
+            visited.add(nodeToRollout);
+        }
+        
 
+        double value = simulation(nodeToRollout, gameBoard);
+        
+        for (MCTSNode node : visited) {
+            node.backpropagation(value);
+        }
+    }
+
+    public boolean isLeaf() {
+        return children.isEmpty();
+    }
+
+    public void expansion(GameBoard gameBoard) {
+        List<Coordinate> availableMoves = getAvailableMoves(gameBoard);
+        
+        int nextPlayer = (playerNumber == 1) ? 2 : 1;
+        for (Coordinate availableMove : availableMoves) {
+            MCTSNode child = new MCTSNode(this, availableMove, nextPlayer);
+            children.add(child);
+        }
+    }
+
+    private MCTSNode selection() {
+        MCTSNode selected = null;
+        double bestValue = Double.NEGATIVE_INFINITY;
+        
         for (MCTSNode child : children) {
-            double exploitationTerm = child.wins / child.visits;
-            double explorationTerm = EXPLORATION_PARAMETER * Math.sqrt(Math.log(this.visits) / child.visits);
-            double uctScore = exploitationTerm + explorationTerm;
-
-            if (uctScore > currentBestScore) {
-                currentBestScore = uctScore;
-                bestChild = child;
+            double exploitationTerm = child.wins / (child.visits + EPSILON);
+            double explorationTerm  = EXPLORATION_PARAMETER * Math.sqrt(Math.log(this.visits + 1) / (child.visits + EPSILON)) + rand.nextDouble() * EPSILON;
+            double uctScore = exploitationTerm + explorationTerm; 
+            
+            if (uctScore > bestValue) {
+                selected = child;
+                bestValue = uctScore;
             }
         }
-        return bestChild;
+        
+        return selected;
     }
 
-    // public MCTSNode expansion(GameBoard gameBoard) {
-    // List<Coordinate> availableMoves = getAvailableMoves(gameBoard);
-
-    // if (availableMoves.isEmpty()) {
-    // this.fullyExpanded = true;
-    // return null;
-    // }
-    // }
-
-    public int simulation(GameBoard gameBoard) {
+    private double simulation(MCTSNode node, GameBoard gameBoard) {
         SimulationGame simGame = new SimulationGame(gameBoard.getBoardM(), gameBoard.getBoardN());
         
         for (int x = 0; x < gameBoard.getBoardM(); x++) {
@@ -68,45 +103,52 @@ public class MCTSNode {
             }
         }
         
-        if (move != null && parent != null) {
-            int x = move.getX();
-            int y = move.getY();
-            simGame.board[x][y].setState(parent.getPlayerNumber());
-        }
-
-        int currentPlayerNumber = playerNumber;
-        List<Coordinate> availableMoves = new ArrayList<>();
-
+        applyMovesToSimulation(node, simGame);
+        
+        int currentPlayer = node.playerNumber;
+        
         while (simGame.winner == 0) {
-            availableMoves = getAvailableMoves(simGame);
-            if (availableMoves.isEmpty())
+            List<Coordinate> availableMoves = getAvailableMoves(simGame);
+            
+            if (availableMoves.isEmpty()) {
                 break;
+            }
+            
             int i = rand.nextInt(availableMoves.size());
             Coordinate spot = availableMoves.get(i);
+            simGame.board[spot.getX()][spot.getY()].setState(currentPlayer);
             
-            simGame.board[spot.getX()][spot.getY()].setState(currentPlayerNumber);
-            
-            boolean win = simGame.checkForWin(spot, currentPlayerNumber);
-            if (win) {
-                simGame.winner = currentPlayerNumber;
+            if (simGame.checkForWin(spot, currentPlayer)) {
+                simGame.winner = currentPlayer;
             }
-            currentPlayerNumber = (currentPlayerNumber == 1) ? 2 : 1;
+            
+            currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
-        return simGame.winner;
+        
+        return (simGame.winner == this.playerNumber) ? 1.0 : 0.0;
     }
-
-    public void backpropagation(int result) {
-        MCTSNode current = this;
-
-        while (current != null) {
-            current.incrementVisit();
-
-            if (result == current.playerNumber) {
-                current.addWin();
-            }
-
+    
+    private void applyMovesToSimulation(MCTSNode node, SimulationGame simGame) {
+        List<MCTSNode> pathToRoot = new ArrayList<>();
+        MCTSNode current = node;
+        
+        while (current.parent != null) {
+            pathToRoot.add(0, current); 
             current = current.parent;
         }
+        
+        for (MCTSNode pathNode : pathToRoot) {
+            if (pathNode.move != null && pathNode.parent != null) {
+                Coordinate move = pathNode.move;
+                int player = pathNode.parent.playerNumber;
+                simGame.board[move.getX()][move.getY()].setState(player);
+            }
+        }
+    }
+
+    public void backpropagation(double value) {
+        visits++;
+        wins += value;
     }
 
     private List<Coordinate> getAvailableMoves(GameBoard gameBoard) {
@@ -133,6 +175,9 @@ public class MCTSNode {
         return availableMoves;
     }
 
+    public boolean isFullyExpanded() {
+        return expanded;
+    }
 
     public int getVisits() {
         return visits;
@@ -142,24 +187,19 @@ public class MCTSNode {
         return wins;
     }
 
-    public MCTSNode getParent() {
-        return parent;
-    }
-
     public int getPlayerNumber() {
         return playerNumber;
+    }
+    
+    public List<MCTSNode> getChildren() {
+        return children;
+    }
+    
+    public Coordinate getMove() {
+        return move;
     }
 
     public void addChild(MCTSNode child) {
         children.add(child);
     }
-
-    public void incrementVisit() {
-        visits++;
-    }
-
-    public void addWin() {
-        wins++;
-    }
-
 }

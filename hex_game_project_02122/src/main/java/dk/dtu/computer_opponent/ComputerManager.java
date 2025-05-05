@@ -25,6 +25,8 @@ public class ComputerManager {
         }
         if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 1) {
             smallBoardStrategy.makeMove();
+        } else if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 2){
+            smallBoardStrategy.makeRandomMove();
         } else {
             mcts.makeMove();
         }
