@@ -1,25 +1,25 @@
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\LocalGameMenu.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\Help.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\ComputerSetUpMenu.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\Client.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoard.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\JoinPane.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Coordinate.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Main.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MainMenu.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoardLogic.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GamePanel.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\Server.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GUI.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Hexagon.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SimulationGame.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuManager.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\ComputerManager.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTS.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineGameMenu.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SmallBoardStrategy.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\GameOver.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuPanel.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTSNode.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\LobbyPane.java
-c:\Users\Weiha\Documents\DTU sem.4\02122 Software Technology Project\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineSetupPane.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\Server.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Hexagon.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GUI.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\LocalGameMenu.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuManager.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\JoinPane.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTS.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MainMenu.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\GameOver.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuPanel.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineGameMenu.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineSetupPane.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Main.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoardLogic.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\Help.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\ComputerSetUpMenu.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\ComputerManager.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GamePanel.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SmallBoardStrategy.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Coordinate.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SimulationGame.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoard.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTSNode.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\Client.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\LobbyPane.java

@@ -13,6 +13,7 @@ public class MCTS {
     private int playerNumber;
     private GUI gui;
     
+    //Hi Bjarke
     private static final int MAX_ITERATIONS = 10000;
 
     public MCTS(GameBoard gameBoard, int playerNumber, GUI gui) {
