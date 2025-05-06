@@ -14,6 +14,7 @@ public class MCTS {
     private GUI gui;
     
     //Hi Bjarke
+    //Bjarke er en taber og er på den forkerte branch...
     private static final int MAX_ITERATIONS = 10000;
 
     public MCTS(GameBoard gameBoard, int playerNumber, GUI gui) {
