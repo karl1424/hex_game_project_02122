@@ -169,7 +169,7 @@ public class GameBoardLogic {
             gamePanel.changeTurn();
 
             if (gameBoard.getWinner() == 0 && comp != null) {
-                Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.5), _2 -> {
+                Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _2 -> {
                     boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
                             (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
 
