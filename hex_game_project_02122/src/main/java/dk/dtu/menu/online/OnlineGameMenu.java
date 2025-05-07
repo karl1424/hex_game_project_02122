@@ -9,6 +9,10 @@ import dk.dtu.menu.MenuPanel;
 
 public class OnlineGameMenu extends MenuPanel {
     private Client client;
+    private int playerNumber;
+    private int boardSize;
+    private int opponentNumber;
+    private LobbyPane pane;
 
     public OnlineGameMenu(MenuManager manager, GamePanel gamePanel, Client client) {
         super(manager, gamePanel);
@@ -29,7 +33,8 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void showLobby() {
         getChildren().clear();
-        getChildren().add(new LobbyPane(this, client.getLobbyID()));
+        pane = new LobbyPane(this, client.getLobbyID());
+        getChildren().add(pane);
     }
 
     public void showJoin() {
@@ -58,28 +63,21 @@ public class OnlineGameMenu extends MenuPanel {
         client.setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         showLobby();
-        client.getStartGame(() -> {
-            initGame(2);
+        client.getStartGame((sizeBoard, numberPlayer) -> {
+            initGame(sizeBoard, numberPlayer);
         });
     }
 
     public void onstartGame() {
-        client.sendStartGame();
-        initGame(1);
+        boardSize = pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
+        playerNumber = pane.player1CheckBox.isSelected() ? 1 : 2;
+        opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
+        client.sendStartGame(boardSize, opponentNumber);
+        initGame(boardSize, playerNumber);
     }
 
-    public void initGame(int playerNumber) {
-        int gridSize = 7;
-        /*
-         * if (sizeSmallCheckBox.isSelected()) {
-         * gridSize = 3;
-         * } else if (sizeMediumCheckBox.isSelected()) {
-         * gridSize = 7;
-         * } else if (sizeLargeCheckBox.isSelected()) {
-         * gridSize = 11;
-         * }
-         */
-        manager.startGame(gridSize, 0, playerNumber);
+    public void initGame(int boardSize, int playerNumber) {
+        manager.startGame(boardSize, 0, playerNumber);
         gamePanel.beginGettingCoordinates();
     }
 }

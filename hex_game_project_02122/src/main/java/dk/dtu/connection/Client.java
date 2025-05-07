@@ -98,20 +98,19 @@ public class Client {
                 if (!currentTurn) {
                     try {
                         Object[] spot = lobbySpace.get(
-                            new FormalField(Integer.class),
-                            new FormalField(Integer.class),
-                            new ActualField(opponent)
-                        );
+                                new FormalField(Integer.class),
+                                new FormalField(Integer.class),
+                                new ActualField(opponent));
                         System.out.println("Received: " + spot[0] + ", " + spot[1]);
                         onSpotReceived.accept(spot);
                     } catch (InterruptedException e) {
-                        break; 
+                        break;
                     }
                 }
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
-                    break; 
+                    break;
                 }
             }
         }).start();
@@ -121,20 +120,33 @@ public class Client {
         running = false;
     }
 
-    public void sendStartGame() {
+    public void sendStartGame(int boardSize, int playerNumber) {
         try {
-            lobbySpace.put("start game");
+            lobbySpace.put("start game", boardSize, playerNumber);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void getStartGame(Runnable onStartGame) {
+    @FunctionalInterface
+    public interface GameStartHandler {
+        void onStart(int boardSize, int playerNumber);
+    }
+
+    public void getStartGame(GameStartHandler handler) {
         new Thread(() -> {
             try {
-                Object[] spot = lobbySpace.get(new ActualField("start game"));
-                System.out.println(spot[0]);
-                onStartGame.run();
+                Object[] gameInfo = lobbySpace.get(
+                    new ActualField("start game"),
+                    new FormalField(Integer.class),
+                    new FormalField(Integer.class)
+                );
+                System.out.println(gameInfo[0]);
+    
+                int boardSize = (int) gameInfo[1];
+                int playerNumber = (int) gameInfo[2];
+    
+                handler.onStart(boardSize, playerNumber);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
