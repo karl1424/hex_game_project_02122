@@ -23,13 +23,13 @@ public class ComputerManager {
             System.out.println("Game is won by Player " + gameBoard.getWinner());
             return;
         }
-        if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 1) {
-            smallBoardStrategy.makeMove();
-        } else if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 2){
-            smallBoardStrategy.makeRandomMove();
-        } else {
+        // if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 1) {
+        //     smallBoardStrategy.makeMove();
+        // } else if (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && playerNumber == 2){
+        //     smallBoardStrategy.makeRandomMove();
+        // } else {
             mcts.makeMove();
-        }
+        //}
     }
 
     public void setLastHumanMove(int x, int y) {
