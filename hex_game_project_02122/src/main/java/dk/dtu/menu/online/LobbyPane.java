@@ -18,6 +18,8 @@ public class LobbyPane extends BorderPane {
     public CheckBox sizeMediumCheckBox;
     public CheckBox sizeLargeCheckBox;
 
+    public CheckBox[] checkBoxes;
+
     public LobbyPane(OnlineGameMenu parent, String lobbyID) {
         setPrefSize(600, 600);
         setPadding(new Insets(40));
@@ -45,11 +47,15 @@ public class LobbyPane extends BorderPane {
         player2CheckBox = Help.creatCheckBox("2", false);
 
         player1CheckBox.setOnAction(_ -> {
-            player2CheckBox.setSelected(!player1CheckBox.isSelected());
+            player1CheckBox.setSelected(true);
+            player2CheckBox.setSelected(false);
+            parent.updateStartTurn("playerStart", 1);
         });
 
         player2CheckBox.setOnAction(_ -> {
-            player1CheckBox.setSelected(!player2CheckBox.isSelected());
+            player1CheckBox.setSelected(false);
+            player2CheckBox.setSelected(true);
+            parent.updateStartTurn("playerStart", 2);
         });
 
         playerBox.getChildren().addAll(playerLabel, player1CheckBox, player2CheckBox);
@@ -62,13 +68,17 @@ public class LobbyPane extends BorderPane {
         sizeMediumCheckBox = Help.creatCheckBox("Medium", true);
         sizeLargeCheckBox = Help.creatCheckBox("Large", false);
 
-        CheckBox[] checkBoxes = { sizeSmallCheckBox, sizeMediumCheckBox, sizeLargeCheckBox };
+        checkBoxes = new CheckBox[] { sizeSmallCheckBox, sizeMediumCheckBox, sizeLargeCheckBox };
         for (CheckBox cb : checkBoxes) {
             cb.setOnAction(_ -> {
                 for (CheckBox other : checkBoxes) {
-                    if (other != cb) other.setSelected(false);
+                    if (other != cb)
+                        other.setSelected(false);
                 }
-                if (!cb.isSelected()) cb.setSelected(true);
+                if (!cb.isSelected())
+                    cb.setSelected(true);
+                int boardSize = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
+                parent.updateBoardSize("board size", boardSize);
             });
         }
 
@@ -81,11 +91,24 @@ public class LobbyPane extends BorderPane {
 
         Button backBtn = Help.createButton("Back", 150, 40, false);
         Button startButton = Help.createButton("Start", 150, 40, false);
-        buttonBox.getChildren().addAll(lobbyIDLabel, backBtn, startButton, playerLabel, player1CheckBox, player2CheckBox);
+        buttonBox.getChildren().addAll(lobbyIDLabel, backBtn, startButton, playerLabel, player1CheckBox,
+                player2CheckBox);
         setBottom(buttonBox);
-        BorderPane.setAlignment(buttonBox, Pos.CENTER);        
+        BorderPane.setAlignment(buttonBox, Pos.CENTER);
 
         backBtn.setOnAction(_ -> parent.showOnlineSetup());
         startButton.setOnAction(_ -> parent.onstartGame());
+
+        boolean isHost = parent.getClient().getIsHost();
+
+        if (!isHost) {
+            player1CheckBox.setDisable(true);
+            player2CheckBox.setDisable(true);
+            for (CheckBox cb : checkBoxes) {
+                cb.setDisable(true);
+            }
+            // Disable the "Start" button (host-only action)
+            startButton.setDisable(true);
+        }
     }
 }

@@ -137,16 +137,51 @@ public class Client {
         new Thread(() -> {
             try {
                 Object[] gameInfo = lobbySpace.get(
-                    new ActualField("start game"),
-                    new FormalField(Integer.class),
-                    new FormalField(Integer.class)
-                );
+                        new ActualField("start game"),
+                        new FormalField(Integer.class),
+                        new FormalField(Integer.class));
                 System.out.println(gameInfo[0]);
-    
+
                 int boardSize = (int) gameInfo[1];
                 int playerNumber = (int) gameInfo[2];
-    
+
                 handler.onStart(boardSize, playerNumber);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    @FunctionalInterface
+    public interface GameInfoHandler {
+        void onStart(String tag, int value);
+    }
+    public void getGameInfo(GameInfoHandler handler){
+        new Thread(() -> {
+            try {
+                while (true) {
+                    Object[] info = lobbySpace.get(
+                        new FormalField(String.class),
+                        new FormalField(Integer.class)
+                    );
+        
+                    String tag = (String) info[0];
+                    int value = (int) info[1];
+        
+                    switch (tag) {
+                        case "board size":
+                            System.out.println("Board size received: " + value);
+                            handler.onStart("board size", value);
+                            break;
+                        case "playerStart":
+                            System.out.println("Player start number: " + value);
+                            handler.onStart("playerStart", value);
+                            break;
+                        default:
+                            System.out.println("Unknown tuple: " + tag);
+                    }
+                }
+                
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -155,6 +190,26 @@ public class Client {
 
     public void setLobbyID(int lobbyID) {
         this.lobbyID = lobbyID;
+    }
+
+    public void updateBoardSize(String boardStringSize, int boardSize) {
+        try {
+            lobbySpace.put(boardStringSize, boardSize);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }   
+    }
+
+    public void updateStartTurn(String playerStartString, int playerStart) {
+        try {
+            lobbySpace.put(playerStartString, playerStart);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }   
+    }
+
+    public boolean getIsHost(){
+        return isHost;
     }
 
 }

@@ -6,6 +6,7 @@ import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
+import javafx.scene.control.CheckBox;
 
 public class OnlineGameMenu extends MenuPanel {
     private Client client;
@@ -63,8 +64,32 @@ public class OnlineGameMenu extends MenuPanel {
         client.setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         showLobby();
+
         client.getStartGame((sizeBoard, numberPlayer) -> {
             initGame(sizeBoard, numberPlayer);
+        });
+        client.getGameInfo((tag, value) -> {
+            if (tag.equals("board size")) {
+                for (CheckBox cb : pane.checkBoxes) {
+                    cb.setSelected(false); // Clear all selections
+                }
+                if (value == 3) {
+                    pane.sizeSmallCheckBox.setSelected(true);
+                } else if (value == 11) {
+                    pane.sizeLargeCheckBox.setSelected(true);
+                } else {
+                    pane.sizeMediumCheckBox.setSelected(true);
+                }
+            } 
+            if (tag.equals("playerStart")){
+                if(value == 1){
+                    pane.player1CheckBox.setSelected(true);
+                    pane.player2CheckBox.setSelected(false);
+                } else if (value == 2) {
+                    pane.player1CheckBox.setSelected(false);
+                    pane.player2CheckBox.setSelected(true);
+                }
+            }
         });
     }
 
@@ -79,5 +104,16 @@ public class OnlineGameMenu extends MenuPanel {
     public void initGame(int boardSize, int playerNumber) {
         manager.startGame(boardSize, 0, playerNumber);
         gamePanel.beginGettingCoordinates();
+    }
+
+    public void updateBoardSize(String boardSizeString, int boardSize){
+        client.updateBoardSize(boardSizeString, boardSize);
+    }
+    public void updateStartTurn(String playerStartString, int playerStart){
+        client.updateStartTurn(playerStartString, playerStart);
+    }
+
+    public Client getClient(){
+        return client;
     }
 }
