@@ -2,6 +2,10 @@ package dk.dtu.menu;
 
 import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
+import dk.dtu.menu.game_over.GameOver;
+import dk.dtu.menu.local.computer_opponent.ComputerSetUpMenu;
+import dk.dtu.menu.local.player_vs_player.LocalGameMenu;
+import dk.dtu.menu.main_menu.MainMenu;
 import dk.dtu.menu.online.OnlineGameMenu;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -15,7 +19,7 @@ public class MenuManager extends Pane {
     private ComputerSetUpMenu computerSetupPanel;
     private LocalGameMenu localGamePanel;
     public OnlineGameMenu onlinePanel;
-    private GameOver gameOverPanel;
+    public GameOver gameOverPanel;
     
     public MenuManager(GamePanel gamePanel, Client client, Stage primaryStage) {
         this.gamePanel = gamePanel;
