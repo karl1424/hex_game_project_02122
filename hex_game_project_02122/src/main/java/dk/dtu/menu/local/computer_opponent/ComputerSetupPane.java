@@ -98,12 +98,12 @@ public class ComputerSetupPane extends BorderPane {
         Button startBtn = Help.createButton("Start Game", 150, 40, false);
         Button backBtn = Help.createButton("Back", 150, 40, false);
 
-        startBtn.setOnAction(e -> {
+        startBtn.setOnAction(_ -> {
             int player = player1CheckBox.isSelected() ? 2 : 1;
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
             int number = player1CheckBox.isSelected() ? 1 : 2;
             int difficulty = difficultyEasyCheckBox.isSelected() ? 500 : difficultyHardCheckBox.isSelected() ? 10000 : 5000;
-            manager.startGame(size, player, number);
+            manager.startGame(size, player, number,difficulty);
         });
 
         backBtn.setOnAction(e -> manager.showMainMenu());

@@ -14,12 +14,13 @@ public class MCTS {
     private int playerNumber;
     private GUI gui;
 
-    private static final int MAX_ITERATIONS = 10000;
+    private int iterations;
 
-    public MCTS(GameBoard gameBoard, int playerNumber, GUI gui) {
+    public MCTS(GameBoard gameBoard, int playerNumber, GUI gui, int iterations) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
+        this.iterations = iterations;
     }
 
     public void makeMove() {
@@ -35,12 +36,12 @@ public class MCTS {
         MCTSNode rootNode = new MCTSNode(null, null, playerNumber);
 
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < MAX_ITERATIONS; i++) {
+        for (int i = 0; i < iterations; i++) {
             rootNode.selectAction(gameBoard);
         }
         long endTime = System.currentTimeMillis();
 
-        System.out.println("MCTS completed " + MAX_ITERATIONS + " iterations in " + (endTime - startTime) + "ms");
+        System.out.println("MCTS completed " + iterations + " iterations in " + (endTime - startTime) + "ms");
 
         MCTSNode bestChild = null;
         int mostVisits = -1;

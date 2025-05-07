@@ -20,6 +20,7 @@ public class GamePanel extends Pane {
     private Stage primaryStage;
     private MenuManager menuManager;
     private Client client;
+    private int difficulty;
 
     public boolean isOnline = false;
     private int playerNumber;
@@ -31,11 +32,12 @@ public class GamePanel extends Pane {
         this.menuManager = new MenuManager(this, client, primaryStage);
     }
 
-    public void gameInit(int gridSize, int computerPlayer, int playerNumber) {
+    public void gameInit(int gridSize, int computerPlayer, int playerNumber, int difficulty) {
         this.getChildren().clear();
         this.gridSize = gridSize;
         this.computerPlayer = computerPlayer;
         this.playerNumber = playerNumber;
+        this.difficulty = difficulty;
         // isPlayerOneTurn = true;
         startGame();
     }
@@ -49,7 +51,7 @@ public class GamePanel extends Pane {
         gameBoard.printBoard();
         if (computerPlayer != 0) {
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
-                computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui);
+                computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui,difficulty);
                 gui.setComputerOpponent(computerOpponent);
 
                 // Let computer go first if it's player 1
@@ -72,7 +74,7 @@ public class GamePanel extends Pane {
 
             gui.animateWinningPath(gameBoard.getWinningPath(), winnerColor);
 
-            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1.5), e -> {
+            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(1.5), _ -> {
                 menuManager.showGameOver(gameBoard.getWinner());
             }));
             delay.setCycleCount(1);
@@ -109,7 +111,7 @@ public class GamePanel extends Pane {
     }
 
     public void resetGame() {
-        gameInit(gridSize, computerPlayer, playerNumber);
+        gameInit(gridSize, computerPlayer, playerNumber,difficulty);
     }
 
     public MenuManager getMenuManager() {
