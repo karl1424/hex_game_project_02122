@@ -5,6 +5,7 @@ import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -35,7 +36,7 @@ public class GamePanel extends Pane {
         this.gridSize = gridSize;
         this.computerPlayer = computerPlayer;
         this.playerNumber = playerNumber;
-        //isPlayerOneTurn = true;
+        // isPlayerOneTurn = true;
         startGame();
     }
 
@@ -43,23 +44,26 @@ public class GamePanel extends Pane {
         curentPlayerTurn = 1;
         gameBoard = new GameBoard(gridSize, gridSize, this);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
+        getChildren().add(gui);
+        System.out.println("Initial empty board:");
+        gameBoard.printBoard();
         if (computerPlayer != 0) {
-            computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui);
-            gui.setComputerOpponent(computerOpponent);
+            Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
+                computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui);
+                gui.setComputerOpponent(computerOpponent);
 
-            // Let computer go first if it's player 1
-            if (computerOpponent.getPlayerNumber() == 1) {
-                computerOpponent.makeMove();
-                //changeTurn();
-            }
+                // Let computer go first if it's player 1
+                if (computerOpponent.getPlayerNumber() == 1) {
+                    computerOpponent.makeMove();
+                }
+            }));
+            delay.setCycleCount(1);
+            delay.play();
+
         } else {
             computerOpponent = null;
             gui.setComputerOpponent(null);
         }
-
-        getChildren().add(gui);
-        System.out.println("Initial empty board:");
-        gameBoard.printBoard();
     }
 
     public void checkGameOver() {
@@ -80,11 +84,11 @@ public class GamePanel extends Pane {
         return curentPlayerTurn == playerNumber;
     }
 
-    public int getPlayerNumber(){
+    public int getPlayerNumber() {
         return playerNumber;
     }
 
-    public int getCurrentPlayerTurn(){
+    public int getCurrentPlayerTurn() {
         return curentPlayerTurn;
     }
 
@@ -92,7 +96,7 @@ public class GamePanel extends Pane {
         curentPlayerTurn = curentPlayerTurn == 1 ? 2 : 1;
     }
 
-    public boolean getIsOnline(){
+    public boolean getIsOnline() {
         return isOnline;
     }
 
@@ -112,11 +116,11 @@ public class GamePanel extends Pane {
         return menuManager;
     }
 
-    public void sendCoordinates(int x, int y, int player){
+    public void sendCoordinates(int x, int y, int player) {
         client.sendSpot(x, y, player);
     }
 
-    public void beginGettingCoordinates(){
+    public void beginGettingCoordinates() {
         System.out.println("Player: " + playerNumber + "Has started recieving spots");
         client.getSpot(playerNumber, this, spot -> {
             System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
@@ -125,11 +129,22 @@ public class GamePanel extends Pane {
         });
     }
 
-    public GameBoard getGameBoard(){
+    public GameBoard getGameBoard() {
         return gameBoard;
     }
 
-    public Client getClient(){
+    public Client getClient() {
         return client;
     }
+
+    private boolean inputLocked = false;
+
+    public boolean isInputLocked() {
+        return inputLocked;
+    }
+
+    public void setInputLocked(boolean lock) {
+        inputLocked = lock;
+    }
+
 }
