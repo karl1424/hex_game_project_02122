@@ -113,7 +113,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void initGame(int boardSize, int playerNumber) {
-        manager.startGame(boardSize, 0, playerNumber,0);
+        manager.startGame(boardSize, 0, playerNumber);
         gamePanel.beginGettingCoordinates();
     }
 

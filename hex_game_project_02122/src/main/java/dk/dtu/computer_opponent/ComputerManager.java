@@ -10,12 +10,12 @@ public class ComputerManager {
     private SmallBoardStrategy smallBoardStrategy;
     private MCTS mcts;
 
-    public ComputerManager(GameBoard gameBoard, int playerNumber, GUI gui, int difficulty) {
+    public ComputerManager(GameBoard gameBoard, int playerNumber, GUI gui) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
         smallBoardStrategy = new SmallBoardStrategy(gameBoard, playerNumber, gui);
-        mcts = new MCTS(gameBoard, playerNumber, gui,difficulty);
+        mcts = new MCTS(gameBoard, playerNumber, gui);
     }
 
     public void makeMove() {

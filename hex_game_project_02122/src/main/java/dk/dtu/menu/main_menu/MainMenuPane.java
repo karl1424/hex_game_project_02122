@@ -19,10 +19,10 @@ public class MainMenuPane extends VBox {
         Label titleLabel = Help.createTitleLabel("HEX GAME", 60);
         titleLabel.setPadding(new Insets(0, 0, 40, 0));
 
-        Button localGameBtn = Help.createButton("Player vs Player", 180, 40, true);
-        Button computerBtn = Help.createButton("Computer Opponent", 180, 40, true);
-        Button onlineBtn = Help.createButton("Play Online", 180, 40, true);
-        Button exitBtn = Help.createButton("Quit", 180, 40, true);
+        Button localGameBtn = Help.createButton("Player vs Player", 180, 40, false);
+        Button computerBtn = Help.createButton("Computer Opponent", 180, 40, false);
+        Button onlineBtn = Help.createButton("Play Online", 180, 40, false);
+        Button exitBtn = Help.createButton("Quit", 180, 40, false);
 
         localGameBtn.setOnAction(e -> manager.showLocalSetup());
         computerBtn.setOnAction(e -> manager.showComputerSetup());
