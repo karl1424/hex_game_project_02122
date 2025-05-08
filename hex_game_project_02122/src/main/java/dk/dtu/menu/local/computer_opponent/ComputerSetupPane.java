@@ -39,11 +39,11 @@ public class ComputerSetupPane extends BorderPane {
         player1CheckBox = Help.creatCheckBox("1", true);
         player2CheckBox = Help.creatCheckBox("2", false);
 
-        player1CheckBox.setOnAction(e -> {
+        player1CheckBox.setOnAction(_ -> {
             player2CheckBox.setSelected(!player1CheckBox.isSelected());
         });
 
-        player2CheckBox.setOnAction(e -> {
+        player2CheckBox.setOnAction(_ -> {
             player1CheckBox.setSelected(!player2CheckBox.isSelected());
         });
 
@@ -59,7 +59,7 @@ public class ComputerSetupPane extends BorderPane {
 
         CheckBox[] checkBoxes = { sizeSmallCheckBox, sizeMediumCheckBox, sizeLargeCheckBox };
         for (CheckBox cb : checkBoxes) {
-            cb.setOnAction(e -> {
+            cb.setOnAction(_ -> {
                 for (CheckBox other : checkBoxes) {
                     if (other != cb) other.setSelected(false);
                 }
@@ -76,14 +76,14 @@ public class ComputerSetupPane extends BorderPane {
         Button startBtn = Help.createButton("Start Game", 150, 40, false);
         Button backBtn = Help.createButton("Back", 150, 40, false);
 
-        startBtn.setOnAction(e -> {
+        startBtn.setOnAction(_ -> {
             int player = player1CheckBox.isSelected() ? 2 : 1;
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
             int number = player1CheckBox.isSelected() ? 1 : 2;
             manager.startGame(size, player, number);
         });
 
-        backBtn.setOnAction(e -> manager.showMainMenu());
+        backBtn.setOnAction(_ -> manager.showMainMenu());
 
         buttonBox.getChildren().addAll(backBtn, startBtn);
         setBottom(buttonBox);

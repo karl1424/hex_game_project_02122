@@ -35,12 +35,12 @@ public class GameOverPane extends StackPane {
         Button againBtn = Help.createButton("Play Again", 140, 35, false);
         Button mainBtn = Help.createButton("Main Menu", 140, 35, false);
 
-        againBtn.setOnAction(e -> {
+        againBtn.setOnAction(_ -> {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             gamePanel.resetGame();
         });
 
-        mainBtn.setOnAction(e -> {
+        mainBtn.setOnAction(_ -> {
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
             gamePanel.getClient().stopReceivingSpots();

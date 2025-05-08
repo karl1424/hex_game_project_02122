@@ -40,7 +40,7 @@ public class LocalGamePane extends BorderPane {
 
         CheckBox[] boxes = { sizeSmallCheckBox, sizeMediumCheckBox, sizeLargeCheckBox };
         for (CheckBox cb : boxes) {
-            cb.setOnAction(e -> {
+            cb.setOnAction(_ -> {
                 for (CheckBox other : boxes)
                     if (cb != other) other.setSelected(false);
                 if (!cb.isSelected()) cb.setSelected(true);
@@ -57,12 +57,12 @@ public class LocalGamePane extends BorderPane {
         Button startBtn = Help.createButton("Start Game", 150, 40, false);
         Button backBtn = Help.createButton("Back", 150, 40, false);
 
-        startBtn.setOnAction(e -> {
+        startBtn.setOnAction(_ -> {
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
             manager.startGame(size, 0, 1);
         });
 
-        backBtn.setOnAction(e -> manager.showMainMenu());
+        backBtn.setOnAction(_ -> manager.showMainMenu());
 
         buttonBox.getChildren().addAll(backBtn, startBtn);
         setBottom(buttonBox);

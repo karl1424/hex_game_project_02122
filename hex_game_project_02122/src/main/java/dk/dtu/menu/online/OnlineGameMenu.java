@@ -18,7 +18,6 @@ public class OnlineGameMenu extends MenuPanel {
     public OnlineGameMenu(MenuManager manager, GamePanel gamePanel, Client client) {
         super(manager, gamePanel);
         this.client = client;
-        showOnlineSetup();
     }
 
     @Override
@@ -27,9 +26,19 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void showOnlineSetup() {
+        System.out.println("Hey!!!!");
+        if (gamePanel.isOnline == true) {
+            if (!client.getIsHost()) {
+                System.out.println("player 2 left");
+                client.sendLeftPlayer2();
+            } else {
+                client.shutDownLobby();
+            }
+        }
         gamePanel.isOnline = false;
         getChildren().clear();
         getChildren().add(new OnlineSetupPane(this));
+
     }
 
     public void showLobby() {
@@ -80,9 +89,9 @@ public class OnlineGameMenu extends MenuPanel {
                 } else {
                     pane.sizeMediumCheckBox.setSelected(true);
                 }
-            } 
-            if (tag.equals("playerStart")){
-                if(value == 1){
+            }
+            if (tag.equals("playerStart")) {
+                if (value == 1) {
                     pane.player1CheckBox.setSelected(true);
                     pane.player2CheckBox.setSelected(false);
                 } else if (value == 2) {
@@ -94,11 +103,16 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void onstartGame() {
-        boardSize = pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
-        playerNumber = pane.player1CheckBox.isSelected() ? 1 : 2;
-        opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
-        client.sendStartGame(boardSize, opponentNumber);
-        initGame(boardSize, playerNumber);
+        if (client.getCanStart()) {
+            boardSize = pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
+            playerNumber = pane.player1CheckBox.isSelected() ? 1 : 2;
+            opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
+            client.sendStartGame(boardSize, opponentNumber);
+            initGame(boardSize, playerNumber);
+        } else {
+            System.out.println("Player 2 missing");
+        }
+
     }
 
     public void initGame(int boardSize, int playerNumber) {
@@ -106,14 +120,15 @@ public class OnlineGameMenu extends MenuPanel {
         gamePanel.beginGettingCoordinates();
     }
 
-    public void updateBoardSize(String boardSizeString, int boardSize){
+    public void updateBoardSize(String boardSizeString, int boardSize) {
         client.updateBoardSize(boardSizeString, boardSize);
     }
-    public void updateStartTurn(String playerStartString, int playerStart){
+
+    public void updateStartTurn(String playerStartString, int playerStart) {
         client.updateStartTurn(playerStartString, playerStart);
     }
 
-    public Client getClient(){
+    public Client getClient() {
         return client;
     }
 }
