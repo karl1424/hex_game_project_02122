@@ -73,8 +73,8 @@ public class MenuManager extends Pane {
         }
     }
     
-    public void startGame(int gridSize, int computerPlayer, int playerNumber) {
-        gamePanel.gameInit(gridSize, computerPlayer, playerNumber);
+    public void startGame(int gridSize, int computerPlayer, int playerNumber,int difficulty) {
+        gamePanel.gameInit(gridSize, computerPlayer, playerNumber,difficulty);
         primaryStage.getScene().setRoot(gamePanel);
     }
     

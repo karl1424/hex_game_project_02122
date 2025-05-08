@@ -3,6 +3,7 @@ package dk.dtu.main;
 import dk.dtu.computer_opponent.ComputerManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -26,11 +27,11 @@ public class GameBoardLogic {
         gameBoard.pickSpot(x, y, playerNumber);
         Color compColor = (playerNumber == 1 ? Color.RED : Color.BLUE);
         gameBoard.getGamePanel().gui.updateHexagonColor(x, y, compColor);
-    }    
+    }
 
     public boolean exploreNeighbors(Coordinate start, int turn) {
-        int[] directionsX = {0, 0, -1, 1, -1, 1};
-        int[] directionsY = {1, -1, 0, 0, 1, -1};
+        int[] directionsX = { 0, 0, -1, 1, -1, 1 };
+        int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
         Queue<Coordinate> queue = new LinkedList<>();
         boolean[][] visited = new boolean[boardM][boardN];
@@ -123,33 +124,19 @@ public class GameBoardLogic {
     }
 
     public void handleHexagonPressed(Hexagon hexagon) {
-        if (gameBoard.getWinner() != 0 || board[hexagon.xCor][hexagon.yCor].getState() != 0) return;
         GamePanel gamePanel = gameBoard.getGamePanel();
-        boolean isLocalGame = gamePanel.getComputerPlayer() == 0;
-        boolean isHumanTurn = (gamePanel.getTurn() && gamePanel.getComputerPlayer() != 1) ||
-        (!gamePanel.getTurn() && gamePanel.getComputerPlayer() != 2);
-        
-        if (isLocalGame || isHumanTurn) {
+        if (gameBoard.getWinner() != 0 || board[hexagon.xCor][hexagon.yCor].getState() != 0)
+            return;
+        if (gamePanel.getTurn() || (gamePanel.getComputerPlayer() == 0 && !gamePanel.getIsOnline())) {
             if (gamePanel.getIsOnline()) {
-                if (gamePanel.getTurn()) {
-                    gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
-                    gamePanel.sendCoordinates(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
-                    System.out.println("Player number: " + gamePanel.getPlayerNumber());
-                } else {
-                    return;
-                }
+                gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
+                gamePanel.sendCoordinates(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
+                System.out.println("Player number: " + gamePanel.getPlayerNumber());
             } else {
-                gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getTurn() ? 1 : 2);
+                gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getCurrentPlayerTurn());
             }
-            
-            
-            if(gamePanel.getIsOnline()){
-                hexagon.setFill(gamePanel.getPlayerNumber() == 1 ? Color.RED : Color.BLUE);
-            } else {
-                hexagon.setFill(gamePanel.getTurn() ? Color.RED : Color.BLUE);
-            }
+            hexagon.setFill(gamePanel.getCurrentPlayerTurn() == 1 ? Color.RED : Color.BLUE);
 
-            
             System.out.println("Human move at: " + hexagon.xCor + ", " + hexagon.yCor);
 
             ComputerManager comp = gamePanel.getComputerOpponent();
@@ -162,23 +149,22 @@ public class GameBoardLogic {
             gamePanel.changeTurn();
 
             if (gameBoard.getWinner() == 0 && comp != null) {
-                Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
-                    boolean isComputerTurn = (comp.getPlayerNumber() == 1 && gamePanel.getTurn()) ||
-                            (comp.getPlayerNumber() == 2 && !gamePanel.getTurn());
 
-                    if (isComputerTurn && gameBoard.getWinner() == 0) {
+                if (!gamePanel.getTurn() && gameBoard.getWinner() == 0) {
+                    new Thread(() -> {
                         comp.makeMove();
-                        System.out.println("Board after computer move:");
-                        gameBoard.printBoard();
-                        gamePanel.changeTurn();
-                    }
-                }));
-                delay.setCycleCount(1);
-                delay.play();
+
+                        Platform.runLater(() -> {
+                            System.out.println("Board after computer move:");
+                            gameBoard.printBoard();
+                            gamePanel.changeTurn();
+                        });
+                    }).start();
+                }
+
             } else if (gameBoard.getWinner() != 0) {
                 System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
             }
         }
     }
-
 }

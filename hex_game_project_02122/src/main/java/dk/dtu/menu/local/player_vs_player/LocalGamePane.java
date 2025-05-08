@@ -59,7 +59,7 @@ public class LocalGamePane extends BorderPane {
 
         startBtn.setOnAction(_ -> {
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
-            manager.startGame(size, 0, 1);
+            manager.startGame(size, 0, 1,0);
         });
 
         backBtn.setOnAction(_ -> manager.showMainMenu());

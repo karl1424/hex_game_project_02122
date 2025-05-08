@@ -18,7 +18,7 @@ public class MCTSNode {
     private double wins;
 
     private int playerNumber;
-    private static final double EXPLORATION_PARAMETER = Math.sqrt(2);
+    private static final double EXPLORATION_PARAMETER = 0.7;
     private static final double EPSILON = 1e-6;
     private Random rand;
 
