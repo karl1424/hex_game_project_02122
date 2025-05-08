@@ -1,6 +1,7 @@
 package dk.dtu.menu.online;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
@@ -14,6 +15,7 @@ public class OnlineGameMenu extends MenuPanel {
     private int boardSize;
     private int opponentNumber;
     private LobbyPane pane;
+    private OnlineSetupPane onlinePane;
 
     public OnlineGameMenu(MenuManager manager, GamePanel gamePanel, Client client) {
         super(manager, gamePanel);
@@ -37,13 +39,18 @@ public class OnlineGameMenu extends MenuPanel {
         }
         gamePanel.isOnline = false;
         getChildren().clear();
-        getChildren().add(new OnlineSetupPane(this));
+        onlinePane = new OnlineSetupPane(this);
+        getChildren().add(onlinePane);
 
     }
 
     public void showLobby() {
         getChildren().clear();
-        pane = new LobbyPane(this, client.getLobbyID());
+        try {
+            pane = new LobbyPane(this, client.getLobbyID());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         getChildren().add(pane);
     }
 
@@ -55,8 +62,14 @@ public class OnlineGameMenu extends MenuPanel {
     public void onHost() {
         gamePanel.isOnline = true;
         client.establishConnetion(true);
-        System.out.println(client.getLobbyID());
-        showLobby();
+        try {
+            client.getLobbyID();
+            showLobby();
+        } catch (UnknownHostException e) {
+            showOnlineSetup();
+            onlinePane.serverIsDown();
+        }
+
     }
 
     public void onJoin() {
@@ -110,7 +123,7 @@ public class OnlineGameMenu extends MenuPanel {
             client.sendStartGame(boardSize, opponentNumber);
             initGame(boardSize, playerNumber);
         } else {
-            System.out.println("Player 2 missing");
+            pane.showLobbyNotFull();
         }
 
     }

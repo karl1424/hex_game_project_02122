@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 
+import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 import dk.dtu.menu.Help;
@@ -51,13 +52,24 @@ public class JoinPane extends BorderPane {
         joinButton.setOnAction(_ -> {
             try {
                 parent.onJoinLobby(inputField.getText());
-            } catch (Exception e) {
-                Label label = Help.createLabel("Lobby does not exist", 40, false);
-                VBox labelBox = new VBox(label);
-                labelBox.setAlignment(Pos.CENTER);
-                labelBox.setPadding(new Insets(0, 0, 200, 0));
-                setCenter(labelBox);
+            } catch (InterruptedException | IOException e) {
+                if (e.getMessage().equals("remote space does not exist!")) {
+                    makeLabel("Lobby does not exist");
+                } else {
+                    makeLabel("Server is down");
+                }
+            } catch (IllegalStateException e) {
+                makeLabel("Lobby is full");
             }
         });
+
+    }
+
+    private void makeLabel(String text) {
+        Label label = Help.createLabel(text, 40, false);
+        VBox labelBox = new VBox(label);
+        labelBox.setAlignment(Pos.CENTER);
+        labelBox.setPadding(new Insets(0, 0, 200, 0));
+        setCenter(labelBox);
     }
 }

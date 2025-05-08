@@ -7,7 +7,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 
+
 public class OnlineSetupPane extends VBox {
+    private boolean serverIsDownShown = false;
+    
     public OnlineSetupPane(OnlineGameMenu parent) {
         super(20);
         setAlignment(Pos.CENTER);
@@ -24,5 +27,13 @@ public class OnlineSetupPane extends VBox {
         hostBtn.setOnAction(_ -> parent.onHost());
         joinBtn.setOnAction(_ -> parent.onJoin());
         backBtn.setOnAction(_ -> parent.onBack());
+    }
+
+    public void serverIsDown() {
+        if (!serverIsDownShown) {
+            Label serverIsDownLabel = Help.createLabel("Server is down", 20, false);
+            getChildren().add(serverIsDownLabel);
+            serverIsDownShown = true;
+        }
     }
 }

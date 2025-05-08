@@ -20,6 +20,8 @@ public class LobbyPane extends BorderPane {
 
     public CheckBox[] checkBoxes;
 
+    private boolean lobbyIsNotFullShown = false;
+
     public LobbyPane(OnlineGameMenu parent, String lobbyID) {
         setPrefSize(600, 600);
         setPadding(new Insets(40));
@@ -109,6 +111,14 @@ public class LobbyPane extends BorderPane {
             }
             // Disable the "Start" button (host-only action)
             startButton.setDisable(true);
+        }
+    }
+
+    public void showLobbyNotFull() {
+        if (!lobbyIsNotFullShown) {
+            Label lobbyIsNotFullLabel = Help.createLabel("Lobby is not full", 20, false);
+            setCenter(lobbyIsNotFullLabel);
+            lobbyIsNotFullShown = true;
         }
     }
 }

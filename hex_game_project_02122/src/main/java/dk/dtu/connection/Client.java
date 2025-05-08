@@ -1,6 +1,7 @@
 package dk.dtu.connection;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
 import org.jspace.ActualField;
@@ -56,7 +57,7 @@ public class Client {
         return Uri;
     }
 
-    public void connectToLobby(int lobbyID) throws InterruptedException, IOException {
+    public void connectToLobby(int lobbyID) throws InterruptedException, IOException, IllegalStateException {
         establishConnectionToLobby(lobbyID);
         if (!lobbyHandShake()) {
             throw new IllegalStateException();
@@ -78,9 +79,9 @@ public class Client {
         return (((String) connection[1]).equals("Connected"));
     }
 
-    public String getLobbyID() {
+    public String getLobbyID() throws UnknownHostException {
         if (isOffline) {
-            return "Server is down!";
+            throw new UnknownHostException();
         }
         return lobbyID + "";
     }
