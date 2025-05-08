@@ -81,7 +81,7 @@ public class ComputerSetupPane extends BorderPane {
 
         CheckBox[] difficultyCheckBoxes = { difficultyEasyCheckBox, difficultyMediumCheckBox, difficultyHardCheckBox };
         for (CheckBox cb : difficultyCheckBoxes) {
-            cb.setOnAction(e -> {
+            cb.setOnAction(_ -> {
                 for (CheckBox other : difficultyCheckBoxes) {
                     if (other != cb) other.setSelected(false);
                 }

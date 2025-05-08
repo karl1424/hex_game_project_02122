@@ -1,12 +1,8 @@
 package dk.dtu.main;
 
 import dk.dtu.computer_opponent.ComputerManager;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
-
 import java.util.*;
 
 public class GameBoardLogic {

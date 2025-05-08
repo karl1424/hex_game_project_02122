@@ -3,7 +3,6 @@ package dk.dtu.main;
 import java.util.List;
 
 import dk.dtu.computer_opponent.ComputerManager;
-import dk.dtu.computer_opponent.SmallBoardStrategy;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

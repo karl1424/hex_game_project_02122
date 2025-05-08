@@ -1,10 +1,5 @@
 package dk.dtu.main;
 
-import dk.dtu.computer_opponent.ComputerManager;
-import dk.dtu.computer_opponent.SmallBoardStrategy;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;

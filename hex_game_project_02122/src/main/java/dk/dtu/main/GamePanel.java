@@ -5,7 +5,6 @@ import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.util.Duration;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,7 +16,6 @@ public class GamePanel extends Pane {
     private int gridSize;
     private ComputerManager computerOpponent;
     private int computerPlayer;
-    private Stage primaryStage;
     private MenuManager menuManager;
     private Client client;
     private int difficulty;
@@ -28,7 +26,6 @@ public class GamePanel extends Pane {
 
     public GamePanel(Stage primaryStage) {
         this.client = new Client();
-        this.primaryStage = primaryStage;
         this.menuManager = new MenuManager(this, client, primaryStage);
     }
 
