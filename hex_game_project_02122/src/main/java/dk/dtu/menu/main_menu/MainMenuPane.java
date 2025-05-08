@@ -24,10 +24,10 @@ public class MainMenuPane extends VBox {
         Button onlineBtn = Help.createButton("Play Online", 180, 40, true);
         Button exitBtn = Help.createButton("Quit", 180, 40, true);
 
-        localGameBtn.setOnAction(_ -> manager.showLocalSetup());
-        computerBtn.setOnAction(_ -> manager.showComputerSetup());
-        onlineBtn.setOnAction(_ -> manager.showOnlineSetup());
-        exitBtn.setOnAction(_ -> System.exit(0));
+        localGameBtn.setOnAction(e -> manager.showLocalSetup());
+        computerBtn.setOnAction(e -> manager.showComputerSetup());
+        onlineBtn.setOnAction(e -> manager.showOnlineSetup());
+        exitBtn.setOnAction(e -> System.exit(0));
 
         getChildren().addAll(titleLabel, localGameBtn, computerBtn, onlineBtn, exitBtn);
     }
