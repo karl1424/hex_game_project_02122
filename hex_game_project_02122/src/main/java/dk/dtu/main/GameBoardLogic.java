@@ -3,6 +3,7 @@ package dk.dtu.main;
 import dk.dtu.computer_opponent.ComputerManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -148,17 +149,19 @@ public class GameBoardLogic {
             gamePanel.changeTurn();
 
             if (gameBoard.getWinner() == 0 && comp != null) {
-                Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
 
-                    if (!gamePanel.getTurn() && gameBoard.getWinner() == 0) {
+                if (!gamePanel.getTurn() && gameBoard.getWinner() == 0) {
+                    new Thread(() -> {
                         comp.makeMove();
-                        System.out.println("Board after computer move:");
-                        gameBoard.printBoard();
-                        gamePanel.changeTurn();
-                    }
-                }));
-                delay.setCycleCount(1);
-                delay.play();
+
+                        Platform.runLater(() -> {
+                            System.out.println("Board after computer move:");
+                            gameBoard.printBoard();
+                            gamePanel.changeTurn();
+                        });
+                    }).start();
+                }
+
             } else if (gameBoard.getWinner() != 0) {
                 System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
             }
