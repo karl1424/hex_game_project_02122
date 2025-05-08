@@ -57,6 +57,7 @@ public class GamePanel extends Pane {
                 // Let computer go first if it's player 1
                 if (computerOpponent.getPlayerNumber() == 1) {
                     computerOpponent.makeMove();
+                    changeTurn();
                 }
             }));
             delay.setCycleCount(1);
