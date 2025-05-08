@@ -19,6 +19,7 @@ public class Client {
     private boolean isHost;
     private boolean isOffline = false;
     private boolean running = false;
+    private boolean canStart;
 
     public Client() {
     }
@@ -62,6 +63,9 @@ public class Client {
             throw new IllegalStateException();
         }
         System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
+        if (isHost) {
+            new Thread(() -> lookForP2()).start();
+        }
     }
 
     public void establishConnectionToLobby(int lobbyID) throws InterruptedException, IOException {
@@ -157,18 +161,18 @@ public class Client {
     public interface GameInfoHandler {
         void onStart(String tag, int value);
     }
-    public void getGameInfo(GameInfoHandler handler){
+
+    public void getGameInfo(GameInfoHandler handler) {
         new Thread(() -> {
             try {
                 while (true) {
                     Object[] info = lobbySpace.get(
-                        new FormalField(String.class),
-                        new FormalField(Integer.class)
-                    );
-        
+                            new FormalField(String.class),
+                            new FormalField(Integer.class));
+
                     String tag = (String) info[0];
                     int value = (int) info[1];
-        
+
                     switch (tag) {
                         case "board size":
                             System.out.println("Board size received: " + value);
@@ -182,7 +186,7 @@ public class Client {
                             System.out.println("Unknown tuple: " + tag);
                     }
                 }
-                
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -198,7 +202,7 @@ public class Client {
             lobbySpace.put(boardStringSize, boardSize);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }   
+        }
     }
 
     public void updateStartTurn(String playerStartString, int playerStart) {
@@ -206,11 +210,43 @@ public class Client {
             lobbySpace.put(playerStartString, playerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }   
+        }
     }
 
-    public boolean getIsHost(){
+    public boolean getIsHost() {
         return isHost;
+    }
+
+    public void lookForP2() {
+        try {
+            while (true) {
+                Object[] start = lobbySpace.get(new FormalField(Boolean.class));
+                if ((boolean) start[0]) {
+                    canStart = true;
+                } else {
+                    canStart = false;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean getCanStart() {
+        return canStart;
+    }
+
+    public void sendLeftPlayer2() {
+        try {
+            System.out.println("put player 2 left");
+            lobbySpace.put("join/leave", "Left");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void shutDownLobby() {
+        // Shut down the space
     }
 
 }
