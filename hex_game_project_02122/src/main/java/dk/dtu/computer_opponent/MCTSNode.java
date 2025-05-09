@@ -21,7 +21,6 @@ public class MCTSNode {
     private static final double EXPLORATION_PARAMETER = 0.7;
     private static final double EPSILON = 1e-6;
     private Random rand;
-    private static RolloutPattern rolloutPattern;
 
     public MCTSNode(MCTSNode parent, Coordinate move, int playerNumber) {
         this.move = move;
@@ -32,9 +31,6 @@ public class MCTSNode {
         this.wins = 0;
         this.expanded = false;
         this.rand = new Random();
-        if (rolloutPattern == null) {
-            rolloutPattern = new RolloutPattern();
-        }
     }
 
     public void selectAction(GameBoard gameBoard) {
@@ -109,10 +105,12 @@ public class MCTSNode {
         while (simGame.winner == 0) {
             List<Coordinate> availableMoves = getAvailableMoves(simGame);
 
-            Coordinate spot = rolloutPattern.getHeuristicMove(availableMoves, simGame, currentPlayer);
-            if (spot == null) {
-                spot = availableMoves.get(rand.nextInt(availableMoves.size()));
+            if (availableMoves.isEmpty()) {
+                break;
             }
+
+            int i = rand.nextInt(availableMoves.size());
+            Coordinate spot = availableMoves.get(i);
             simGame.board[spot.getX()][spot.getY()].setState(currentPlayer);
 
             if (simGame.checkForWin(spot, currentPlayer)) {
