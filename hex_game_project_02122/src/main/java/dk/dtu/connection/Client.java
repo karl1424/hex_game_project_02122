@@ -20,8 +20,10 @@ public class Client {
     private boolean isOffline = false;
     private boolean running = false;
     private boolean canStart;
+    private GamePanel gamePanel;
 
-    public Client() {
+    public Client(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
 
     public void establishConnetion(boolean isHost) {
@@ -242,6 +244,28 @@ public class Client {
             lobbySpace.put("join/leave", "Left");
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(String message) {
+        try {
+            lobbySpace.put(message, isHost);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void recieveMessage() {
+        while(true) {
+            Object[] message = null;
+            try {
+                message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost));
+                if (!((String) message[0]).isEmpty()) {
+                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage("Other: " + (String) message[0]);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

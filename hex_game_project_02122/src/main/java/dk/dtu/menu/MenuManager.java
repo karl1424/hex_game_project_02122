@@ -89,4 +89,8 @@ public class MenuManager extends Pane {
     public Client getClient() {
         return client;
     }
+
+    public OnlineGameMenu getOnlineGameMenu() {
+        return onlinePanel;
+    }
 }

@@ -7,6 +7,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 
@@ -20,7 +22,8 @@ public class LobbyPane extends BorderPane {
 
     public CheckBox[] checkBoxes;
 
-    private boolean lobbyIsNotFullShown = false;
+    private Label errorLabel;
+    private TextArea chatArea;
 
     public LobbyPane(OnlineGameMenu parent, String lobbyID) {
         setPrefSize(600, 600);
@@ -32,14 +35,15 @@ public class LobbyPane extends BorderPane {
         titleBox.setPadding(new Insets(0, 0, -120, 0));
         setTop(titleBox);
 
-        Label lobbyIDLabel = Help.createLabel(lobbyID, 40, false);
+        Label lobbyIDLabel = Help.createLabel("Lobby ID: " + lobbyID, 30, false);
         VBox lobbyIDBox = new VBox(lobbyIDLabel);
         lobbyIDBox.setAlignment(Pos.CENTER);
         lobbyIDBox.setPadding(new Insets(0, 0, 200, 0));
         setCenter(lobbyIDBox);
 
-        VBox centerContent = new VBox(30);
+        VBox centerContent = new VBox(20);
         centerContent.setAlignment(Pos.CENTER);
+        centerContent.setTranslateY(40);
 
         HBox playerBox = new HBox(50);
         playerBox.setAlignment(Pos.CENTER);
@@ -84,8 +88,45 @@ public class LobbyPane extends BorderPane {
             });
         }
 
+        errorLabel = Help.createLabel("", 20, false);
+        errorLabel.setVisible(false);
+
+        chatArea = new TextArea();
+        chatArea.setEditable(false);
+        chatArea.setWrapText(true);
+        chatArea.setPrefHeight(130);
+        chatArea.setMaxWidth(260);
+        chatArea.setStyle(
+            "-fx-focus-color: transparent;" +
+            "-fx-faint-focus-color: transparent;"
+        );
+
+        VBox chatBox = new VBox(0);
+        chatBox.setAlignment(Pos.CENTER);
+        chatBox.getChildren().add(chatArea);
+
+        TextField chatInput = new TextField();
+        chatInput.setPromptText("Write a message...");
+        chatInput.setPrefWidth(200);
+
+        Button sendButton = new Button("Send");
+        sendButton.setFocusTraversable(false);
+        sendButton.setOnAction(_ -> {
+            String message = chatInput.getText().trim();
+            parent.onSend(message);
+            if (!message.isEmpty()) {
+                chatArea.appendText("You: " + message + "\n");
+                chatInput.clear();
+            }
+            chatInput.requestFocus();
+        });
+        chatInput.setOnAction(_ -> sendButton.fire());
+
+        HBox chatInputBox = new HBox(10, chatInput, sendButton);
+        chatInputBox.setAlignment(Pos.CENTER);
+
         sizeBox.getChildren().addAll(sizeLabel, sizeSmallCheckBox, sizeMediumCheckBox, sizeLargeCheckBox);
-        centerContent.getChildren().addAll(playerBox, sizeBox);
+        centerContent.getChildren().addAll(lobbyIDLabel, playerBox, sizeBox, errorLabel, chatBox, chatInputBox);
         setCenter(centerContent);
 
         HBox buttonBox = new HBox(30);
@@ -93,8 +134,7 @@ public class LobbyPane extends BorderPane {
 
         Button backBtn = Help.createButton("Back", 150, 40, false);
         Button startButton = Help.createButton("Start", 150, 40, false);
-        buttonBox.getChildren().addAll(lobbyIDLabel, backBtn, startButton, playerLabel, player1CheckBox,
-                player2CheckBox);
+        buttonBox.getChildren().addAll(backBtn, startButton);
         setBottom(buttonBox);
         BorderPane.setAlignment(buttonBox, Pos.CENTER);
 
@@ -109,16 +149,16 @@ public class LobbyPane extends BorderPane {
             for (CheckBox cb : checkBoxes) {
                 cb.setDisable(true);
             }
-            // Disable the "Start" button (host-only action)
             startButton.setDisable(true);
         }
     }
 
     public void showLobbyNotFull() {
-        if (!lobbyIsNotFullShown) {
-            Label lobbyIsNotFullLabel = Help.createLabel("Lobby is not full", 20, false);
-            setCenter(lobbyIsNotFullLabel);
-            lobbyIsNotFullShown = true;
-        }
+        errorLabel.setText("Lobby is not full");
+        errorLabel.setVisible(true);
+    }
+
+    public void appendMessage(String message) {
+        chatArea.appendText(message + "\n");
     }
 }

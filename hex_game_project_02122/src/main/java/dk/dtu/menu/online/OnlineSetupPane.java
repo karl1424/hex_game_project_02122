@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 
 
 public class OnlineSetupPane extends VBox {
-    private boolean serverIsDownShown = false;
+    Label serverIsDownLabel;
     
     public OnlineSetupPane(OnlineGameMenu parent) {
         super(20);
@@ -22,7 +22,10 @@ public class OnlineSetupPane extends VBox {
         Button joinBtn = Help.createButton("Join", 200, 40, true);
         Button backBtn = Help.createButton("Back", 200, 40, true);
 
-        getChildren().addAll(titleLabel, hostBtn, joinBtn, backBtn);
+        serverIsDownLabel = Help.createLabel("Server is down", 20, false);
+        serverIsDownLabel.setVisible(false);
+
+        getChildren().addAll(titleLabel, hostBtn, joinBtn, backBtn, serverIsDownLabel);
 
         hostBtn.setOnAction(_ -> parent.onHost());
         joinBtn.setOnAction(_ -> parent.onJoin());
@@ -30,10 +33,6 @@ public class OnlineSetupPane extends VBox {
     }
 
     public void serverIsDown() {
-        if (!serverIsDownShown) {
-            Label serverIsDownLabel = Help.createLabel("Server is down", 20, false);
-            getChildren().add(serverIsDownLabel);
-            serverIsDownShown = true;
-        }
+        serverIsDownLabel.setVisible(true);
     }
 }

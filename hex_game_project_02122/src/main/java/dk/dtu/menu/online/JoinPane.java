@@ -16,11 +16,13 @@ import java.util.function.UnaryOperator;
 import dk.dtu.menu.Help;
 
 public class JoinPane extends BorderPane {
+    private Label errorLabel;
+
     public JoinPane(OnlineGameMenu parent) {
         setPrefSize(600, 600);
         setPadding(new Insets(40));
 
-        Label titleLabel = Help.createTitleLabel("HEX GAME Join", 60);
+        Label titleLabel = Help.createTitleLabel("HEX GAME", 60);
         VBox titleBox = new VBox(titleLabel);
         titleBox.setAlignment(Pos.CENTER);
         titleBox.setPadding(new Insets(0, 0, -120, 0));
@@ -28,6 +30,9 @@ public class JoinPane extends BorderPane {
 
         TextField inputField = new TextField();
         inputField.setPromptText("Enter Lobby ID");
+        inputField.setMaxWidth(300);
+        inputField.setPrefHeight(40);
+        inputField.setStyle("-fx-font-size: 18px;");
 
         UnaryOperator<TextFormatter.Change> integerFilter = change -> {
             String newText = change.getControlNewText();
@@ -38,12 +43,22 @@ public class JoinPane extends BorderPane {
         };
         inputField.setTextFormatter(new TextFormatter<>(integerFilter));
 
-        Button joinButton = Help.createButton("Join", 150, 0, false);
-        Button backButton = Help.createButton("Back", 150, 40, false);
+        Label enterLobbyLabel = Help.createLabel("Enter Lobby ID", 30, false);
+
+        errorLabel = Help.createLabel("", 20, false);
+        errorLabel.setVisible(false);
+
+        VBox centerBox = new VBox(20);
+        centerBox.setAlignment(Pos.CENTER);
+        centerBox.getChildren().addAll(enterLobbyLabel, inputField, errorLabel);
+        setCenter(centerBox);
+
+        Button joinButton = Help.createButton("Join", 150, 40, true);
+        Button backButton = Help.createButton("Back", 150, 40, true);
 
         HBox buttonBox = new HBox(30);
         buttonBox.setAlignment(Pos.CENTER);
-        buttonBox.getChildren().addAll(backButton, inputField, joinButton);
+        buttonBox.getChildren().addAll(backButton, joinButton);
 
         setBottom(buttonBox);
         BorderPane.setAlignment(buttonBox, Pos.CENTER);
@@ -60,16 +75,15 @@ public class JoinPane extends BorderPane {
                 }
             } catch (IllegalStateException e) {
                 makeLabel("Lobby is full");
+            } catch (NumberFormatException e) {
+                makeLabel("Write a Lobby ID");
             }
         });
 
     }
 
     private void makeLabel(String text) {
-        Label label = Help.createLabel(text, 40, false);
-        VBox labelBox = new VBox(label);
-        labelBox.setAlignment(Pos.CENTER);
-        labelBox.setPadding(new Insets(0, 0, 200, 0));
-        setCenter(labelBox);
+        errorLabel.setText(text);
+        errorLabel.setVisible(true);
     }
 }

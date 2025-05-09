@@ -25,7 +25,7 @@ public class GamePanel extends Pane {
     private int curentPlayerTurn;
 
     public GamePanel(Stage primaryStage) {
-        this.client = new Client();
+        this.client = new Client(this);
         this.menuManager = new MenuManager(this, client, primaryStage);
     }
 
@@ -135,16 +135,6 @@ public class GamePanel extends Pane {
 
     public Client getClient() {
         return client;
-    }
-
-    private boolean inputLocked = false;
-
-    public boolean isInputLocked() {
-        return inputLocked;
-    }
-
-    public void setInputLocked(boolean lock) {
-        inputLocked = lock;
     }
 
 }
