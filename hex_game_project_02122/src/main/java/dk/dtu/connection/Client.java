@@ -2,6 +2,7 @@ package dk.dtu.connection;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.jspace.ActualField;
@@ -257,15 +258,26 @@ public class Client {
 
     public void recieveMessage() {
         while(true) {
-            Object[] message = null;
             try {
-                message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost));
+                Object[] message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost));
                 if (!((String) message[0]).isEmpty()) {
                     gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage("Other: " + (String) message[0]);
+                    lobbySpace.put(message[0], message[1], "old");
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void recieveOldMessages() {
+        try {
+            List<Object[]> oldMessages = lobbySpace.queryAll(new FormalField(String.class), new FormalField(Boolean.class), new ActualField("old"));
+            for (Object[] m : oldMessages) {
+                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage(((boolean) m[1] ? "Other: " : "You: ") + (String) m[0]);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 

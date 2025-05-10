@@ -91,8 +91,9 @@ class lobbyHandler implements Runnable {
                     if(!checkOccupied(lobbySpace)){
                         System.out.println("Not occupied");
                         lobbySpace.put("occupied");
-                        lobbySpace.put("connection","Connected");
+                        lobbySpace.put("connection", "Connected");
                         System.out.println("Player 2 has joined Lobby: " + lobbyID);
+                        //lobbySpace.put("Player joined", 0);
                         // Boolean to start
                         lobbySpace.put(true);
                         player2 = true;
@@ -103,6 +104,7 @@ class lobbyHandler implements Runnable {
                 } else {
                     lobbySpace.get(new ActualField("occupied"));
                     System.out.println("PLAYER 2 LEFT");
+                    //lobbySpace.put("Player left", 0);
                     // boolean not ready to start
                     lobbySpace.put(false);
                     player2 = false;

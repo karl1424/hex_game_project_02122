@@ -66,6 +66,7 @@ public class OnlineGameMenu extends MenuPanel {
             client.getLobbyID();
             showLobby();
             new Thread(() -> client.recieveMessage()).start();
+            //new Thread(() -> client.recieveServerMessages()).start();
         } catch (UnknownHostException e) {
             showOnlineSetup();
             onlinePane.serverIsDown();
@@ -114,6 +115,7 @@ public class OnlineGameMenu extends MenuPanel {
                 }
             }
         });
+        client.recieveOldMessages();
         new Thread(() -> client.recieveMessage()).start();
     }
 
@@ -135,7 +137,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void initGame(int boardSize, int playerNumber) {
-        manager.startGame(boardSize, 0, playerNumber,0);
+        manager.startGame(boardSize, 0, playerNumber, 0);
         gamePanel.beginGettingCoordinates();
     }
 
