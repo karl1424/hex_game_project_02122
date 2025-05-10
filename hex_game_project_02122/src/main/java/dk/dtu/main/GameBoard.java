@@ -87,4 +87,16 @@ public class GameBoard {
     public void updateSpot(int x, int y, int playerNumber) {
         logic.updateSpot(x, y, playerNumber);
     }
+
+    public GameBoardLogic getLogic() {
+        return logic;
+    }
+
+    public boolean checkWinningMove(Coordinate move, int playerNumber) {
+        return logic.checkWinningMove(move, playerNumber);
+    }
+
+    public List<Coordinate> getAvailableMoves() {
+        return logic.getAvailableMoves();
+    }
 }

@@ -163,4 +163,30 @@ public class GameBoardLogic {
             }
         }
     }
+
+    public boolean checkWinningMove(Coordinate move, int playerNumber) {
+        int originalState = board[move.getX()][move.getY()].getState();
+
+        board[move.getX()][move.getY()].setState(playerNumber);
+
+        boolean isWinning = exploreNeighbors(move, playerNumber);
+
+        board[move.getX()][move.getY()].setState(originalState);
+
+        winningPath.clear();
+
+        return isWinning;
+    }
+
+    public List<Coordinate> getAvailableMoves() {
+        List<Coordinate> availableMoves = new ArrayList<>();
+        for (int x = 0; x < boardM; x++) {
+            for (int y = 0; y < boardN; y++) {
+                if (board[x][y].getState() == 0) {
+                    availableMoves.add(new Coordinate(x, y, 0));
+                }
+            }
+        }
+        return availableMoves;
+    }
 }
