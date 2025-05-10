@@ -1,16 +1,19 @@
 package dk.dtu.computer_opponent;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import dk.dtu.main.Coordinate;
+import dk.dtu.main.GameBoard;
 
 public class SimulationGame {
     public Coordinate[][] board;
     public int boardM;
     public int boardN;
     public int winner = 0;
-    
+
     public SimulationGame(int boardM, int boardN) {
         this.boardM = boardM;
         this.boardN = boardN;
@@ -19,6 +22,18 @@ public class SimulationGame {
         for (int x = 0; x < boardM; x++) {
             for (int y = 0; y < boardN; y++) {
                 board[x][y] = new Coordinate(x, y, 0);
+            }
+        }
+    }
+
+    public SimulationGame(GameBoard gameBoard) {
+        this.boardM = gameBoard.getBoardM();
+        this.boardN = gameBoard.getBoardN();
+        this.board = new Coordinate[boardM][boardN];
+        
+        for (int x = 0; x < boardM; x++) {
+            for (int y = 0; y < boardN; y++) {
+                this.board[x][y] = new Coordinate(x, y, gameBoard.getBoard()[x][y].getState());
             }
         }
     }
@@ -73,5 +88,27 @@ public class SimulationGame {
         }
         
         return false;
+    }
+    
+
+    public List<Coordinate> getAvailableMoves() {
+        List<Coordinate> availableMoves = new ArrayList<>();
+        for (int x = 0; x < boardM; x++) {
+            for (int y = 0; y < boardN; y++) {
+                if (board[x][y].getState() == 0) {
+                    availableMoves.add(new Coordinate(x, y, 0));
+                }
+            }
+        }
+        return availableMoves;
+    }
+    
+    public boolean makeMove(Coordinate move, int playerNumber) {
+        board[move.getX()][move.getY()].setState(playerNumber);
+        boolean isWin = checkForWin(move, playerNumber);
+        if (isWin) {
+            winner = playerNumber;
+        }
+        return isWin;
     }
 }

@@ -61,7 +61,7 @@ public class MCTSNode {
     }
 
     public void expansion(GameBoard gameBoard) {
-        List<Coordinate> availableMoves = getAvailableMoves(gameBoard);
+        List<Coordinate> availableMoves = gameBoard.getAvailableMoves();
 
         int nextPlayer = (playerNumber == 1) ? 2 : 1;
         for (Coordinate availableMove : availableMoves) {
@@ -90,20 +90,14 @@ public class MCTSNode {
     }
 
     private double simulation(MCTSNode node, GameBoard gameBoard) {
-        SimulationGame simGame = new SimulationGame(gameBoard.getBoardM(), gameBoard.getBoardN());
-
-        for (int x = 0; x < gameBoard.getBoardM(); x++) {
-            for (int y = 0; y < gameBoard.getBoardN(); y++) {
-                simGame.board[x][y].setState(gameBoard.getBoard()[x][y].getState());
-            }
-        }
+        SimulationGame simGame = new SimulationGame(gameBoard);
 
         applyMovesToSimulation(node, simGame);
 
         int currentPlayer = node.playerNumber;
 
         while (simGame.winner == 0) {
-            List<Coordinate> availableMoves = getAvailableMoves(simGame);
+            List<Coordinate> availableMoves = simGame.getAvailableMoves();
 
             if (availableMoves.isEmpty()) {
                 break;
@@ -111,11 +105,8 @@ public class MCTSNode {
 
             int i = rand.nextInt(availableMoves.size());
             Coordinate spot = availableMoves.get(i);
-            simGame.board[spot.getX()][spot.getY()].setState(currentPlayer);
-
-            if (simGame.checkForWin(spot, currentPlayer)) {
-                simGame.winner = currentPlayer;
-            }
+        
+            simGame.makeMove(spot, currentPlayer);
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
@@ -144,30 +135,6 @@ public class MCTSNode {
     public void backpropagation(double value) {
         visits++;
         wins += value;
-    }
-
-    private List<Coordinate> getAvailableMoves(GameBoard gameBoard) {
-        List<Coordinate> availableMoves = new ArrayList<>();
-        for (int x = 0; x < gameBoard.getBoardM(); x++) {
-            for (int y = 0; y < gameBoard.getBoardN(); y++) {
-                if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    availableMoves.add(new Coordinate(x, y, 0));
-                }
-            }
-        }
-        return availableMoves;
-    }
-
-    private List<Coordinate> getAvailableMoves(SimulationGame simGame) {
-        List<Coordinate> availableMoves = new ArrayList<>();
-        for (int x = 0; x < simGame.boardM; x++) {
-            for (int y = 0; y < simGame.boardN; y++) {
-                if (simGame.board[x][y].getState() == 0) {
-                    availableMoves.add(new Coordinate(x, y, 0));
-                }
-            }
-        }
-        return availableMoves;
     }
 
     public boolean isFullyExpanded() {

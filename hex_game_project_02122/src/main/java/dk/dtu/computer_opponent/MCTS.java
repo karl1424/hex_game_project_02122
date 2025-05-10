@@ -1,9 +1,6 @@
 package dk.dtu.computer_opponent;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import dk.dtu.main.Coordinate;
 import dk.dtu.main.GUI;
