@@ -11,6 +11,7 @@ import org.jspace.RemoteSpace;
 import org.jspace.Space;
 
 import dk.dtu.main.GamePanel;
+import javafx.application.Platform;
 
 public class Client {
     private Space server, lobbySpace;
@@ -243,27 +244,28 @@ public class Client {
         try {
             System.out.println("put player 2 left");
             lobbySpace.put("join/leave", "Left");
+            lobbySpace.put("PLAYER LEFT", isHost, true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessage(String message) {
+    public void sendMessage(String message, boolean joinOrLeave) {
         try {
-            lobbySpace.put(message, isHost);
+            lobbySpace.put(message, isHost, joinOrLeave);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void recieveMessage() {
-        while(true) {
+        while (true) {
             try {
-                Object[] message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost));
-                if (!((String) message[0]).isEmpty()) {
-                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage("Other: " + (String) message[0]);
-                    lobbySpace.put(message[0], message[1], "old");
-                }
+                Object[] message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost),
+                        new FormalField(Boolean.class));
+                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
+                        .appendMessage(((boolean) message[2] ? "" : "Other: ") + (String) message[0]);
+                lobbySpace.put(message[0], message[1], message[2], "old");
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -272,17 +274,36 @@ public class Client {
 
     public void recieveOldMessages() {
         try {
-            List<Object[]> oldMessages = lobbySpace.queryAll(new FormalField(String.class), new FormalField(Boolean.class), new ActualField("old"));
+            List<Object[]> oldMessages = lobbySpace.queryAll(new FormalField(String.class),
+                    new FormalField(Boolean.class), new FormalField(Boolean.class), new ActualField("old"));
             for (Object[] m : oldMessages) {
-                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage(((boolean) m[1] ? "Other: " : "You: ") + (String) m[0]);
+                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
+                        .appendMessage(((boolean) m[2] ? "" : ((boolean) m[1] ? "Other: " : "You: ")) + (String) m[0]);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
+    public void checkForLobbyClosed() {
+        try {
+            lobbySpace.get(new ActualField("lobby has been closed"));
+            lobbySpace.put("acknowledge close");
+            System.out.println("Lobby has been closed");
+            Platform.runLater(() -> {
+                gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void shutDownLobby() {
-        // Shut down the space
+        try {
+            lobbySpace.put("CLOSE LOBBY");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

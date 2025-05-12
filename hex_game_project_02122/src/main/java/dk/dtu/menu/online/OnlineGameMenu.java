@@ -7,6 +7,7 @@ import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
+import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 
 public class OnlineGameMenu extends MenuPanel {
@@ -37,11 +38,14 @@ public class OnlineGameMenu extends MenuPanel {
                 client.shutDownLobby();
             }
         }
+        goToOnlineSetup();
+    }
+
+    public void goToOnlineSetup() {
         gamePanel.isOnline = false;
         getChildren().clear();
         onlinePane = new OnlineSetupPane(this);
         getChildren().add(onlinePane);
-
     }
 
     public void showLobby() {
@@ -66,7 +70,7 @@ public class OnlineGameMenu extends MenuPanel {
             client.getLobbyID();
             showLobby();
             new Thread(() -> client.recieveMessage()).start();
-            //new Thread(() -> client.recieveServerMessages()).start();
+            // new Thread(() -> client.recieveServerMessages()).start();
         } catch (UnknownHostException e) {
             showOnlineSetup();
             onlinePane.serverIsDown();
@@ -116,7 +120,12 @@ public class OnlineGameMenu extends MenuPanel {
             }
         });
         client.recieveOldMessages();
+        Platform.runLater(() -> {
+            client.sendMessage("PLAYER JOINED", true);
+            pane.appendMessage("PLAYER JOINED");
+        });
         new Thread(() -> client.recieveMessage()).start();
+        new Thread(() -> client.checkForLobbyClosed()).start();
     }
 
     public void onstartGame() {
@@ -133,7 +142,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void onSend(String message) {
-        client.sendMessage(message);
+        client.sendMessage(message, false);
     }
 
     public void initGame(int boardSize, int playerNumber) {

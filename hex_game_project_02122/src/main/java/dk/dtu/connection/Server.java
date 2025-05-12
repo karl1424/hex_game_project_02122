@@ -1,4 +1,5 @@
 package dk.dtu.connection;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +48,9 @@ public class Server {
     public static void createLobby() {
         try {
             lobbyHandler tempLobbyHandler = new lobbyHandler(IP, port, lobbyID, serverSpace);
-            lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler = lobbyHandlers.get(1); //How to acces a specific lobbyHanlder
+            lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler =
+                                                          // lobbyHandlers.get(1); //How to acces a specific
+                                                          // lobbyHanlder
             new Thread(tempLobbyHandler).start();
             lobbyRequests.put("lobby", lobbyID);
             System.out.println("Lobby ID: " + lobbyHandlers.get(lobbyID).getLobbyId() + " have been created ");
@@ -65,6 +68,7 @@ class lobbyHandler implements Runnable {
     private SpaceRepository serverSpace;
     private Space lobbySpace;
     private boolean player2;
+    private volatile boolean running = true;
 
     public lobbyHandler(String IP, String port, int lobbyID, SpaceRepository serverSpace) {
         this.IP = IP;
@@ -78,49 +82,68 @@ class lobbyHandler implements Runnable {
         new Thread(() -> getConnect()).start();
     }
 
-    public void getConnect(){
+    public void getConnect() {
         try {
             lobbySpace = new RemoteSpace(getUri(lobbyID + "lobby"));
             lobbySpace.get(new ActualField("join/leave"), new ActualField("try to connect"));
             lobbySpace.put("connection", "Connected");
             System.out.println("The host has joined Lobby: " + lobbyID);
             System.out.println("Before while");
-            while (true) {
-                Object [] player2Status = lobbySpace.get(new ActualField("join/leave"), new FormalField(String.class));
-                if(player2Status[1].equals("try to connect")){
-                    if(!checkOccupied(lobbySpace)){
+            new Thread(() -> checkCloseLobby()).start();
+            while (running) {
+                Object[] player2Status = lobbySpace.get(new ActualField("join/leave"), new FormalField(String.class));
+                if (player2Status[1].equals("try to connect")) {
+                    if (!checkOccupied(lobbySpace)) {
                         System.out.println("Not occupied");
                         lobbySpace.put("occupied");
                         lobbySpace.put("connection", "Connected");
                         System.out.println("Player 2 has joined Lobby: " + lobbyID);
-                        //lobbySpace.put("Player joined", 0);
+                        // lobbySpace.put("Player joined", 0);
                         // Boolean to start
                         lobbySpace.put(true);
                         player2 = true;
                     } else {
                         System.out.println("Occupied");
-                        lobbySpace.put("connection","Not connected");
+                        lobbySpace.put("connection", "Not connected");
                     }
                 } else {
                     lobbySpace.get(new ActualField("occupied"));
                     System.out.println("PLAYER 2 LEFT");
-                    //lobbySpace.put("Player left", 0);
+                    // lobbySpace.put("Player left", 0);
                     // boolean not ready to start
                     lobbySpace.put(false);
                     player2 = false;
 
                 }
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean checkOccupied(Space space) {
-        Object [] isOccupied = null;
+    private void checkCloseLobby() {
         try {
-             isOccupied = space.queryp(new ActualField("occupied"));
+            System.out.println("Started check close lobby");
+            lobbySpace.get(new ActualField("CLOSE LOBBY"));
+            lobbySpace.put("lobby has been closed");
+
+            lobbySpace.get(new ActualField("acknowledge close"));
+            serverSpace.remove(lobbyID + "lobby");
+            System.out.println("Lobby " + lobbyID + " closed and removed from repository");
+
+            Server.lobbyHandlers.remove(lobbyID);
+
+            running = false;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkOccupied(Space space) {
+        Object[] isOccupied = null;
+        try {
+            isOccupied = space.queryp(new ActualField("occupied"));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -131,7 +154,8 @@ class lobbyHandler implements Runnable {
         String Uri = "tcp://" + IP + ":" + port + "/" + name + "?conn";
         return Uri;
     }
-    public int getLobbyId(){
+
+    public int getLobbyId() {
         return lobbyID;
     }
 }
