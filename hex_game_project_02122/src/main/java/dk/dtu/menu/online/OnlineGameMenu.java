@@ -42,6 +42,9 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void goToOnlineSetup() {
+        if (client != null) {
+            client.stopReceivingMessages();
+        }
         gamePanel.isOnline = false;
         getChildren().clear();
         onlinePane = new OnlineSetupPane(this);
@@ -65,14 +68,13 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void onHost() {
         gamePanel.isOnline = true;
-        client.establishConnetion(true);
         try {
+            client.establishConnetion(true);
             client.getLobbyID();
             showLobby();
             new Thread(() -> client.recieveMessage()).start();
-            // new Thread(() -> client.recieveServerMessages()).start();
-        } catch (UnknownHostException e) {
-            showOnlineSetup();
+        } catch (Exception e) {
+            goToOnlineSetup();
             onlinePane.serverIsDown();
         }
 

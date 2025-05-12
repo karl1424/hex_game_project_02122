@@ -128,13 +128,29 @@ class lobbyHandler implements Runnable {
             lobbySpace.get(new ActualField("CLOSE LOBBY"));
             lobbySpace.put("lobby has been closed");
 
-            lobbySpace.get(new ActualField("acknowledge close"));
+            long startTime = System.currentTimeMillis();
+            boolean acknowledged = false;
+
+            while (System.currentTimeMillis() - startTime < 2000) {
+                Object[] ack = lobbySpace.getp(new ActualField("acknowledge close"));
+                if (ack != null) {
+                    acknowledged = true;
+                    System.out.println("Received acknowledge close");
+                    break;
+                }
+                Thread.sleep(100);
+            }
+
+            if (!acknowledged) {
+                System.out.println("No acknowledge close received in 2 seconds, continuing anyway.");
+            }
+
             serverSpace.remove(lobbyID + "lobby");
             System.out.println("Lobby " + lobbyID + " closed and removed from repository");
 
             Server.lobbyHandlers.remove(lobbyID);
-
             running = false;
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

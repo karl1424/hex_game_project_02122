@@ -23,22 +23,19 @@ public class Client {
     private boolean running = false;
     private boolean canStart;
     private GamePanel gamePanel;
+    private boolean recieveMessages = false;
 
     public Client(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
     }
 
-    public void establishConnetion(boolean isHost) {
+    public void establishConnetion(boolean isHost) throws IllegalStateException, InterruptedException, IOException {
+        isOffline = false;
         this.isHost = isHost;
-        try {
-            if (isHost) {
-                connectHost(getUri("lobbyRequests"));
-            }
-            connectToLobby(lobbyID);
-        } catch (Exception e) {
-            return;
-            // e.printStackTrace();
+        if (isHost) {
+            connectHost(getUri("lobbyRequests"));
         }
+        connectToLobby(lobbyID);
     }
 
     public void connectHost(String uri) {
@@ -156,7 +153,7 @@ public class Client {
 
                 handler.onStart(boardSize, playerNumber);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                
             }
         }).start();
     }
@@ -192,7 +189,7 @@ public class Client {
                 }
 
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                
             }
         }).start();
     }
@@ -223,7 +220,7 @@ public class Client {
 
     public void lookForP2() {
         try {
-            while (true) {
+            while (recieveMessages) {
                 Object[] start = lobbySpace.get(new FormalField(Boolean.class));
                 if ((boolean) start[0]) {
                     canStart = true;
@@ -258,8 +255,13 @@ public class Client {
         }
     }
 
+    public void stopReceivingMessages() {
+        recieveMessages = false;
+    }
+
     public void recieveMessage() {
-        while (true) {
+        recieveMessages = true;
+        while (recieveMessages) {
             try {
                 Object[] message = lobbySpace.get(new FormalField(String.class), new ActualField(!isHost),
                         new FormalField(Boolean.class));
@@ -267,7 +269,7 @@ public class Client {
                         .appendMessage(((boolean) message[2] ? "" : "Other: ") + (String) message[0]);
                 lobbySpace.put(message[0], message[1], message[2], "old");
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                
             }
         }
     }
@@ -291,6 +293,7 @@ public class Client {
             lobbySpace.put("acknowledge close");
             System.out.println("Lobby has been closed");
             Platform.runLater(() -> {
+                stopReceivingMessages();
                 gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
             });
         } catch (InterruptedException e) {
