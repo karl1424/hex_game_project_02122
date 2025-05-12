@@ -2,7 +2,7 @@ package dk.dtu.main;
 
 import java.util.List;
 
-import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.computer_opponent.MCTS;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -17,7 +17,7 @@ public class GUI extends Pane {
 
     private GameBoard gameBoard;
     private GamePanel gamePanel;
-    private ComputerManager computerOpponent;
+    private MCTS computerOpponent;
 
     private Hexagon[][] hexagons;
 
@@ -86,7 +86,7 @@ public class GUI extends Pane {
         timeline.play();
     }
 
-    public void setComputerOpponent(ComputerManager comp) {
+    public void setComputerOpponent(MCTS comp) {
         this.computerOpponent = comp;
     }
 }

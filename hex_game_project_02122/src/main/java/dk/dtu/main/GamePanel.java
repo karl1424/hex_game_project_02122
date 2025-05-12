@@ -1,6 +1,6 @@
 package dk.dtu.main;
 
-import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.computer_opponent.MCTS;
 import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
 import javafx.animation.KeyFrame;
@@ -14,7 +14,7 @@ public class GamePanel extends Pane {
     public GUI gui;
     private GameBoard gameBoard;
     private int gridSize;
-    private ComputerManager computerOpponent;
+    private MCTS computerOpponent;
     private int computerPlayer;
     private MenuManager menuManager;
     private Client client;
@@ -48,7 +48,7 @@ public class GamePanel extends Pane {
         gameBoard.printBoard();
         if (computerPlayer != 0) {
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
-                computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui,difficulty);
+                computerOpponent = new MCTS(gameBoard, computerPlayer, gui,difficulty);
                 gui.setComputerOpponent(computerOpponent);
 
                 // Let computer go first if it's player 1
@@ -100,7 +100,7 @@ public class GamePanel extends Pane {
         return isOnline;
     }
 
-    public ComputerManager getComputerOpponent() {
+    public MCTS getComputerOpponent() {
         return computerOpponent;
     }
 
