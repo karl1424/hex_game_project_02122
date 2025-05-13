@@ -10,7 +10,7 @@ public class GameBoardLogic {
     private final Coordinate[][] board;
     private final int boardM, boardN;
     private final List<Coordinate> winningPath = new ArrayList<>();
-    public boolean BFSDebug = true;
+    public boolean BFSDebug = false;
 
     public GameBoardLogic(GameBoard gameBoard, Coordinate[][] board, int boardM, int boardN) {
         this.gameBoard = gameBoard;
