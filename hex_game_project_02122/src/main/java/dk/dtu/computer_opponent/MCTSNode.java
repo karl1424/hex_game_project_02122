@@ -105,7 +105,7 @@ public class MCTSNode {
 
             int i = rand.nextInt(availableMoves.size());
             Coordinate spot = availableMoves.get(i);
-        
+            // Coordinate spot = chooseHeuristicMove(availableMoves,simGame,currentPlayer);
             simGame.makeMove(spot, currentPlayer);
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
@@ -130,6 +130,112 @@ public class MCTSNode {
                 simGame.board[move.getX()][move.getY()].setState(player);
             }
         }
+    }
+
+    private Coordinate chooseHeuristicMove(List<Coordinate> moves, SimulationGame simGame, int player) {
+        int M = simGame.boardM;
+        int N = simGame.boardN;
+        int centerX = M / 2;
+        int centerY = N / 2;
+        int opponent = (player == 1) ? 2 : 1;
+
+        List<ScoredMove> scored = new ArrayList<>();
+        int[] directionsX = { 0, 0, -1, 1, -1, 1 };
+        int[] directionsY = { 1, -1, 0, 0, 1, -1 };
+
+        for (Coordinate mv : moves) {
+            // 1) Center value
+            double dist = Math.hypot(mv.getX() - centerX, mv.getY() - centerY);
+            double centerScore = (1.0 / (1.0 + dist)) * 2;
+
+            // 2) chain pattern(Friendly adjacency)
+            int adj = 0;
+            for (int k = 0; k < directionsX.length; k++) {
+                int nx = mv.getX() + directionsX[k], ny = mv.getY() + directionsY[k];
+                if (nx >= 0 && nx < M && ny >= 0 && ny < N && simGame.board[nx][ny].getState() == player) {
+                    adj++;
+                }
+            }
+            double adjScore = adj * 1;
+
+            // 3) Opponent adjacency (blocking)
+            int oppAdj = 0;
+            for (int k = 0; k < directionsX.length; k++) {
+                int nx = mv.getX() + directionsX[k];
+                int ny = mv.getY() + directionsY[k];
+                if (nx >= 0 && nx < M && ny >= 0 && ny < N && simGame.board[nx][ny].getState() == opponent) {
+                    oppAdj++;
+                }
+            }
+            double blockScore = oppAdj * 3;
+
+            // 4) Bridge pattern
+            int bridgeCount = 0;
+            int[][] cross = {
+                    { -1, 0, 0, -1 },
+                    { -1, 0, 0, 1 },
+                    { 1, 0, 0, -1 },
+                    { 1, 0, 0, 1 } };
+            for (int i = 0; i < cross.length; i++) {
+                int dx1 = cross[i][0], dy1 = cross[i][1];
+                int dx2 = cross[i][2], dy2 = cross[i][3];
+                int nx1 = mv.getX() + dx1, ny1 = mv.getY() + dy1;
+                int nx2 = mv.getX() + dx2, ny2 = mv.getY() + dy2;
+                if (nx1 >= 0 && nx1 < M && ny1 >= 0 && ny1 < N
+                        && nx2 >= 0 && nx2 < M && ny2 >= 0 && ny2 < N
+                        && simGame.board[nx1][ny1].getState() == player
+                        && simGame.board[nx2][ny2].getState() == player) {
+                    bridgeCount++;
+                }
+            }
+            double bridgeScore = bridgeCount * 1;
+
+            // 5) Ladder escape & ladder breaker patterns
+            int escapeCount = 0;
+            int breakerCount = 0;
+            int[][] escapePatterns = {
+                { 2, 1, 1, 2 },
+                { 2, -1, 1, -2 },
+                { -2, 1, -1, 2 },
+                { -2, -1, -1, -2 }
+            };
+            for (int[] pat : escapePatterns) {
+                int sx = mv.getX() + pat[0], sy = mv.getY() + pat[1];
+                int ex = mv.getX() + pat[2], ey = mv.getY() + pat[3];
+                if (sx >= 0 && sx < M && sy >= 0 && sy < N
+                        && ex >= 0 && ex < M && ey >= 0 && ey < N
+                        && simGame.board[sx][sy].getState() == player
+                        && simGame.board[ex][ey].getState() == 0) {
+                    escapeCount++;
+                }
+            }
+            int[][] breakerPatterns = {
+                { 1, 2, 2, 1 },
+                { 1, -2, 2, -1 },
+                { -1, 2, -2, 1 },
+                { -1, -2, -2, -1 }
+            };
+            for (int[] pat : breakerPatterns) {
+                int ox = mv.getX() + pat[0], oy = mv.getY() + pat[1];
+                int jx = mv.getX() + pat[2], jy = mv.getY() + pat[3];
+                if (ox >= 0 && ox < M && oy >= 0 && oy < N
+                        && jx >= 0 && jx < M && jy >= 0 && jy < N
+                        && simGame.board[ox][oy].getState() == opponent
+                        && simGame.board[jx][jy].getState() == 0) {
+                    breakerCount++;
+                }
+            }
+            double escapeScore = escapeCount * 2;
+            double breakerScore = breakerCount * 2;
+
+            double totalScore = centerScore + blockScore + bridgeScore + adjScore + escapeScore + breakerScore;
+            scored.add(new ScoredMove(mv, totalScore));
+        }
+
+        scored.sort((a, b) -> Double.compare(b.score, a.score));
+        int limit = Math.min(3, scored.size());
+        int choice = rand.nextInt(limit);
+        return scored.get(choice).move;
     }
 
     public void backpropagation(double value) {
@@ -163,5 +269,15 @@ public class MCTSNode {
 
     public void addChild(MCTSNode child) {
         children.add(child);
+    }
+
+    private static class ScoredMove {
+        Coordinate move;
+        double score;
+
+        ScoredMove(Coordinate m, double s) {
+            move = m;
+            score = s;
+        }
     }
 }
