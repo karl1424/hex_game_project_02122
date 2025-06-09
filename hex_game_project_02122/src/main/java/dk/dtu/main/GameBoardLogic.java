@@ -1,6 +1,6 @@
 package dk.dtu.main;
 
-import dk.dtu.computer_opponent.MCTS;
+import dk.dtu.computer_opponent.ComputerManager;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import java.util.*;
@@ -10,7 +10,7 @@ public class GameBoardLogic {
     private final Coordinate[][] board;
     private final int boardM, boardN;
     private final List<Coordinate> winningPath = new ArrayList<>();
-    public boolean BFSDebug = true;
+    public boolean BFSDebug = false;
 
     public GameBoardLogic(GameBoard gameBoard, Coordinate[][] board, int boardM, int boardN) {
         this.gameBoard = gameBoard;
@@ -135,10 +135,10 @@ public class GameBoardLogic {
 
             System.out.println("Human move at: " + hexagon.xCor + ", " + hexagon.yCor);
 
-            MCTS comp = gamePanel.getComputerOpponent();
-            // if (comp != null) {
-            //     comp.setLastHumanMove(hexagon.xCor, hexagon.yCor);
-            // }
+            ComputerManager comp = gamePanel.getComputerOpponent();
+            if (comp != null) {
+                comp.setLastHumanMove(hexagon.xCor, hexagon.yCor);
+            }
 
             System.out.println("Board after human move:");
             gameBoard.printBoard();

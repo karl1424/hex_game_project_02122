@@ -229,7 +229,7 @@ public class Client {
 
     public void lookForP2() {
         try {
-            while (recieveMessages) {
+            while (true) {
                 Object[] start = lobbySpace.get(new FormalField(Boolean.class));
                 if ((boolean) start[0]) {
                     canStart = true;

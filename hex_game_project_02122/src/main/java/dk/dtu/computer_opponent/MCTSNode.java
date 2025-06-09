@@ -77,7 +77,7 @@ public class MCTSNode {
         for (MCTSNode child : children) {
             double exploitationTerm = child.wins / (child.visits + EPSILON);
             double explorationTerm = EXPLORATION_PARAMETER
-                    * Math.sqrt(Math.log(this.visits + 1) / (child.visits + EPSILON)) + rand.nextDouble() * EPSILON;
+                    * Math.sqrt(Math.log(this.visits + 1) / (child.visits + EPSILON));
             double uctScore = exploitationTerm + explorationTerm;
 
             if (uctScore > bestValue) {
@@ -105,7 +105,6 @@ public class MCTSNode {
 
             int i = rand.nextInt(availableMoves.size());
             Coordinate spot = availableMoves.get(i);
-        
             simGame.makeMove(spot, currentPlayer);
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
