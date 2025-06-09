@@ -38,6 +38,7 @@ public class Server {
     public static void waitingForHost() {
         try {
             handshake();
+            System.out.println("Handshake completed");
             lobbyRequests.get(new ActualField("host"));
             System.out.println("Host detected");
             createLobby();
@@ -50,6 +51,7 @@ public class Server {
         try {
             lobbyRequests.get(new ActualField("server"), new ActualField("try to connect"));
             lobbyRequests.put("connection", "Connected");
+            return;
         } catch (Exception e) {
             e.printStackTrace();
         }
