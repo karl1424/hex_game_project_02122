@@ -37,6 +37,7 @@ public class Server {
 
     public static void waitingForHost() {
         try {
+            handshake();
             lobbyRequests.get(new ActualField("host"));
             System.out.println("Host detected");
             createLobby();
@@ -45,12 +46,21 @@ public class Server {
         }
     }
 
+    public static void handshake() {
+        try {
+            lobbyRequests.get(new ActualField("server"), new ActualField("try to connect"));
+            lobbyRequests.put("connection", "Connected");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void createLobby() {
         try {
             lobbyHandler tempLobbyHandler = new lobbyHandler(IP, port, lobbyID, serverSpace);
-            lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler =
+            lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler
                                                           // lobbyHandlers.get(1); //How to acces a specific
-                                                          // lobbyHanlder
             new Thread(tempLobbyHandler).start();
             lobbyRequests.put("lobby", lobbyID);
             System.out.println("Lobby ID: " + lobbyHandlers.get(lobbyID).getLobbyId() + " have been created ");
@@ -67,7 +77,7 @@ class lobbyHandler implements Runnable {
     public int lobbyID;
     private SpaceRepository serverSpace;
     private Space lobbySpace;
-    private boolean player2;
+    private boolean player2; // Used to check if the lobby is full
     private volatile boolean running = true;
 
     public lobbyHandler(String IP, String port, int lobbyID, SpaceRepository serverSpace) {
