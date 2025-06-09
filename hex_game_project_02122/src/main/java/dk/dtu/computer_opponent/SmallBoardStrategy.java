@@ -32,9 +32,9 @@ public class SmallBoardStrategy {
             gameBoard.printBoard();
             return;
         }
-        List<Coordinate> candidateMoves = getCandidateMoves();
-        List<Coordinate> priorityMoves = filterMovesNearLastHumanMove(candidateMoves);
-        if (!priorityMoves.isEmpty() && placeFirstValidMove(priorityMoves)) {
+        List<Coordinate> candidateMoves = possibleMoves();
+        List<Coordinate> priorityMoves = nearHuman(candidateMoves);
+        if (!priorityMoves.isEmpty() && firstValidMove(priorityMoves)) {
             return;
         }
     }
@@ -70,12 +70,12 @@ public class SmallBoardStrategy {
      * Scans the entire board (using x as the first coordinate and y as the second)
      * for empty cells that connects to at least one of computer opponent's move.
      */
-    private List<Coordinate> getCandidateMoves() {
+    private List<Coordinate> possibleMoves() {
         List<Coordinate> candidates = new ArrayList<>();
         for (int x = 0; x < gameBoard.getBoardN(); x++) {
             for (int y = 0; y < gameBoard.getBoardM(); y++) {
                 if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    if (isConnectedToComputerMove(x, y)) {
+                    if (isLinkedToAI(x, y)) {
                         candidates.add(new Coordinate(x, y, playerNumber));
                     }
                 }
@@ -84,7 +84,7 @@ public class SmallBoardStrategy {
         return candidates;
     }
 
-    private boolean isConnectedToComputerMove(int x, int y) {
+    private boolean isLinkedToAI(int x, int y) {
         int[] directionsX = { 0, 0, -1, 1, -1, 1 };
         int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
@@ -101,7 +101,7 @@ public class SmallBoardStrategy {
         return false;
     }
 
-    private List<Coordinate> filterMovesNearLastHumanMove(List<Coordinate> candidates) {
+    private List<Coordinate> nearHuman(List<Coordinate> candidates) {
         List<Coordinate> filteredMoves = new ArrayList<>();
 
         if (lastHumanMove == null) {
@@ -138,7 +138,7 @@ public class SmallBoardStrategy {
         return filteredMoves;
     }
 
-    private boolean placeFirstValidMove(List<Coordinate> moves) {
+    private boolean firstValidMove(List<Coordinate> moves) {
         if (gameBoard.getWinner() != 0) {
             return false;
         }
