@@ -50,7 +50,7 @@ public class Server {
     public static void handshake() {
         try {
             lobbyRequests.get(new ActualField("server"), new ActualField("try to connect"));
-            lobbyRequests.put("connection", "Connected");
+            lobbyRequests.put("connection", "connected");
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,7 +98,7 @@ class lobbyHandler implements Runnable {
         try {
             lobbySpace = new RemoteSpace(getUri(lobbyID + "lobby"));
             lobbySpace.get(new ActualField("join/leave"), new ActualField("try to connect"));
-            lobbySpace.put("connection", "Connected");
+            lobbySpace.put("connection", "connected");
             System.out.println("The host has joined Lobby: " + lobbyID);
             System.out.println("Before while");
             new Thread(() -> checkCloseLobby()).start();
@@ -108,7 +108,7 @@ class lobbyHandler implements Runnable {
                     if (!checkOccupied(lobbySpace)) {
                         System.out.println("Not occupied");
                         lobbySpace.put("occupied");
-                        lobbySpace.put("connection", "Connected");
+                        lobbySpace.put("connection", "connected");
                         System.out.println("Player 2 has joined Lobby: " + lobbyID);
                         // lobbySpace.put("Player joined", 0);
                         // Boolean to start

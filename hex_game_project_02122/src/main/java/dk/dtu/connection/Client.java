@@ -80,13 +80,13 @@ public class Client {
     public boolean serverHandShake() throws InterruptedException {
         server.put("server", "try to connect");
         Object[] connection = server.get(new ActualField("connection"), new FormalField(String.class));
-        return (((String) connection[1]).equals("Connected"));
+        return (((String) connection[1]).equals("connected"));
     }
 
     public boolean lobbyHandShake() throws InterruptedException {
         lobbySpace.put("join/leave", "try to connect");
         Object[] connection = lobbySpace.get(new ActualField("connection"), new FormalField(String.class));
-        return (((String) connection[1]).equals("Connected"));
+        return (((String) connection[1]).equals("connected"));
     }
 
     public String getLobbyID() throws UnknownHostException {
