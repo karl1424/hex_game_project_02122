@@ -41,6 +41,9 @@ public class Client {
     public void connectHost(String uri) {
         try {
             server = new RemoteSpace(uri);
+            if (!serverHandShake()) {
+                throw new IllegalStateException();
+            }
             server.put("host");
             Object[] lobby = server.get(new ActualField("lobby"), new FormalField(Integer.class));
             lobbyID = (int) lobby[1];
@@ -72,6 +75,12 @@ public class Client {
     public void establishConnectionToLobby(int lobbyID) throws InterruptedException, IOException {
         String uriLobby = getUri(lobbyID + "lobby");
         lobbySpace = new RemoteSpace(uriLobby);
+    }
+
+    public boolean serverHandShake() throws InterruptedException {
+        server.put("server", "try to connect");
+        Object[] connection = server.get(new ActualField("connection"), new FormalField(String.class));
+        return (((String) connection[1]).equals("Connected"));
     }
 
     public boolean lobbyHandShake() throws InterruptedException {
@@ -153,7 +162,7 @@ public class Client {
 
                 handler.onStart(boardSize, playerNumber);
             } catch (InterruptedException e) {
-                
+
             }
         }).start();
     }
@@ -189,7 +198,7 @@ public class Client {
                 }
 
             } catch (InterruptedException e) {
-                
+
             }
         }).start();
     }
@@ -269,7 +278,7 @@ public class Client {
                         .appendMessage(((boolean) message[2] ? "" : "Other: ") + (String) message[0]);
                 lobbySpace.put(message[0], message[1], message[2], "old");
             } catch (InterruptedException e) {
-                
+
             }
         }
     }
