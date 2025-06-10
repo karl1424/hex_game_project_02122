@@ -198,7 +198,7 @@ public class Client {
                 }
 
             } catch (InterruptedException e) {
-
+                
             }
         }).start();
     }
@@ -224,6 +224,7 @@ public class Client {
     }
 
     public boolean getIsHost() {
+        System.out.println(isHost);
         return isHost;
     }
 
@@ -232,6 +233,7 @@ public class Client {
             while (true) {
                 Object[] start = lobbySpace.get(new FormalField(Boolean.class));
                 if ((boolean) start[0]) {
+                    sendGameSettings();
                     canStart = true;
                 } else {
                     canStart = false;
@@ -318,4 +320,19 @@ public class Client {
         }
     }
 
+    public void setIsHost(boolean isHost) {
+        this.isHost = isHost;
+        System.out.println("set:" + this.isHost);
+    }
+
+    private void sendGameSettings() {
+        try {
+            int boardSize = gamePanel.getMenuManager().getOnlineGameMenu().getBoardSize();
+            int playerStart = gamePanel.getMenuManager().getOnlineGameMenu().getPlayerStart();
+            lobbySpace.put("board size", boardSize);
+            lobbySpace.put("playerStart", playerStart);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -116,7 +116,7 @@ class lobbyHandler implements Runnable {
                         player2 = true;
                     } else {
                         System.out.println("Occupied");
-                        lobbySpace.put("connection", "Not connected");
+                        lobbySpace.put("connection", "not connected");
                     }
                 } else {
                     lobbySpace.get(new ActualField("occupied"));

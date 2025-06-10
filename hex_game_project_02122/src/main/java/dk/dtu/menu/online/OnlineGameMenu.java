@@ -29,7 +29,6 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void showOnlineSetup() {
-        System.out.println("Hey!!!!");
         if (gamePanel.isOnline == true) {
             if (!client.getIsHost()) {
                 System.out.println("player 2 left");
@@ -37,6 +36,7 @@ public class OnlineGameMenu extends MenuPanel {
             } else {
                 client.shutDownLobby();
             }
+            client.setIsHost(false);
         }
         goToOnlineSetup();
     }
@@ -99,6 +99,7 @@ public class OnlineGameMenu extends MenuPanel {
             initGame(sizeBoard, numberPlayer);
         });
         client.getGameInfo((tag, value) -> {
+            System.out.println("tag, value: " + tag + value);
             if (tag.equals("board size")) {
                 for (CheckBox cb : pane.checkBoxes) {
                     cb.setSelected(false); // Clear all selections
@@ -132,8 +133,8 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void onstartGame() {
         if (client.getCanStart()) {
-            boardSize = pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
-            playerNumber = pane.player1CheckBox.isSelected() ? 1 : 2;
+            boardSize = getBoardSize();
+            playerNumber = getPlayerStart();
             opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
             client.sendStartGame(boardSize, opponentNumber);
             initGame(boardSize, playerNumber);
@@ -166,5 +167,13 @@ public class OnlineGameMenu extends MenuPanel {
 
     public LobbyPane getLobbyPane() {
         return pane;
+    }
+
+    public int getBoardSize(){
+        return pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
+    }
+
+    public int getPlayerStart(){
+        return pane.player1CheckBox.isSelected() ? 1 : 2;
     }
 }

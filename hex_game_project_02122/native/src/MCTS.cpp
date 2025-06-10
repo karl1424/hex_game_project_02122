@@ -21,8 +21,6 @@ std::pair<int, int> MCTS::runAlgorithm() {
         root->selectAction(board);
     }
 
-    return {0, 0};
-
     MCTSNode* bestChild = nullptr;
     int mostVisits = -1;
 

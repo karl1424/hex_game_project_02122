@@ -13,7 +13,7 @@ public class ComputerManager {
     private int difficulty;
     private boolean useSmallBoardStrategyHard;
     private NativeWrapper wrapper;
-    private boolean nativeTest = false;
+    private boolean nativeTest = true;
 
     public ComputerManager(GameBoard gameBoard, int playerNumber, GUI gui, int difficulty) {
         this.gameBoard = gameBoard;
