@@ -1,5 +1,6 @@
 #include "MCTSNode.h"
 #include "MCTSUtils.h"
+#include <iostream>
 
 std::mt19937 MCTSNode::shared_rng(std::random_device{}());
 
@@ -96,23 +97,30 @@ double MCTSNode::simulation(MCTSNode* node, const std::vector<std::vector<int>>&
     int currentPlayer = node->playerNumber;
     int winner = 0;
 
-    while (true) {
-        std::vector<Move> availableMoves = getAvailableMoves(board);
+    std::vector<Move> availableMoves = getAvailableMoves(board);
+    int totalMoves = availableMoves.size();
+    int moveCount = 0;
 
-        if (availableMoves.empty()) {
-            break;
-        }
-
+    while (moveCount < totalMoves) {
         std::uniform_int_distribution<int> dist(0, availableMoves.size() - 1);
         auto move = availableMoves[dist(MCTSNode::shared_rng)];
         board[move.x][move.y] = currentPlayer;
 
-        if (checkWinningMove(move, board, currentPlayer)) {
-            winner = currentPlayer;
+        auto it = std::find(availableMoves.begin(), availableMoves.end(), move);
+        if (it != availableMoves.end()) {
+            availableMoves.erase(it);
+        }
+        
+        moveCount++;
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+    }
+
+    for (int i = 0; i < board.size(); ++i) {
+        if (checkWinningMove(Move(i, 0), board, 2)) {
+            winner = 2;
             break;
         }
-
-        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        winner = 1;
     }
 
     return (winner == this->playerNumber) ? 1.0 : 0.0;
