@@ -51,6 +51,9 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>dk.dtu.main.Main</mainClass>
+                            <options>
+                                <option>-Djava.library.path=native</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

@@ -9,6 +9,7 @@ import dk.dtu.main.Coordinate;
 import dk.dtu.main.GameBoard;
 
 public class MCTSNode {
+    private static int counter = 0;
     private Coordinate move;
     private MCTSNode parent;
     private List<MCTSNode> children;
@@ -34,26 +35,49 @@ public class MCTSNode {
     }
 
     public void selectAction(GameBoard gameBoard) {
+        long startTotal = System.nanoTime();
+
         List<MCTSNode> visited = new LinkedList<>();
         MCTSNode current = this;
         visited.add(current);
 
+        long startSelection = System.nanoTime();
         while (!current.isLeaf()) {
             current = current.selection();
             visited.add(current);
         }
+        long endSelection = System.nanoTime();
 
+        long startExpansion = System.nanoTime();
         if (!current.expanded) {
             current.expansion(gameBoard);
             current.expanded = true;
         }
+        long endExpansion = System.nanoTime();
 
+        long startSimulation = System.nanoTime();
         MCTSNode nodeToRollout = current;
         double value = simulation(nodeToRollout, gameBoard);
+        long endSimulation = System.nanoTime();
 
+        long startBackprop = System.nanoTime();
         for (MCTSNode node : visited) {
             node.backpropagation(value);
         }
+        long endBackprop = System.nanoTime();
+
+        long endTotal = System.nanoTime();
+
+/*         // Statisk tæller – printer kun hver 1000. gang
+        if (++counter % 1000 == 0) {
+            System.out.println("[Iteration " + counter + "]");
+            System.out.println("Selection:  " + (endSelection - startSelection) / 1000 + " μs");
+            System.out.println("Expansion:  " + (endExpansion - startExpansion) / 1000 + " μs");
+            System.out.println("Simulation: " + (endSimulation - startSimulation) / 1000 + " μs");
+            System.out.println("Backprop:   " + (endBackprop - startBackprop) / 1000 + " μs");
+            System.out.println("Total:      " + (endTotal - startTotal) / 1000 + " μs");
+            System.out.println("-------------------------");
+        } */
     }
 
     public boolean isLeaf() {

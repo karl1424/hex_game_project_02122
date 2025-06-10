@@ -32,14 +32,9 @@ public class MCTS {
 
         MCTSNode rootNode = new MCTSNode(null, null, playerNumber);
 
-        long startTime = System.currentTimeMillis();
-
         for (int i = 0; i < iterations; i++) {
             rootNode.selectAction(gameBoard);
         }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("MCTS completed " + iterations + " iterations in " + (endTime - startTime) + "ms");
         
         MCTSNode bestChild = null;
         int mostVisits = -1;
