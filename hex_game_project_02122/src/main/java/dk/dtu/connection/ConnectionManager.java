@@ -13,40 +13,42 @@ public class ConnectionManager {
                 + "?conn";
     }
 
-    
-
-    public void connectHost(String uri) throws Exception {
-        server = new RemoteSpace(uri);
-        if (!performHandshake(SpaceTag.SERVER.value(), server)) {
-            throw new IllegalStateException();
-        }
-        server.put(TupleTag.HOST.value());
-        Object[] lobby = server.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(Integer.class));
-        lobbyID = (int) lobby[1];
-    }
-
-
-    public void connectToLobby(int lobbyID) throws Exception {
-        this.lobbyID = lobbyID;
-        String uriLobby = getUri(lobbyID + SpaceTag.LOBBY.value());
-        lobby = new RemoteSpace(uriLobby);
-
-        if (!performHandshake(SpaceTag.LOBBY.value(), lobby)) {
-            throw new IllegalStateException();
-        }
+    public RemoteSpace establishConnectionToRemoteSpace(String name) throws InterruptedException, IOException {
+        String uri = getUri(name);
+        RemoteSpace space = new RemoteSpace(uri);
+        return space;
     }
 
     public boolean performHandshake(String spaceTag, RemoteSpace space) throws InterruptedException {
         space.put(spaceTag, TupleTag.TRYTOCONNECT.value());
         Object[] connection = space.get(new ActualField(TupleTag.CONNECTION.value()), new FormalField(String.class));
-        return connection[1].equals(TupleTag.CONNECTED.value());
+        return (((String) connection[1]).equals(TupleTag.CONNECTED.value()));
     }
+
+    public void connectHost() throws InterruptedException, IOException {
+        server = establishConnectionToRemoteSpace(SpaceTag.LOBBY_REQUEST.value());
+            if (!performHandshake(SpaceTag.SERVER.value(), server)) {
+                throw new IllegalStateException();
+            }
+            server.put(TupleTag.HOST.value());
+            Object[] lobby = server.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(Integer.class));
+            lobbyID = (int) lobby[1];
+            System.out.println("Lobby ID: " + lobbyID);
+        
+    }
+    public int getLobbyID(){
+        return this.lobbyID;
+    }
+
+
+    // -------------------------
+
+
+
+
+    
 
     public RemoteSpace getLobby() {
         return lobby;
-    }
-
-    public int getLobbyID() {
-        return lobbyID;
     }
 }

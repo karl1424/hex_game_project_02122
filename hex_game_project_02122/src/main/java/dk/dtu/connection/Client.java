@@ -36,37 +36,21 @@ public class Client {
         isOffline = false;
         this.isHost = isHost;
         if (isHost) {
-            connectHost();
-        }
-        connectToLobby(lobbyID);
-    }
-
-    public void connectHost() {
-        try {
-            server = establishConnectionToRemoteSpace(SpaceTag.LOBBY_REQUEST.value());
-            if (!perfromHandShake(SpaceTag.SERVER.value(), server)) {
-                throw new IllegalStateException();
+            try {
+                connectionManager.connectHost();
+            } catch (Exception e) {
+                isOffline = true;
+                return;
             }
-            server.put(TupleTag.HOST.value());
-            Object[] lobby = server.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(Integer.class));
-            lobbyID = (int) lobby[1];
-            System.out.println("Lobby ID: " + lobbyID);
-        } catch (Exception e) {
-            isOffline = true;
-            return;
+            
         }
+        connectToLobby(connectionManager.getLobbyID());
     }
 
-
-    public RemoteSpace establishConnectionToRemoteSpace(String name) throws InterruptedException, IOException {
-        String uri = connectionManager.getUri(name);
-        RemoteSpace space = new RemoteSpace(uri);
-        return space;
-    }
 
     public void connectToLobby(int lobbyID) throws InterruptedException, IOException, IllegalStateException {
-        lobby = establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
-        if (!perfromHandShake(SpaceTag.LOBBY.value(), lobby)) {
+        lobby = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
+        if (!connectionManager.performHandshake(SpaceTag.LOBBY.value(), lobby)) {
             throw new IllegalStateException();
         }
         System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
@@ -75,17 +59,11 @@ public class Client {
         }
     }
 
-    public boolean perfromHandShake(String spaceTag, RemoteSpace space) throws InterruptedException {
-        space.put(spaceTag, TupleTag.TRYTOCONNECT.value());
-        Object[] connection = space.get(new ActualField(TupleTag.CONNECTION.value()), new FormalField(String.class));
-        return (((String) connection[1]).equals(TupleTag.CONNECTED.value()));
-    }
-
     public String getLobbyID() throws UnknownHostException {
         if (isOffline) {
             throw new UnknownHostException();
         }
-        return lobbyID + "";
+        return connectionManager.getLobbyID() + "";
     }
 
     public void sendSpot(int x, int y, int player) {
@@ -286,7 +264,8 @@ public class Client {
         }
     }
 
-    public void checkForLobbyClosed() {
+    public void checkForLobbyClosed() { // Player 2 needs to stop listening for a lobby closing after exitin the lobby
+                                        // himself
         try {
             lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
             lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
