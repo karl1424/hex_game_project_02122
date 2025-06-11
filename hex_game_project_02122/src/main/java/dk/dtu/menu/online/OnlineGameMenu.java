@@ -42,8 +42,8 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void goToOnlineSetup() {
-        if (client != null) {
-            client.stopReceivingMessages();
+        if (client != null && client.getLobbyMessageHandler() != null) {
+            client.getLobbyMessageHandler().stopReceivingMessages();
         }
         gamePanel.isOnline = false;
         getChildren().clear();
@@ -72,7 +72,7 @@ public class OnlineGameMenu extends MenuPanel {
             client.establishConnetion(true);
             client.getLobbyID();
             showLobby();
-            new Thread(() -> client.recieveMessage()).start();
+            client.getLobbyMessageHandler().receiveMessage();
         } catch (Exception e) {
             goToOnlineSetup();
             onlinePane.serverIsDown();
@@ -122,12 +122,16 @@ public class OnlineGameMenu extends MenuPanel {
                 }
             }
         });
-        client.recieveOldMessages();
+        client.getLobbyMessageHandler().receiveOldMessages();
         Platform.runLater(() -> {
-            client.sendMessage("PLAYER JOINED", true);
+            try {
+                client.getLobbyMessageHandler().sendMessage("PLAYER JOINED", true);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             pane.appendMessage("PLAYER JOINED");
         });
-        new Thread(() -> client.recieveMessage()).start();
+        client.getLobbyMessageHandler().receiveMessage();
         new Thread(() -> client.checkForLobbyClosed()).start();
     }
 
@@ -144,8 +148,8 @@ public class OnlineGameMenu extends MenuPanel {
 
     }
 
-    public void onSend(String message) {
-        client.sendMessage(message, false);
+    public void onSend(String message) throws InterruptedException {
+        client.getLobbyMessageHandler().sendMessage(message, false);
     }
 
     public void initGame(int boardSize, int playerNumber) {

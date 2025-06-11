@@ -11,10 +11,12 @@ public class Server {
     public static SpaceRepository serverSpace;
     public static RemoteSpace lobbyRequests;
     public static int lobbyID;
+    private static ConnectionManager connectionManager;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Server.connectionManager = new ConnectionManager();
         setUpServerSapce();
-        lobbyRequests = new RemoteSpace(getUri(SpaceTag.LOBBY_REQUEST.value()));
+        lobbyRequests = connectionManager.establishConnectionToRemoteSpace(SpaceTag.LOBBY_REQUEST.value());
         while (true) {
             waitingForHost();
         }
@@ -23,14 +25,9 @@ public class Server {
     public static void setUpServerSapce() {
         lobbyID = 0;
         serverSpace = new SpaceRepository();
-        serverSpace.addGate(getUri(""));
+        serverSpace.addGate(connectionManager.getUri(""));
         serverSpace.add(SpaceTag.LOBBY_REQUEST.value(), new SequentialSpace());
         System.out.println("server up");
-    }
-
-    public static String getUri(String name) {
-        String Uri = SpaceTag.PROTOCOL.value() + SpaceTag.SERVER_IP.value() + ":" + SpaceTag.SERVER_PORT.value() + "/" + name + "?conn";
-        return Uri;
     }
 
     public static void waitingForHost() {
@@ -53,8 +50,6 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        
     }
 
     public static void createLobby() {
@@ -81,7 +76,10 @@ class lobbyHandler implements Runnable {
     private boolean player2; // Used to check if the lobby is full
     private volatile boolean running = true;
 
+    private ConnectionManager connectionManager;
+
     public lobbyHandler(String IP, String port, int lobbyID, SpaceRepository serverSpace) {
+        this.connectionManager = new ConnectionManager();
         this.IP = IP;
         this.port = port;
         this.lobbyID = lobbyID;
@@ -95,7 +93,7 @@ class lobbyHandler implements Runnable {
 
     public void getConnect() {
         try {
-            lobbySpace = new RemoteSpace(getUri(lobbyID + SpaceTag.LOBBY.value()));
+            lobbySpace = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
             lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()), new ActualField(TupleTag.TRYTOCONNECT.value()));
             lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
             System.out.println("The host has joined Lobby: " + lobbyID);
@@ -175,11 +173,6 @@ class lobbyHandler implements Runnable {
             e.printStackTrace();
         }
         return (isOccupied != null);
-    }
-
-    public static String getUri(String name) {
-        String Uri = SpaceTag.PROTOCOL.value() + SpaceTag.SERVER_IP.value() + ":" + SpaceTag.SERVER_PORT.value() + "/" + name + "?conn";
-        return Uri;
     }
 
     public int getLobbyId() {

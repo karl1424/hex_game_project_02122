@@ -114,7 +114,11 @@ public class LobbyPane extends BorderPane {
         sendButton.setOnAction(_ -> {
             String message = chatInput.getText().trim();
             if (!message.isEmpty()) {
-                parent.onSend(message);
+                try {
+                    parent.onSend(message);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 chatArea.appendText("You: " + message + "\n");
                 chatInput.clear();
             }

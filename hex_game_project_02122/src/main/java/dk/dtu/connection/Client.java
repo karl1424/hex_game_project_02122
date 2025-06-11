@@ -26,31 +26,33 @@ public class Client {
     private RemoteSpace lobby;
 
     private ConnectionManager connectionManager;
+    private LobbyMessageHandler lobbyMessageHandler;
 
     public Client(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
-        this.connectionManager = new ConnectionManager();
+        this.connectionManager = new ConnectionManager(this);
     }
 
     public void establishConnetion(boolean isHost) throws IllegalStateException, InterruptedException, IOException {
         isOffline = false;
         this.isHost = isHost;
-        if (isHost) {
-            try {
-                connectionManager.connectHost();
-            } catch (Exception e) {
-                isOffline = true;
-                return;
-            }
+        //setIsHost(isHost);
+        try {
+            connectionManager.connectHost();
+        } catch (Exception e) {
+            isOffline = true;
+            return;
         }
         connectionManager.connectToLobby(connectionManager.getLobbyID());
-        if (isHost) {
-            new Thread(() -> lookForP2()).start();
-        }
+        new Thread(() -> lookForP2()).start();
     }
 
-    public ConnectionManager getConnectionManager(){
+    public ConnectionManager getConnectionManager() {
         return connectionManager;
+    }
+
+    public void creatLobbyMessageHandler(){
+        this.lobbyMessageHandler = new LobbyMessageHandler(connectionManager.getLobby(), gamePanel, isHost);
     }
 
     public String getLobbyID() throws UnknownHostException {
@@ -65,8 +67,7 @@ public class Client {
         connectionManager.setLobbyID(lobbyID);
     }
 
-    //------------
-
+    // ------------
 
     public void sendSpot(int x, int y, int player) {
         try {
@@ -172,8 +173,6 @@ public class Client {
         }).start();
     }
 
-    
-
     public void updateBoardSize(String boardStringSize, int boardSize) {
         try {
             connectionManager.getLobby().put(boardStringSize, boardSize);
@@ -229,45 +228,12 @@ public class Client {
         }
     }
 
-    public void sendMessage(String message, boolean joinOrLeave) {
-        try {
-            connectionManager.getLobby().put(message, isHost, joinOrLeave);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    // --------------
+
+    public LobbyMessageHandler getLobbyMessageHandler() {
+        return lobbyMessageHandler;
     }
 
-    public void stopReceivingMessages() {
-        recieveMessages = false;
-    }
-
-    public void recieveMessage() {
-        recieveMessages = true;
-        while (recieveMessages) {
-            try {
-                Object[] message = connectionManager.getLobby().get(new FormalField(String.class), new ActualField(!isHost),
-                        new FormalField(Boolean.class));
-                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
-                        .appendMessage(((boolean) message[2] ? "" : "Other: ") + (String) message[0]);
-                connectionManager.getLobby().put(message[0], message[1], message[2], "old");
-            } catch (InterruptedException e) {
-
-            }
-        }
-    }
-
-    public void recieveOldMessages() {
-        try {
-            List<Object[]> oldMessages = connectionManager.getLobby().queryAll(new FormalField(String.class),
-                    new FormalField(Boolean.class), new FormalField(Boolean.class), new ActualField("old"));
-            for (Object[] m : oldMessages) {
-                gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
-                        .appendMessage(((boolean) m[2] ? "" : ((boolean) m[1] ? "Other: " : "You: ")) + (String) m[0]);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void checkForLobbyClosed() { // Player 2 needs to stop listening for a lobby closing after exitin the lobby
                                         // himself
@@ -276,7 +242,7 @@ public class Client {
             connectionManager.getLobby().put(TupleTag.ACKNOWLEDGE_CLOSE.value());
             System.out.println("Lobby has been closed");
             Platform.runLater(() -> {
-                stopReceivingMessages();
+                lobbyMessageHandler.stopReceivingMessages();
                 gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
             });
         } catch (InterruptedException e) {

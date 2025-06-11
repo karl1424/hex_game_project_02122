@@ -3,8 +3,8 @@ c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\Server.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Hexagon.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GUI.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\GameCommunicationHandler.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\game_over\GameOverPane.java
-c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\ConnectionService.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuManager.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\JoinPane.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTS.java
@@ -17,6 +17,7 @@ c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Main.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoardLogic.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\Help.java
+c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\connection\LobbyMessageHandler.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\ComputerManager.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\player_vs_player\LocalGamePane.java
 c:\Users\Bruger\Documents\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\computer_opponent\ComputerSetUpMenu.java

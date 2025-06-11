@@ -7,6 +7,14 @@ public class ConnectionManager {
     private RemoteSpace server;
     private RemoteSpace lobby;
     private int lobbyID;
+    private Client client;
+
+    public ConnectionManager(Client client){
+        this.client = client;
+    }
+
+    public ConnectionManager(){
+    }
 
     public String getUri(String name) {
         return SpaceTag.PROTOCOL.value() + SpaceTag.SERVER_IP.value() + ":" + SpaceTag.SERVER_PORT.value() + "/" + name
@@ -43,6 +51,7 @@ public class ConnectionManager {
             throw new IllegalStateException();
         }
         System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
+        client.creatLobbyMessageHandler();
     }
 
     public int getLobbyID(){
