@@ -36,17 +36,21 @@ public class ConnectionManager {
             System.out.println("Lobby ID: " + lobbyID);
         
     }
+
+    public void connectToLobby(int lobbyID) throws InterruptedException, IOException, IllegalStateException {
+        lobby = establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
+        if (!performHandshake(SpaceTag.LOBBY.value(), lobby)) {
+            throw new IllegalStateException();
+        }
+        System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
+    }
+
     public int getLobbyID(){
         return this.lobbyID;
     }
-
-
-    // -------------------------
-
-
-
-
-    
+    public void setLobbyID(int lobbyID){
+        this.lobbyID = lobbyID;
+    }
 
     public RemoteSpace getLobby() {
         return lobby;

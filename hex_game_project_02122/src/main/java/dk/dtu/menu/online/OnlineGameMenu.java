@@ -90,7 +90,7 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void onJoinLobby(String lobbyIDText) throws InterruptedException, IOException {
         int lobbyID = Integer.parseInt(lobbyIDText);
-        client.connectToLobby(lobbyID);
+        client.getConnectionManager().connectToLobby(lobbyID);
         client.setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         showLobby();

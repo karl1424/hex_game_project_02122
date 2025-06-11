@@ -42,21 +42,15 @@ public class Client {
                 isOffline = true;
                 return;
             }
-            
         }
-        connectToLobby(connectionManager.getLobbyID());
-    }
-
-
-    public void connectToLobby(int lobbyID) throws InterruptedException, IOException, IllegalStateException {
-        lobby = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
-        if (!connectionManager.performHandshake(SpaceTag.LOBBY.value(), lobby)) {
-            throw new IllegalStateException();
-        }
-        System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
+        connectionManager.connectToLobby(connectionManager.getLobbyID());
         if (isHost) {
             new Thread(() -> lookForP2()).start();
         }
+    }
+
+    public ConnectionManager getConnectionManager(){
+        return connectionManager;
     }
 
     public String getLobbyID() throws UnknownHostException {
@@ -66,9 +60,17 @@ public class Client {
         return connectionManager.getLobbyID() + "";
     }
 
+    public void setLobbyID(int lobbyID) {
+        this.lobbyID = lobbyID;
+        connectionManager.setLobbyID(lobbyID);
+    }
+
+    //------------
+
+
     public void sendSpot(int x, int y, int player) {
         try {
-            lobby.put(x, y, player);
+            connectionManager.getLobby().put(x, y, player);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -82,7 +84,7 @@ public class Client {
                 boolean currentTurn = gamePanel.getTurn();
                 if (!currentTurn) {
                     try {
-                        Object[] spot = lobby.get(
+                        Object[] spot = connectionManager.getLobby().get(
                                 new FormalField(Integer.class),
                                 new FormalField(Integer.class),
                                 new ActualField(opponent));
@@ -107,7 +109,7 @@ public class Client {
 
     public void sendStartGame(int boardSize, int playerNumber) {
         try {
-            lobby.put(TupleTag.START_GAME.value(), boardSize, playerNumber);
+            connectionManager.getLobby().put(TupleTag.START_GAME.value(), boardSize, playerNumber);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -121,7 +123,7 @@ public class Client {
     public void getStartGame(GameStartHandler handler) {
         new Thread(() -> {
             try {
-                Object[] gameInfo = lobby.get(
+                Object[] gameInfo = connectionManager.getLobby().get(
                         new ActualField(TupleTag.START_GAME.value()),
                         new FormalField(Integer.class),
                         new FormalField(Integer.class));
@@ -146,7 +148,7 @@ public class Client {
         new Thread(() -> {
             try {
                 while (true) {
-                    Object[] info = lobby.get(
+                    Object[] info = connectionManager.getLobby().get(
                             new FormalField(String.class),
                             new FormalField(Integer.class));
 
@@ -170,13 +172,11 @@ public class Client {
         }).start();
     }
 
-    public void setLobbyID(int lobbyID) {
-        this.lobbyID = lobbyID;
-    }
+    
 
     public void updateBoardSize(String boardStringSize, int boardSize) {
         try {
-            lobby.put(boardStringSize, boardSize);
+            connectionManager.getLobby().put(boardStringSize, boardSize);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -184,7 +184,7 @@ public class Client {
 
     public void updateStartTurn(String playerStartString, int playerStart) {
         try {
-            lobby.put(playerStartString, playerStart);
+            connectionManager.getLobby().put(playerStartString, playerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -195,10 +195,15 @@ public class Client {
         return isHost;
     }
 
+    public void setIsHost(boolean isHost) {
+        this.isHost = isHost;
+        System.out.println("set:" + this.isHost);
+    }
+
     public void lookForP2() {
         try {
             while (true) {
-                Object[] start = lobby.get(new FormalField(Boolean.class));
+                Object[] start = connectionManager.getLobby().get(new FormalField(Boolean.class));
                 if ((boolean) start[0]) {
                     sendGameSettings();
                     canStart = true;
@@ -217,8 +222,8 @@ public class Client {
 
     public void sendLeftPlayer2() {
         try {
-            lobby.put(SpaceTag.LOBBY.value(), TupleTag.LEFT.value());
-            lobby.put(TupleTag.PLAYER_LEFT.value(), isHost, true);
+            connectionManager.getLobby().put(SpaceTag.LOBBY.value(), TupleTag.LEFT.value());
+            connectionManager.getLobby().put(TupleTag.PLAYER_LEFT.value(), isHost, true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -226,7 +231,7 @@ public class Client {
 
     public void sendMessage(String message, boolean joinOrLeave) {
         try {
-            lobby.put(message, isHost, joinOrLeave);
+            connectionManager.getLobby().put(message, isHost, joinOrLeave);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -240,11 +245,11 @@ public class Client {
         recieveMessages = true;
         while (recieveMessages) {
             try {
-                Object[] message = lobby.get(new FormalField(String.class), new ActualField(!isHost),
+                Object[] message = connectionManager.getLobby().get(new FormalField(String.class), new ActualField(!isHost),
                         new FormalField(Boolean.class));
                 gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
                         .appendMessage(((boolean) message[2] ? "" : "Other: ") + (String) message[0]);
-                lobby.put(message[0], message[1], message[2], "old");
+                connectionManager.getLobby().put(message[0], message[1], message[2], "old");
             } catch (InterruptedException e) {
 
             }
@@ -253,7 +258,7 @@ public class Client {
 
     public void recieveOldMessages() {
         try {
-            List<Object[]> oldMessages = lobby.queryAll(new FormalField(String.class),
+            List<Object[]> oldMessages = connectionManager.getLobby().queryAll(new FormalField(String.class),
                     new FormalField(Boolean.class), new FormalField(Boolean.class), new ActualField("old"));
             for (Object[] m : oldMessages) {
                 gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
@@ -267,8 +272,8 @@ public class Client {
     public void checkForLobbyClosed() { // Player 2 needs to stop listening for a lobby closing after exitin the lobby
                                         // himself
         try {
-            lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
-            lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
+            connectionManager.getLobby().get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
+            connectionManager.getLobby().put(TupleTag.ACKNOWLEDGE_CLOSE.value());
             System.out.println("Lobby has been closed");
             Platform.runLater(() -> {
                 stopReceivingMessages();
@@ -281,23 +286,18 @@ public class Client {
 
     public void shutDownLobby() {
         try {
-            lobby.put(TupleTag.CLOSE_LOBBY.value());
+            connectionManager.getLobby().put(TupleTag.CLOSE_LOBBY.value());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setIsHost(boolean isHost) {
-        this.isHost = isHost;
-        System.out.println("set:" + this.isHost);
     }
 
     private void sendGameSettings() {
         try {
             int boardSize = gamePanel.getMenuManager().getOnlineGameMenu().getBoardSize();
             int playerStart = gamePanel.getMenuManager().getOnlineGameMenu().getPlayerStart();
-            lobby.put(TupleTag.BOARD_SIZE.value(), boardSize);
-            lobby.put(TupleTag.PLAYER_START.value(), playerStart);
+            connectionManager.getLobby().put(TupleTag.BOARD_SIZE.value(), boardSize);
+            connectionManager.getLobby().put(TupleTag.PLAYER_START.value(), playerStart);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
