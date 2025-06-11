@@ -26,6 +26,8 @@ public class GameBoardLogic {
     }
 
     public boolean exploreNeighbors(Coordinate start, int turn) {
+
+        //Hexagon neighbors
         int[] directionsX = { 0, 0, -1, 1, -1, 1 };
         int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
@@ -43,7 +45,6 @@ public class GameBoardLogic {
 
         while (!queue.isEmpty()) {
             Coordinate current = queue.poll();
-
             if (turn == 2) {
                 if (current.getY() == 0) {
                     reachedStartEdge = true;
@@ -64,15 +65,7 @@ public class GameBoardLogic {
                 }
             }
 
-            if (BFSDebug)
-                System.out.println("Processing: " + current);
-
-            if (reachedStartEdge && reachedEndEdge) {
-                if (BFSDebug)
-                    System.out.println("Winning Path Found!");
-                reconstructPath(parentMap, startEdgeCoordinate, endEdgeCoordinate);
-                return true;
-            }
+            if (BFSDebug) System.out.println("Processing: " + current);
 
             for (int i = 0; i < 6; i++) {
                 int neighborX = current.getX() + directionsX[i];
@@ -88,6 +81,12 @@ public class GameBoardLogic {
                             System.out.println("Adding neighbor: " + neighbor);
                     }
                 }
+            }
+
+            if (reachedStartEdge && reachedEndEdge) {
+                if (BFSDebug) System.out.println("Winning Path Found!");
+                reconstructPath(parentMap, startEdgeCoordinate, endEdgeCoordinate);
+                return true;
             }
         }
 

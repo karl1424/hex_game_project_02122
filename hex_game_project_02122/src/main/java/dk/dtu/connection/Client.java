@@ -51,9 +51,7 @@ public class Client {
         } catch (Exception e) {
             isOffline = true;
             return;
-            // e.printStackTrace();
         }
-
     }
 
     public String getUri(String name) {
@@ -198,7 +196,7 @@ public class Client {
                 }
 
             } catch (InterruptedException e) {
-                
+
             }
         }).start();
     }
