@@ -16,8 +16,14 @@ import javafx.scene.shape.Rectangle;
 public class GameOverPane extends StackPane {
 
     private Label resultLabel;
+    private Button againBtn;
+    private MenuManager manager;
+    private GamePanel gamePanel;
 
     public GameOverPane(MenuManager manager, GamePanel gamePanel) {
+        this.manager = manager;
+        this.gamePanel = gamePanel;
+
         setPrefSize(600, 600);
 
         Rectangle overlay = new Rectangle(600, 600);
@@ -32,13 +38,8 @@ public class GameOverPane extends StackPane {
         Label title = Help.createLabel("Game Over", 36, true);
         resultLabel = Help.createLabel("", 24, true);
 
-        Button againBtn = Help.createButton("Play Again", 140, 35, false);
+        againBtn = Help.createButton("Play Again", 140, 35, false);
         Button mainBtn = Help.createButton("Main Menu", 140, 35, false);
-
-        againBtn.setOnAction(_ -> {
-            gamePanel.getChildren().remove(manager.gameOverPanel);
-            gamePanel.resetGame();
-        });
 
         mainBtn.setOnAction(_ -> {
             gamePanel.isOnline = false;
@@ -58,5 +59,25 @@ public class GameOverPane extends StackPane {
     public void setWinner(int winner) {
         resultLabel.setText("Player " + winner + " wins!");
         resultLabel.setTextFill(winner == 1 ? Color.RED : Color.BLUE);
+    }
+
+    public void setLocal() {
+        againBtn.setText("Play Again");
+        againBtn.setOnAction(_ -> {
+            gamePanel.getChildren().remove(manager.gameOverPanel);
+            gamePanel.resetGame();
+        });
+    }
+
+    public void setOnline() {
+        againBtn.setText("Go to Lobby");
+        againBtn.setOnAction(_ -> {
+            gamePanel.getChildren().remove(manager.gameOverPanel);
+            manager.getPrimaryStage().getScene().setRoot(manager);
+            manager.getOnlineGameMenu().showLobby();
+            manager.getClient().getStartGame((sizeBoard, numberPlayer) -> {
+                manager.getOnlineGameMenu().initGame(sizeBoard, numberPlayer);
+            });
+        });
     }
 }

@@ -77,6 +77,11 @@ public class GamePanel extends Pane {
             }));
             delay.setCycleCount(1);
             delay.play();
+            if (isOnline) {
+                menuManager.gameOverPanel.setOnline();
+            } else {
+                menuManager.gameOverPanel.setLocal();
+            }
         }
     }
 
