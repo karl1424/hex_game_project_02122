@@ -103,12 +103,17 @@ public class SimulationGame {
         return availableMoves;
     }
     
-    public boolean makeMove(Coordinate move, int playerNumber) {
+    public void makeMove(Coordinate move, int playerNumber) {
         board[move.getX()][move.getY()].setState(playerNumber);
-        boolean isWin = checkForWin(move, playerNumber);
-        if (isWin) {
-            winner = playerNumber;
+    }
+
+    public void checkWin() {
+        for (int i = 0; i < boardM; i++) {
+            if (board[i][0].getState() == 2 && checkForWin(new Coordinate(i, 0, 2), 2)) {
+                winner = 2;
+                break;
+            }
+            winner = 1;
         }
-        return isWin;
     }
 }

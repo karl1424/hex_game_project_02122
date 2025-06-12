@@ -35,6 +35,8 @@ public class MCTS {
         for (int i = 0; i < iterations; i++) {
             rootNode.selectAction(gameBoard);
         }
+
+        //MCTSNode.printTimingStats();
         
         MCTSNode bestChild = null;
         int mostVisits = -1;

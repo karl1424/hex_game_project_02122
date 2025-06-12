@@ -23,6 +23,12 @@ public class MCTSNode {
     private static final double EPSILON = 1e-6;
     private Random rand;
 
+    private static long totalSelectionTime = 0;
+    private static long totalExpansionTime = 0;
+    private static long totalSimulationTime = 0;
+    private static long totalBackpropagationTime = 0;
+    private static int runCount = 0;
+
     public MCTSNode(MCTSNode parent, Coordinate move, int playerNumber) {
         this.move = move;
         this.parent = parent;
@@ -35,26 +41,52 @@ public class MCTSNode {
     }
 
     public void selectAction(GameBoard gameBoard) {
+        long startTime, endTime;
+
         List<MCTSNode> visited = new LinkedList<>();
         MCTSNode current = this;
         visited.add(current);
 
+        startTime = System.nanoTime();
         while (!current.isLeaf()) {
             current = current.selection();
             visited.add(current);
         }
+        endTime = System.nanoTime();
+        totalSelectionTime += (endTime - startTime);
 
         if (!current.expanded) {
+            startTime = System.nanoTime();
             current.expansion(gameBoard);
             current.expanded = true;
+            endTime = System.nanoTime();
+            totalExpansionTime += (endTime - startTime);
         }
 
+        startTime = System.nanoTime();
         MCTSNode nodeToRollout = current;
         double value = simulation(nodeToRollout, gameBoard);
+        endTime = System.nanoTime();
+        totalSimulationTime += (endTime - startTime);
 
+        startTime = System.nanoTime();
         for (MCTSNode node : visited) {
             node.backpropagation(value);
         }
+        endTime = System.nanoTime();
+        totalBackpropagationTime += (endTime - startTime);
+
+        runCount++;
+    }
+
+    public static void printTimingStats() {
+        System.out.println("After " + runCount + " runs:");
+        System.out.println("Avg Selection Time:      " + (totalSelectionTime / runCount) / 1_000.0 + " µs");
+        System.out.println("Avg Expansion Time:      " + (totalExpansionTime / runCount) / 1_000.0 + " µs");
+        System.out.println("Avg Simulation Time:     " + (totalSimulationTime / runCount) / 1_000.0 + " µs");
+        System.out.println("Avg Backpropagation Time:" + (totalBackpropagationTime / runCount) / 1_000.0 + " µs");
+        long total = totalSelectionTime + totalExpansionTime + totalSimulationTime + totalBackpropagationTime;
+        System.out.println("Avg Total Time Per Iteration: " + (double)(total / runCount) / 1_000.0 + " µs\n");
     }
 
     public boolean isLeaf() {
@@ -111,6 +143,7 @@ public class MCTSNode {
             moveCount++;
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
+        simGame.checkWin();
 
         return (simGame.winner == this.playerNumber) ? 1.0 : 0.0;
     }

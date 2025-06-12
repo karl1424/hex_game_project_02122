@@ -31,6 +31,7 @@ public:
     const std::vector<MCTSNode*>& getChildren();
 
     void selectAction(const std::vector<std::vector<int>>& board);
+    static void printTimingStats();
 
 private:
     static constexpr double EXPLORATION_PARAMETER = 0.7;
