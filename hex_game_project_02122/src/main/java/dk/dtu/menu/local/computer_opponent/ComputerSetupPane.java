@@ -102,7 +102,7 @@ public class ComputerSetupPane extends BorderPane {
             int player = player1CheckBox.isSelected() ? 2 : 1;
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
             int number = player1CheckBox.isSelected() ? 1 : 2;
-            int difficulty = difficultyEasyCheckBox.isSelected() ? 2000 : difficultyHardCheckBox.isSelected() ? 100000 : 5000;
+            int difficulty = difficultyEasyCheckBox.isSelected() ? 2000 : difficultyHardCheckBox.isSelected() ? 10000 : 5000;
             manager.startGame(size, player, number,difficulty);
         });
 

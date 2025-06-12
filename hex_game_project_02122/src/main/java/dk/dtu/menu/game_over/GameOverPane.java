@@ -43,9 +43,11 @@ public class GameOverPane extends StackPane {
 
         mainBtn.setOnAction(_ -> {
             showOnlineSetup();
+            if(gamePanel.isOnline){
+                gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
+            }
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
-            gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.showMainMenu();
             
