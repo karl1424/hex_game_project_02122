@@ -1,13 +1,17 @@
 package dk.dtu.computer_opponent;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import dk.dtu.main.Coordinate;
 
+//Click on continue when VSCode says build failed
+
 public class MCTStest {
-    private static final int GAMES = 1000;
+    private static final int GAMES = 100;
     private static final int ITERATIONS = 5000;
-    private static final int BOARD_SIZE = 3;
+    private static final int BOARD_SIZE = 7;
 
     public static void main(String[] args) {
         int player1Wins = 0;
@@ -43,28 +47,39 @@ public class MCTStest {
     private static int playGame() {
         SimulationGame game = new SimulationGame(BOARD_SIZE, BOARD_SIZE);
 
+        List<int[]> playerMoves = new ArrayList<>();
+
         int currentPlayer = 1;
         List<Coordinate> availableMoves = game.getAvailableMoves();
         int totalMoves = availableMoves.size();
         int moveCount = 0;
+        MCTS mctsPlayer1 = new MCTS( null, 1, ITERATIONS);
+        MCTS mctsPlayer2 = new MCTS( null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
             SimulationGame sim = new SimulationGame(game);
-            MCTS mcts = new MCTS(sim, currentPlayer, ITERATIONS);
+            MCTS mcts = (currentPlayer == 1) ? mctsPlayer1 : mctsPlayer2;
+            mcts.setSimulationGame(sim);
             Coordinate moveMade = mcts.makeMoveInTest();
             sim.makeMove(moveMade, currentPlayer);
             availableMoves.remove(moveMade);
-
-            // System.out.println("Computer (Player " + currentPlayer + ") chooses move at:
-            // " + moveMade.getX() + ", "
-            // + moveMade.getY());
             moveCount++;
+
+            playerMoves.add(new int[] { moveMade.getX(), moveMade.getY(), currentPlayer });
+
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
             game = sim;
         }
         game.checkWin();
 
-        // game.printBoard();
+        // if (game.winner == 2 & BOARD_SIZE == 3) {
+        //     game.printBoard();
+        //     System.out.println();
+        //     for (int[] c : playerMoves) {
+        //         System.out.println(Arrays.toString(c));
+        //     }
+        // }
+
         // System.out.println();
         // System.out.println("Player " + game.winner + " wins");
         return game.winner;
