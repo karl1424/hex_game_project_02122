@@ -18,7 +18,7 @@ public class SimulationGame {
         this.boardM = boardM;
         this.boardN = boardN;
         this.board = new Coordinate[boardM][boardN];
-        
+
         for (int x = 0; x < boardM; x++) {
             for (int y = 0; y < boardN; y++) {
                 board[x][y] = new Coordinate(x, y, 0);
@@ -30,17 +30,38 @@ public class SimulationGame {
         this.boardM = gameBoard.getBoardM();
         this.boardN = gameBoard.getBoardN();
         this.board = new Coordinate[boardM][boardN];
-        
+
         for (int x = 0; x < boardM; x++) {
             for (int y = 0; y < boardN; y++) {
                 this.board[x][y] = new Coordinate(x, y, gameBoard.getBoard()[x][y].getState());
             }
         }
     }
-    
+
+    public SimulationGame(SimulationGame simGame) {
+        this.boardM = simGame.getboardM();
+        this.boardN = simGame.getboardN();
+        this.board = new Coordinate[boardM][boardN];
+
+        for (int x = 0; x < boardM; x++) {
+            for (int y = 0; y < boardN; y++) {
+                this.board[x][y] = new Coordinate(x, y, simGame.getBoard()[x][y].getState());
+            }
+        }
+    }
+
+    public void printBoard() {
+        for (int y = 0; y < boardN; y++) {
+            for (int x = 0; x < boardM; x++) {
+                System.out.print(board[x][y].getState() + " ");
+            }
+            System.out.println();
+        }
+    }
+
     public boolean checkForWin(Coordinate start, int turn) {
-        int[] directionsX = {0, 0, -1, 1, -1, 1};
-        int[] directionsY = {1, -1, 0, 0, 1, -1};
+        int[] directionsX = { 0, 0, -1, 1, -1, 1 };
+        int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
         Queue<Coordinate> queue = new LinkedList<>();
         boolean[][] visited = new boolean[boardM][boardN];
@@ -86,10 +107,9 @@ public class SimulationGame {
                 }
             }
         }
-        
+
         return false;
     }
-    
 
     public List<Coordinate> getAvailableMoves() {
         List<Coordinate> availableMoves = new ArrayList<>();
@@ -102,7 +122,7 @@ public class SimulationGame {
         }
         return availableMoves;
     }
-    
+
     public void makeMove(Coordinate move, int playerNumber) {
         board[move.getX()][move.getY()].setState(playerNumber);
     }
@@ -115,5 +135,17 @@ public class SimulationGame {
             }
             winner = 1;
         }
+    }
+
+    public Coordinate[][] getBoard() {
+        return board;
+    }
+
+    public int getboardM() {
+        return boardM;
+    }
+
+    public int getboardN() {
+        return boardN;
     }
 }
