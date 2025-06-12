@@ -79,6 +79,30 @@ public class MCTSNode {
         runCount++;
     }
 
+    public void selectAction(SimulationGame gameBoard) {
+
+        List<MCTSNode> visited = new LinkedList<>();
+        MCTSNode current = this;
+        visited.add(current);
+
+        while (!current.isLeaf()) {
+            current = current.selection();
+            visited.add(current);
+        }
+
+        if (!current.expanded) {
+            current.expansion(gameBoard);
+            current.expanded = true;
+        }
+
+        MCTSNode nodeToRollout = current;
+        double value = simulation(nodeToRollout, gameBoard);
+
+        for (MCTSNode node : visited) {
+            node.backpropagation(value);
+        }
+    }
+
     public static void printTimingStats() {
         System.out.println("After " + runCount + " runs:");
         System.out.println("Avg Selection Time:      " + (totalSelectionTime / runCount) / 1_000.0 + " µs");
@@ -86,7 +110,7 @@ public class MCTSNode {
         System.out.println("Avg Simulation Time:     " + (totalSimulationTime / runCount) / 1_000.0 + " µs");
         System.out.println("Avg Backpropagation Time:" + (totalBackpropagationTime / runCount) / 1_000.0 + " µs");
         long total = totalSelectionTime + totalExpansionTime + totalSimulationTime + totalBackpropagationTime;
-        System.out.println("Avg Total Time Per Iteration: " + (double)(total / runCount) / 1_000.0 + " µs\n");
+        System.out.println("Avg Total Time Per Iteration: " + (double) (total / runCount) / 1_000.0 + " µs\n");
     }
 
     public boolean isLeaf() {
@@ -95,6 +119,16 @@ public class MCTSNode {
 
     public void expansion(GameBoard gameBoard) {
         List<Coordinate> availableMoves = gameBoard.getAvailableMoves();
+
+        int nextPlayer = (playerNumber == 1) ? 2 : 1;
+        for (Coordinate availableMove : availableMoves) {
+            MCTSNode child = new MCTSNode(this, availableMove, nextPlayer);
+            children.add(child);
+        }
+    }
+
+    public void expansion(SimulationGame simGame) {
+        List<Coordinate> availableMoves = simGame.getAvailableMoves();
 
         int nextPlayer = (playerNumber == 1) ? 2 : 1;
         for (Coordinate availableMove : availableMoves) {
@@ -123,6 +157,32 @@ public class MCTSNode {
     }
 
     private double simulation(MCTSNode node, GameBoard gameBoard) {
+        SimulationGame simGame = new SimulationGame(gameBoard);
+
+        applyMovesToSimulation(node, simGame);
+
+        int currentPlayer = node.playerNumber;
+
+        List<Coordinate> availableMoves = simGame.getAvailableMoves();
+        int totalMoves = availableMoves.size();
+        int moveCount = 0;
+
+        while (moveCount < totalMoves) {
+            int i = rand.nextInt(availableMoves.size());
+            Coordinate spot = availableMoves.get(i);
+            simGame.makeMove(spot, currentPlayer);
+
+            availableMoves.remove(spot);
+
+            moveCount++;
+            currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        }
+        simGame.checkWin();
+
+        return (simGame.winner == this.playerNumber) ? 1.0 : 0.0;
+    }
+
+    private double simulation(MCTSNode node, SimulationGame gameBoard) {
         SimulationGame simGame = new SimulationGame(gameBoard);
 
         applyMovesToSimulation(node, simGame);
