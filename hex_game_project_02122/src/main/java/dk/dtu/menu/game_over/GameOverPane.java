@@ -42,18 +42,34 @@ public class GameOverPane extends StackPane {
         Button mainBtn = Help.createButton("Main Menu", 140, 35, false);
 
         mainBtn.setOnAction(_ -> {
+            showOnlineSetup();
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
-            gamePanel.getClient().stopReceivingSpots();
+            gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.showMainMenu();
+            
         });
+        
 
         HBox buttons = new HBox(15, againBtn, mainBtn);
         buttons.setAlignment(Pos.CENTER);
 
         popup.getChildren().addAll(title, resultLabel, buttons);
         getChildren().addAll(overlay, popup);
+    }
+
+    public void showOnlineSetup() {
+        if (gamePanel.isOnline == true) {
+            if (!gamePanel.getClient().getClientState().isHost()) {
+                System.out.println("player 2 left");
+                gamePanel.getClient().sendLeftPlayer2();
+            } else {
+                gamePanel.getClient().shutDownLobby();
+            }
+            gamePanel.getClient().getClientState().setHost(false);
+        }
+        //goToOnlineSetup();
     }
 
     public void setWinner(int winner) {
@@ -75,7 +91,7 @@ public class GameOverPane extends StackPane {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.getOnlineGameMenu().showLobby();
-            manager.getClient().getStartGame((sizeBoard, numberPlayer) -> {
+            manager.getClient().getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
                 manager.getOnlineGameMenu().initGame(sizeBoard, numberPlayer);
             });
         });

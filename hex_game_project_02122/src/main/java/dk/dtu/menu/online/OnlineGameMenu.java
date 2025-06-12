@@ -3,10 +3,10 @@ package dk.dtu.menu.online;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
+import dk.dtu.network.Client;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 
@@ -30,20 +30,20 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void showOnlineSetup() {
         if (gamePanel.isOnline == true) {
-            if (!client.getIsHost()) {
+            if (!client.getClientState().isHost()) {
                 System.out.println("player 2 left");
                 client.sendLeftPlayer2();
             } else {
                 client.shutDownLobby();
             }
-            client.setIsHost(false);
+            client.getClientState().setHost(false);
         }
         goToOnlineSetup();
     }
 
     public void goToOnlineSetup() {
-        if (client != null) {
-            client.stopReceivingMessages();
+        if (client != null && client.getLobbyMessageHandler() != null) {
+            client.getLobbyMessageHandler().stopReceivingMessages();
         }
         gamePanel.isOnline = false;
         getChildren().clear();
@@ -69,10 +69,10 @@ public class OnlineGameMenu extends MenuPanel {
     public void onHost() {
         gamePanel.isOnline = true;
         try {
-            client.establishConnetion(true);
+            client.establishConnetionAsHost(true);
             client.getLobbyID();
             showLobby();
-            new Thread(() -> client.recieveMessage()).start();
+            client.getLobbyMessageHandler().receiveMessage();
         } catch (Exception e) {
             goToOnlineSetup();
             onlinePane.serverIsDown();
@@ -90,15 +90,15 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void onJoinLobby(String lobbyIDText) throws InterruptedException, IOException {
         int lobbyID = Integer.parseInt(lobbyIDText);
-        client.connectToLobby(lobbyID);
-        client.setLobbyID(lobbyID);
+        client.getConnectionManager().connectToLobby(lobbyID);
+        client.getConnectionManager().setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         showLobby();
 
-        client.getStartGame((sizeBoard, numberPlayer) -> {
+        client.getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
             initGame(sizeBoard, numberPlayer);
         });
-        client.getGameInfo((tag, value) -> {
+        client.getGameCommunicationHandler().getGameSettings((tag, value) -> {
             System.out.println("tag, value: " + tag + value);
             if (tag.equals("board size")) {
                 for (CheckBox cb : pane.checkBoxes) {
@@ -122,21 +122,26 @@ public class OnlineGameMenu extends MenuPanel {
                 }
             }
         });
-        client.recieveOldMessages();
+        client.getLobbyMessageHandler().receiveOldMessages();
         Platform.runLater(() -> {
-            client.sendMessage("PLAYER JOINED", true);
+            try {
+                client.getLobbyMessageHandler().sendMessage("PLAYER JOINED", true);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             pane.appendMessage("PLAYER JOINED");
         });
-        new Thread(() -> client.recieveMessage()).start();
         new Thread(() -> client.checkForLobbyClosed()).start();
+        client.getLobbyMessageHandler().receiveMessage();
+        
     }
 
-    public void onstartGame() {
-        if (client.getCanStart()) {
+    public void onstartGame() throws InterruptedException {
+        if (client.getClientState().canStart()) {
             boardSize = getBoardSize();
             playerNumber = getPlayerStart();
             opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
-            client.sendStartGame(boardSize, opponentNumber);
+            client.getGameCommunicationHandler().sendStartGame(boardSize, opponentNumber);
             initGame(boardSize, playerNumber);
         } else {
             pane.showLobbyNotFull();
@@ -144,8 +149,8 @@ public class OnlineGameMenu extends MenuPanel {
 
     }
 
-    public void onSend(String message) {
-        client.sendMessage(message, false);
+    public void onSend(String message) throws InterruptedException {
+        client.getLobbyMessageHandler().sendMessage(message, false);
     }
 
     public void initGame(int boardSize, int playerNumber) {
@@ -153,12 +158,12 @@ public class OnlineGameMenu extends MenuPanel {
         gamePanel.beginGettingCoordinates();
     }
 
-    public void updateBoardSize(String boardSizeString, int boardSize) {
-        client.updateBoardSize(boardSizeString, boardSize);
+    public void updateBoardSize(String boardSizeString, int boardSize) throws InterruptedException {
+        client.getGameCommunicationHandler().updateBoardSize(boardSizeString, boardSize);
     }
 
-    public void updateStartTurn(String playerStartString, int playerStart) {
-        client.updateStartTurn(playerStartString, playerStart);
+    public void updateStartTurn(String playerStartString, int playerStart) throws InterruptedException {
+        client.getGameCommunicationHandler().updateStartTurn(playerStartString, playerStart);
     }
 
     public Client getClient() {

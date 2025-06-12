@@ -52,7 +52,7 @@ public class GameBoard {
         Platform.runLater(() -> getGamePanel().checkGameOver());
     }
 
-    public void hexagonHasBeenPressed(Hexagon hexagon) {
+    public void hexagonHasBeenPressed(Hexagon hexagon) throws InterruptedException {
         logic.handleHexagonPressed(hexagon);
     }
 

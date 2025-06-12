@@ -77,7 +77,11 @@ public class Hexagon extends Polygon {
         }
 
         this.setOnMouseClicked(_ -> {
-            gameBoard.hexagonHasBeenPressed(this);
+            try {
+                gameBoard.hexagonHasBeenPressed(this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
     }

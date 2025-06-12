@@ -1,8 +1,8 @@
 package dk.dtu.main;
 
 import dk.dtu.computer_opponent.ComputerManager;
-import dk.dtu.connection.Client;
 import dk.dtu.menu.MenuManager;
+import dk.dtu.network.Client;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
@@ -77,6 +77,7 @@ public class GamePanel extends Pane {
             }));
             delay.setCycleCount(1);
             delay.play();
+
             if (isOnline) {
                 menuManager.gameOverPanel.setOnline();
             } else {
@@ -121,13 +122,13 @@ public class GamePanel extends Pane {
         return menuManager;
     }
 
-    public void sendCoordinates(int x, int y, int player) {
-        client.sendSpot(x, y, player);
+    public void sendCoordinates(int x, int y, int player) throws InterruptedException {
+        client.getGameCommunicationHandler().sendSpot(x, y, player);
     }
 
     public void beginGettingCoordinates() {
         System.out.println("Player: " + playerNumber + "Has started recieving spots");
-        client.getSpot(playerNumber, this, spot -> {
+        client.getGameCommunicationHandler().getSpot(this, spot -> {
             System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
             getGameBoard().updateSpot((int) spot[0], (int) spot[1], playerNumber == 1 ? 2 : 1);
             changeTurn();
