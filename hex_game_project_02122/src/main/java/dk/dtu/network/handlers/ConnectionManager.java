@@ -16,6 +16,7 @@ public class ConnectionManager {
 
     public ConnectionManager() {
     }
+
     public ConnectionManager(Client client) {
         this.client = client;
     }
@@ -61,12 +62,28 @@ public class ConnectionManager {
         client.createHandlers();
     }
 
+    public void receiveCloseLobby() throws InterruptedException {
+        lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
+        lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
+        System.out.println("Lobby has been closed");
+    }
+
+    public void shutDownLobby() {
+        try {
+            lobby.put(TupleTag.CLOSE_LOBBY.value());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getLobbyID() {
         return this.lobbyID;
     }
+
     public void setLobbyID(int lobbyID) {
         this.lobbyID = lobbyID;
     }
+
     public RemoteSpace getLobby() {
         return lobby;
     }

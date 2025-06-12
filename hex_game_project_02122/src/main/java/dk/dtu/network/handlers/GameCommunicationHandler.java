@@ -23,14 +23,12 @@ public class GameCommunicationHandler {
         new Thread(() -> {
             int opponent = gamePanel.getPlayerNumber() == 1 ? 2 : 1;
             while (running) {
-                if (!gamePanel.getTurn()) {
-                    try {
-                        Object[] spot = lobby.get(new FormalField(Integer.class), new FormalField(Integer.class),
-                                new ActualField(opponent));
-                        onSpotReceived.accept(spot);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
+                try {
+                    Object[] spot = lobby.get(new FormalField(Integer.class), new FormalField(Integer.class),
+                            new ActualField(opponent));
+                    onSpotReceived.accept(spot);
+                } catch (InterruptedException e) {
+                    break;
                 }
                 try {
                     Thread.sleep(100);
@@ -112,6 +110,7 @@ public class GameCommunicationHandler {
     public void updateBoardSize(String key, int size) throws InterruptedException {
         lobby.put(key, size);
     }
+
     public void updateStartTurn(String key, int playerStart) throws InterruptedException {
         lobby.put(key, playerStart);
     }
