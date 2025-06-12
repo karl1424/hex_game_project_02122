@@ -1,12 +1,12 @@
 package dk.dtu.menu;
 
-import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.game_over.GameOver;
 import dk.dtu.menu.local.computer_opponent.ComputerSetUpMenu;
 import dk.dtu.menu.local.player_vs_player.LocalGameMenu;
 import dk.dtu.menu.main_menu.MainMenu;
 import dk.dtu.menu.online.OnlineGameMenu;
+import dk.dtu.network.Client;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 

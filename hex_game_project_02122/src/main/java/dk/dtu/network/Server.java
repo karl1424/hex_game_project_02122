@@ -1,9 +1,13 @@
-package dk.dtu.connection;
+package dk.dtu.network;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.jspace.*;
+
+import dk.dtu.network.handlers.ConnectionManager;
+import dk.dtu.network.tags.SpaceTag;
+import dk.dtu.network.tags.TupleTag;
 
 public class Server {
     static Map<Integer, lobbyHandler> lobbyHandlers = new ConcurrentHashMap<>();
@@ -32,21 +36,9 @@ public class Server {
 
     public static void waitingForHost() {
         try {
-            handShake();
-            System.out.println("Handshake completed");
+            connectionManager.performHandshakeServer(SpaceTag.SERVER.value(), lobbyRequests);
             lobbyRequests.get(new ActualField(TupleTag.HOST.value()));
-            System.out.println("Host detected");
             createLobby();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void handShake() {
-        try {
-            lobbyRequests.get(new ActualField(SpaceTag.SERVER.value()), new ActualField(TupleTag.TRYTOCONNECT.value()));
-            lobbyRequests.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
-            return;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,7 +46,7 @@ public class Server {
 
     public static void createLobby() {
         try {
-            lobbyHandler tempLobbyHandler = new lobbyHandler(SpaceTag.SERVER_IP.value(), SpaceTag.SERVER_PORT.value(), lobbyID, serverSpace);
+            lobbyHandler tempLobbyHandler = new lobbyHandler(lobbyID, serverSpace);
             lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler
                                                           // lobbyHandlers.get(1); //How to acces a specific
             new Thread(tempLobbyHandler).start();
@@ -68,20 +60,16 @@ public class Server {
 }
 
 class lobbyHandler implements Runnable {
-    private String IP;
-    private String port;
     public int lobbyID;
     private SpaceRepository serverSpace;
-    private Space lobbySpace;
+    private RemoteSpace lobbySpace;
     private boolean player2; // Used to check if the lobby is full
     private volatile boolean running = true;
 
     private ConnectionManager connectionManager;
 
-    public lobbyHandler(String IP, String port, int lobbyID, SpaceRepository serverSpace) {
+    public lobbyHandler(int lobbyID, SpaceRepository serverSpace) {
         this.connectionManager = new ConnectionManager();
-        this.IP = IP;
-        this.port = port;
         this.lobbyID = lobbyID;
         this.serverSpace = serverSpace;
     }
@@ -94,10 +82,8 @@ class lobbyHandler implements Runnable {
     public void getConnect() {
         try {
             lobbySpace = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
-            lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()), new ActualField(TupleTag.TRYTOCONNECT.value()));
-            lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
+            connectionManager.performHandshakeServer(SpaceTag.LOBBY.value(), lobbySpace);
             System.out.println("The host has joined Lobby: " + lobbyID);
-            System.out.println("Before while");
             new Thread(() -> checkCloseLobby()).start();
             while (running) {
                 Object[] player2Status = lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(String.class));
@@ -106,10 +92,8 @@ class lobbyHandler implements Runnable {
                         System.out.println("Not occupied");
                         lobbySpace.put(TupleTag.OCCUPIED.value());
                         lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
-                        System.out.println("Player 2 has joined Lobby: " + lobbyID);
-                        // lobbySpace.put("Player joined", 0);
-                        // Boolean to start
-                        lobbySpace.put(true);
+                        System.out.println("Player 2 has joined Lobby: " + lobbyID);                        
+                        lobbySpace.put(true); // Boolean to start
                         player2 = true;
                     } else {
                         System.out.println("Occupied");
@@ -117,15 +101,10 @@ class lobbyHandler implements Runnable {
                     }
                 } else {
                     lobbySpace.get(new ActualField(TupleTag.OCCUPIED.value()));
-                    System.out.println("PLAYER 2 LEFT");
-                    // lobbySpace.put("Player left", 0);
-                    // boolean not ready to start
-                    lobbySpace.put(false);
+                    lobbySpace.put(false); // boolean not ready to start
                     player2 = false;
-
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,18 +112,14 @@ class lobbyHandler implements Runnable {
 
     private void checkCloseLobby() {
         try {
-            System.out.println("Started check close lobby");
             lobbySpace.get(new ActualField(TupleTag.CLOSE_LOBBY.value()));
             lobbySpace.put(TupleTag.LOBBY_CLOSED.value());
-
             long startTime = System.currentTimeMillis();
             boolean acknowledged = false;
-
             while (System.currentTimeMillis() - startTime < 2000) {
                 Object[] ack = lobbySpace.getp(new ActualField(TupleTag.ACKNOWLEDGE_CLOSE.value()));
                 if (ack != null) {
                     acknowledged = true;
-                    System.out.println("Received acknowledge close");
                     break;
                 }
                 Thread.sleep(100);

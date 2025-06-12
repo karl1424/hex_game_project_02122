@@ -45,7 +45,7 @@ public class GameOverPane extends StackPane {
             showOnlineSetup();
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
-            gamePanel.getClient().stopReceivingSpots();
+            gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.showMainMenu();
             
@@ -61,13 +61,13 @@ public class GameOverPane extends StackPane {
 
     public void showOnlineSetup() {
         if (gamePanel.isOnline == true) {
-            if (!gamePanel.getClient().getIsHost()) {
+            if (!gamePanel.getClient().getClientState().isHost()) {
                 System.out.println("player 2 left");
                 gamePanel.getClient().sendLeftPlayer2();
             } else {
                 gamePanel.getClient().shutDownLobby();
             }
-            gamePanel.getClient().setIsHost(false);
+            gamePanel.getClient().getClientState().setHost(false);
         }
         //goToOnlineSetup();
     }
@@ -91,7 +91,7 @@ public class GameOverPane extends StackPane {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.getOnlineGameMenu().showLobby();
-            manager.getClient().getStartGame((sizeBoard, numberPlayer) -> {
+            manager.getClient().getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
                 manager.getOnlineGameMenu().initGame(sizeBoard, numberPlayer);
             });
         });

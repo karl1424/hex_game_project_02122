@@ -1,4 +1,4 @@
-package dk.dtu.connection;
+package dk.dtu.network.handlers;
 
 import dk.dtu.main.GamePanel;
 import org.jspace.*;
@@ -47,7 +47,4 @@ public class LobbyMessageHandler {
             gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage(prefix + (String) msg[0]);
         }
     }
-
-
-
 } 

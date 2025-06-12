@@ -55,13 +55,21 @@ public class LobbyPane extends BorderPane {
         player1CheckBox.setOnAction(_ -> {
             player1CheckBox.setSelected(true);
             player2CheckBox.setSelected(false);
-            parent.updateStartTurn("playerStart", 1);
+            try {
+                parent.updateStartTurn("playerStart", 1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
         player2CheckBox.setOnAction(_ -> {
             player1CheckBox.setSelected(false);
             player2CheckBox.setSelected(true);
-            parent.updateStartTurn("playerStart", 2);
+            try {
+                parent.updateStartTurn("playerStart", 2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
         playerBox.getChildren().addAll(playerLabel, player1CheckBox, player2CheckBox);
@@ -84,7 +92,11 @@ public class LobbyPane extends BorderPane {
                 if (!cb.isSelected())
                     cb.setSelected(true);
                 int boardSize = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
-                parent.updateBoardSize("board size", boardSize);
+                try {
+                    parent.updateBoardSize("board size", boardSize);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             });
         }
 
@@ -143,9 +155,15 @@ public class LobbyPane extends BorderPane {
         BorderPane.setAlignment(buttonBox, Pos.CENTER);
 
         backBtn.setOnAction(_ -> parent.showOnlineSetup());
-        startButton.setOnAction(_ -> parent.onstartGame());
+        startButton.setOnAction(_ -> {
+            try {
+                parent.onstartGame();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
-        boolean isHost = parent.getClient().getIsHost();
+        boolean isHost = parent.getClient().getClientState().isHost();
 
         if (!isHost) {
             player1CheckBox.setDisable(true);

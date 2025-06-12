@@ -1,4 +1,4 @@
-package dk.dtu.connection;
+package dk.dtu.network.tags;
 
 public enum SpaceTag {
     PROTOCOL("tcp://"),
@@ -23,4 +23,3 @@ public enum SpaceTag {
         return value;
     }
 }
-

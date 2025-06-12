@@ -118,7 +118,7 @@ public class GameBoardLogic {
         return winningPath;
     }
 
-    public void handleHexagonPressed(Hexagon hexagon) {
+    public void handleHexagonPressed(Hexagon hexagon) throws InterruptedException {
         GamePanel gamePanel = gameBoard.getGamePanel();
         if (gameBoard.getWinner() != 0 || board[hexagon.xCor][hexagon.yCor].getState() != 0)
             return;

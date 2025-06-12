@@ -3,10 +3,10 @@ package dk.dtu.menu.online;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import dk.dtu.connection.Client;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
+import dk.dtu.network.Client;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 
@@ -30,13 +30,13 @@ public class OnlineGameMenu extends MenuPanel {
 
     public void showOnlineSetup() {
         if (gamePanel.isOnline == true) {
-            if (!client.getIsHost()) {
+            if (!client.getClientState().isHost()) {
                 System.out.println("player 2 left");
                 client.sendLeftPlayer2();
             } else {
                 client.shutDownLobby();
             }
-            client.setIsHost(false);
+            client.getClientState().setHost(false);
         }
         goToOnlineSetup();
     }
@@ -69,7 +69,7 @@ public class OnlineGameMenu extends MenuPanel {
     public void onHost() {
         gamePanel.isOnline = true;
         try {
-            client.establishConnetion(true);
+            client.establishConnetionAsHost(true);
             client.getLobbyID();
             showLobby();
             client.getLobbyMessageHandler().receiveMessage();
@@ -95,10 +95,10 @@ public class OnlineGameMenu extends MenuPanel {
         gamePanel.isOnline = true;
         showLobby();
 
-        client.getStartGame((sizeBoard, numberPlayer) -> {
+        client.getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
             initGame(sizeBoard, numberPlayer);
         });
-        client.getGameInfo((tag, value) -> {
+        client.getGameCommunicationHandler().getGameSettings((tag, value) -> {
             System.out.println("tag, value: " + tag + value);
             if (tag.equals("board size")) {
                 for (CheckBox cb : pane.checkBoxes) {
@@ -136,12 +136,12 @@ public class OnlineGameMenu extends MenuPanel {
         
     }
 
-    public void onstartGame() {
-        if (client.getCanStart()) {
+    public void onstartGame() throws InterruptedException {
+        if (client.getClientState().canStart()) {
             boardSize = getBoardSize();
             playerNumber = getPlayerStart();
             opponentNumber = pane.player1CheckBox.isSelected() ? 2 : 1;
-            client.sendStartGame(boardSize, opponentNumber);
+            client.getGameCommunicationHandler().sendStartGame(boardSize, opponentNumber);
             initGame(boardSize, playerNumber);
         } else {
             pane.showLobbyNotFull();
@@ -158,12 +158,12 @@ public class OnlineGameMenu extends MenuPanel {
         gamePanel.beginGettingCoordinates();
     }
 
-    public void updateBoardSize(String boardSizeString, int boardSize) {
-        client.updateBoardSize(boardSizeString, boardSize);
+    public void updateBoardSize(String boardSizeString, int boardSize) throws InterruptedException {
+        client.getGameCommunicationHandler().updateBoardSize(boardSizeString, boardSize);
     }
 
-    public void updateStartTurn(String playerStartString, int playerStart) {
-        client.updateStartTurn(playerStartString, playerStart);
+    public void updateStartTurn(String playerStartString, int playerStart) throws InterruptedException {
+        client.getGameCommunicationHandler().updateStartTurn(playerStartString, playerStart);
     }
 
     public Client getClient() {

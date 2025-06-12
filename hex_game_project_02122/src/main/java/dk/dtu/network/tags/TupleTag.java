@@ -1,4 +1,4 @@
-package dk.dtu.connection;
+package dk.dtu.network.tags;
 
 public enum TupleTag {
     HOST("host"),
