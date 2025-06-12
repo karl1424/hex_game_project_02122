@@ -91,7 +91,7 @@ public class OnlineGameMenu extends MenuPanel {
     public void onJoinLobby(String lobbyIDText) throws InterruptedException, IOException {
         int lobbyID = Integer.parseInt(lobbyIDText);
         client.getConnectionManager().connectToLobby(lobbyID);
-        client.setLobbyID(lobbyID);
+        client.getConnectionManager().setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         showLobby();
 
@@ -131,8 +131,9 @@ public class OnlineGameMenu extends MenuPanel {
             }
             pane.appendMessage("PLAYER JOINED");
         });
-        client.getLobbyMessageHandler().receiveMessage();
         new Thread(() -> client.checkForLobbyClosed()).start();
+        client.getLobbyMessageHandler().receiveMessage();
+        
     }
 
     public void onstartGame() {

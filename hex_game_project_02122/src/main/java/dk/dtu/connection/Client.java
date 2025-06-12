@@ -2,28 +2,21 @@ package dk.dtu.connection;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.jspace.ActualField;
 import org.jspace.FormalField;
-import org.jspace.RemoteSpace;
-import org.jspace.Space;
-
 import dk.dtu.main.GamePanel;
 import javafx.application.Platform;
 
 public class Client {
-    private int lobbyID;
+
     private boolean isHost;
     private boolean isOffline = false;
     private boolean running = false;
     private boolean canStart;
-    private boolean recieveMessages = false;
 
     private GamePanel gamePanel;
-    private RemoteSpace server;
-    private RemoteSpace lobby;
 
     private ConnectionManager connectionManager;
     private LobbyMessageHandler lobbyMessageHandler;
@@ -60,11 +53,6 @@ public class Client {
             throw new UnknownHostException();
         }
         return connectionManager.getLobbyID() + "";
-    }
-
-    public void setLobbyID(int lobbyID) {
-        this.lobbyID = lobbyID;
-        connectionManager.setLobbyID(lobbyID);
     }
 
     // ------------
