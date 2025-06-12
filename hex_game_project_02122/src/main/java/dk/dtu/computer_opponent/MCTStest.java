@@ -11,7 +11,7 @@ import dk.dtu.main.Coordinate;
 public class MCTStest {
     private static final int GAMES = 100;
     private static final int ITERATIONS = 5000;
-    private static final int BOARD_SIZE = 7;
+    private static final int BOARD_SIZE = 3;
 
     public static void main(String[] args) {
         int player1Wins = 0;
@@ -72,13 +72,13 @@ public class MCTStest {
         }
         game.checkWin();
 
-        // if (game.winner == 2 & BOARD_SIZE == 3) {
-        //     game.printBoard();
-        //     System.out.println();
-        //     for (int[] c : playerMoves) {
-        //         System.out.println(Arrays.toString(c));
-        //     }
-        // }
+        if (game.winner == 2 & BOARD_SIZE == 3) {
+            game.printBoard();
+            System.out.println();
+            for (int[] c : playerMoves) {
+                System.out.println(Arrays.toString(c));
+            }
+        }
 
         // System.out.println();
         // System.out.println("Player " + game.winner + " wins");
