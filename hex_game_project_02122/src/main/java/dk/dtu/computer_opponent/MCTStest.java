@@ -9,7 +9,7 @@ import dk.dtu.main.Coordinate;
 //Click on continue when VSCode says build failed
 
 public class MCTStest {
-    private static final int GAMES = 100;
+    private static final int GAMES = 1000;
     private static final int ITERATIONS = 5000;
     private static final int BOARD_SIZE = 3;
 
@@ -57,18 +57,16 @@ public class MCTStest {
         MCTS mctsPlayer2 = new MCTS( null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
-            SimulationGame sim = new SimulationGame(game);
             MCTS mcts = (currentPlayer == 1) ? mctsPlayer1 : mctsPlayer2;
-            mcts.setSimulationGame(sim);
+            mcts.setSimulationGame(game);
             Coordinate moveMade = mcts.makeMoveInTest();
-            sim.makeMove(moveMade, currentPlayer);
+            game.makeMove(moveMade, currentPlayer);
             availableMoves.remove(moveMade);
             moveCount++;
 
             playerMoves.add(new int[] { moveMade.getX(), moveMade.getY(), currentPlayer });
 
             currentPlayer = (currentPlayer == 1) ? 2 : 1;
-            game = sim;
         }
         game.checkWin();
 
