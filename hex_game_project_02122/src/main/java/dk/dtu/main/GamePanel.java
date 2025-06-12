@@ -80,6 +80,9 @@ public class GamePanel extends Pane {
 
             if (isOnline) {
                 menuManager.gameOverPanel.setOnline();
+                if (!menuManager.getClient().getClientState().isHost()) {
+                    menuManager.getClient().receiveToLobby();
+                }
             } else {
                 menuManager.gameOverPanel.setLocal();
             }

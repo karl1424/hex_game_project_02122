@@ -28,7 +28,7 @@ public class Server {
     }
 
     public static void setUpServerSapce() {
-        lobbyID = 0;
+        lobbyID = 1;
         serverSpace = new SpaceRepository();
         serverSpace.addGate(connectionManager.getUri(""));
         serverSpace.add(SpaceTag.LOBBY_REQUEST.value(), new SequentialSpace());
@@ -38,8 +38,12 @@ public class Server {
     public static void waitingForHost() {
         try {
             connectionManager.performHandshakeServer(SpaceTag.SERVER.value(), lobbyRequests);
-            lobbyRequests.get(new ActualField(TupleTag.HOST.value()));
-            createLobby();
+            Object[] request = lobbyRequests.get(new ActualField(TupleTag.HOST.value()), new FormalField(Integer.class));
+            if ((int) request[1] == 0) {
+                createLobby();
+            } else {
+                createOldLobby((int) request[1]);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,6 +57,18 @@ public class Server {
             lobbyRequests.put(SpaceTag.LOBBY.value(), lobbyID);
             System.out.println("Lobby ID: " + lobbyHandlers.get(lobbyID).getLobbyId() + " have been created ");
             lobbyID++;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createOldLobby(int oldLobbyID) {
+        try {
+            LobbyHandler tempLobbyHandler = new LobbyHandler(oldLobbyID, serverSpace);
+            lobbyHandlers.put(oldLobbyID, tempLobbyHandler);
+            new Thread(tempLobbyHandler).start();
+            lobbyRequests.put(SpaceTag.LOBBY.value(), oldLobbyID);
+            System.out.println("Old Lobby ID: " + lobbyHandlers.get(oldLobbyID).getLobbyId() + " have been created ");
         } catch (Exception e) {
             e.printStackTrace();
         }

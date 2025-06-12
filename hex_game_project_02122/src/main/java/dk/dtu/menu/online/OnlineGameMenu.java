@@ -7,6 +7,7 @@ import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
 import dk.dtu.network.Client;
+import dk.dtu.network.tags.SpaceTag;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 
@@ -29,6 +30,7 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void showOnlineSetup() {
+        System.out.println("HEJ");
         if (gamePanel.isOnline == true) {
             if (!client.getClientState().isHost()) {
                 System.out.println("player 2 left");
@@ -66,10 +68,10 @@ public class OnlineGameMenu extends MenuPanel {
         getChildren().add(new JoinPane(this));
     }
 
-    public void onHost() {
+    public void onHost(int lobbyID) {
         gamePanel.isOnline = true;
         try {
-            client.establishConnetionAsHost(true);
+            client.establishConnetionAsHost(true, lobbyID);
             client.getLobbyID();
             showLobby();
             client.getLobbyMessageHandler().receiveMessage();
@@ -93,6 +95,8 @@ public class OnlineGameMenu extends MenuPanel {
         client.getConnectionManager().connectToLobby(lobbyID);
         client.getConnectionManager().setLobbyID(lobbyID);
         gamePanel.isOnline = true;
+        gamePanel.getChildren().remove(manager.gameOverPanel);
+        manager.getPrimaryStage().getScene().setRoot(manager);
         showLobby();
 
         client.getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {

@@ -27,7 +27,7 @@ public class OnlineSetupPane extends VBox {
 
         getChildren().addAll(titleLabel, hostBtn, joinBtn, backBtn, serverIsDownLabel);
 
-        hostBtn.setOnAction(_ -> parent.onHost());
+        hostBtn.setOnAction(_ -> parent.onHost(0));
         joinBtn.setOnAction(_ -> parent.onJoin());
         backBtn.setOnAction(_ -> parent.onBack());
     }

@@ -29,11 +29,12 @@ public class Client {
         this.clientState = new ClientState();
     }
 
-    public void establishConnetionAsHost(boolean isHost) throws IllegalStateException, InterruptedException, IOException {
+    public void establishConnetionAsHost(boolean isHost, int oldLobbyID)
+            throws IllegalStateException, InterruptedException, IOException {
         clientState.setOffline(false);
         clientState.setHost(isHost);
         try {
-            connectionManager.connectHost();
+            connectionManager.connectHost(oldLobbyID);
         } catch (Exception e) {
             clientState.setOffline(true);
             return;
@@ -74,6 +75,7 @@ public class Client {
             connectionManager.getLobby().put(TupleTag.ACKNOWLEDGE_CLOSE.value());
             System.out.println("Lobby has been closed");
             Platform.runLater(() -> {
+                gamePanel.getMenuManager().getPrimaryStage().getScene().setRoot(gamePanel.getMenuManager());
                 lobbyMessageHandler.stopReceivingMessages();
                 gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
             });
@@ -97,21 +99,51 @@ public class Client {
         return connectionManager.getLobbyID() + "";
     }
 
-    public ClientState getClientState(){
+    public void sendToLobby() {
+        try {
+            connectionManager.getLobby().put("to lobby");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void receiveToLobby() {
+        new Thread(() -> {
+            try {
+                connectionManager.getLobby().get(new ActualField("to lobby"));
+                Thread.sleep(500);
+                System.out.println("I HAVE RECEIVED");
+                Platform.runLater(() -> {
+                    try {
+                        gamePanel.getMenuManager().getOnlineGameMenu().onJoinLobby(getLobbyID());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            } catch (Exception ignored) {
+            }
+        }).start();
+    }
+
+    public ClientState getClientState() {
         return clientState;
     }
+
     public LobbyMessageHandler getLobbyMessageHandler() {
         return lobbyMessageHandler;
     }
+
     public ConnectionManager getConnectionManager() {
         return connectionManager;
     }
-    public GameCommunicationHandler getGameCommunicationHandler(){
+
+    public GameCommunicationHandler getGameCommunicationHandler() {
         return gameCommunicationHandler;
     }
 
-    public void createHandlers(){
-        this.lobbyMessageHandler = new LobbyMessageHandler(connectionManager.getLobby(), gamePanel, clientState.isHost());
+    public void createHandlers() {
+        this.lobbyMessageHandler = new LobbyMessageHandler(connectionManager.getLobby(), gamePanel,
+                clientState.isHost());
         this.gameCommunicationHandler = new GameCommunicationHandler(connectionManager.getLobby());
     }
 }

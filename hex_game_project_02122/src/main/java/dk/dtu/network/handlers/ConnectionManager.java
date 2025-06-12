@@ -42,12 +42,12 @@ public class ConnectionManager {
         return (((String) connection[1]).equals(TupleTag.CONNECTED.value()));
     }
 
-    public void connectHost() throws InterruptedException, IOException {
+    public void connectHost(int oldLobbyID) throws InterruptedException, IOException {
         server = establishConnectionToRemoteSpace(SpaceTag.LOBBY_REQUEST.value());
         if (!performHandshakeClients(SpaceTag.SERVER.value(), server)) {
             throw new IllegalStateException();
         }
-        server.put(TupleTag.HOST.value());
+        server.put(TupleTag.HOST.value(), oldLobbyID);
         Object[] lobby = server.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(Integer.class));
         lobbyID = (int) lobby[1];
     }

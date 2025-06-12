@@ -3,6 +3,7 @@ package dk.dtu.menu.game_over;
 import dk.dtu.main.GamePanel;
 import dk.dtu.menu.Help;
 import dk.dtu.menu.MenuManager;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,11 +13,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class GameOverPane extends StackPane {
 
     private Label resultLabel;
     private Button againBtn;
+    private Button mainBtn;
     private MenuManager manager;
     private GamePanel gamePanel;
 
@@ -33,24 +36,14 @@ public class GameOverPane extends StackPane {
         popup.setAlignment(Pos.CENTER);
         popup.setPadding(new Insets(25));
         popup.setMaxSize(300, 250);
-        popup.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 5);");
+        popup.setStyle(
+                "-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 5);");
 
         Label title = Help.createLabel("Game Over", 36, true);
         resultLabel = Help.createLabel("", 24, true);
 
         againBtn = Help.createButton("Play Again", 140, 35, false);
-        Button mainBtn = Help.createButton("Main Menu", 140, 35, false);
-
-        mainBtn.setOnAction(_ -> {
-            showOnlineSetup();
-            gamePanel.isOnline = false;
-            manager.onlinePanel.getChildren().clear();
-            gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
-            manager.getPrimaryStage().getScene().setRoot(manager);
-            manager.showMainMenu();
-            
-        });
-        
+        mainBtn = Help.createButton("Main Menu", 140, 35, false);
 
         HBox buttons = new HBox(15, againBtn, mainBtn);
         buttons.setAlignment(Pos.CENTER);
@@ -59,7 +52,7 @@ public class GameOverPane extends StackPane {
         getChildren().addAll(overlay, popup);
     }
 
-    public void showOnlineSetup() {
+/*     public void showOnlineSetup() {
         if (gamePanel.isOnline == true) {
             if (!gamePanel.getClient().getClientState().isHost()) {
                 System.out.println("player 2 left");
@@ -69,8 +62,8 @@ public class GameOverPane extends StackPane {
             }
             gamePanel.getClient().getClientState().setHost(false);
         }
-        //goToOnlineSetup();
-    }
+        // goToOnlineSetup();
+    } */
 
     public void setWinner(int winner) {
         resultLabel.setText("Player " + winner + " wins!");
@@ -83,17 +76,38 @@ public class GameOverPane extends StackPane {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             gamePanel.resetGame();
         });
+        mainBtn.setOnAction(_ -> {
+            gamePanel.isOnline = false;
+            manager.onlinePanel.getChildren().clear();
+            manager.getPrimaryStage().getScene().setRoot(manager);
+            manager.showMainMenu();
+        });
     }
 
     public void setOnline() {
         againBtn.setText("Go to Lobby");
+        if (!manager.getOnlineGameMenu().getClient().getClientState().isHost()) {
+            againBtn.setDisable(true);
+        }
         againBtn.setOnAction(_ -> {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             manager.getPrimaryStage().getScene().setRoot(manager);
-            manager.getOnlineGameMenu().showLobby();
-            manager.getClient().getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
-                manager.getOnlineGameMenu().initGame(sizeBoard, numberPlayer);
+            manager.getOnlineGameMenu().getClient().sendToLobby();
+            manager.getOnlineGameMenu().getClient().shutDownLobby();
+            PauseTransition pause = new PauseTransition(Duration.millis(200));
+            pause.setOnFinished(_ -> {
+                manager.getOnlineGameMenu().onHost(
+                        manager.getOnlineGameMenu().getClient().getConnectionManager().getLobbyID());
             });
+            pause.play();
+        });
+
+        mainBtn.setOnAction(_ -> {
+            manager.onlinePanel.getChildren().clear();
+            gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
+            manager.getPrimaryStage().getScene().setRoot(manager);
+            manager.getOnlineGameMenu().showOnlineSetup();
+            gamePanel.isOnline = false;
         });
     }
 }
