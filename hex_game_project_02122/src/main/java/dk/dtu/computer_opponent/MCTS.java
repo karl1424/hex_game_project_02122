@@ -8,6 +8,7 @@ import dk.dtu.main.GameBoard;
 
 public class MCTS {
     private GameBoard gameBoard;
+    private SimulationGame simBoard;
     private int playerNumber;
     private GUI gui;
 
@@ -17,6 +18,12 @@ public class MCTS {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
         this.gui = gui;
+        this.iterations = iterations;
+    }
+
+    public MCTS(SimulationGame simBoard, int playerNumber, int iterations) {
+        this.simBoard = simBoard;
+        this.playerNumber = playerNumber;
         this.iterations = iterations;
     }
 
@@ -36,8 +43,8 @@ public class MCTS {
             rootNode.selectAction(gameBoard);
         }
 
-        //MCTSNode.printTimingStats();
-        
+        // MCTSNode.printTimingStats();
+
         MCTSNode bestChild = null;
         int mostVisits = -1;
 
@@ -56,6 +63,48 @@ public class MCTS {
                     " (Visits: " + bestChild.getVisits() +
                     ", Win ratio: " + (bestChild.getWins() / (double) bestChild.getVisits()) + ")");
         }
+    }
+
+    public Coordinate makeMoveInTest() {
+        Coordinate winningMove = findWinningMoveInTest();
+
+        if (winningMove != null) {
+            return winningMove;
+        }
+
+        MCTSNode rootNode = new MCTSNode(null, null, playerNumber);
+
+        for (int i = 0; i < iterations; i++) {
+            rootNode.selectAction(simBoard);
+        }
+
+        MCTSNode bestChild = null;
+        int mostVisits = -1;
+
+        for (MCTSNode child : rootNode.getChildren()) {
+            if (child.getVisits() > mostVisits) {
+                mostVisits = child.getVisits();
+                bestChild = child;
+            }
+        }
+
+        if (bestChild != null && bestChild.getMove() != null) {
+            Coordinate bestMove = bestChild.getMove();
+            return bestMove;
+        }
+
+        return null;
+    }
+
+    public Coordinate findWinningMoveInTest() {
+        List<Coordinate> availableMoves = simBoard.getAvailableMoves();
+
+        for (Coordinate move : availableMoves) {
+            if (simBoard.checkForWin(move, playerNumber)) {
+                return move;
+            }
+        }
+        return null;
     }
 
     private Coordinate findWinningMove() {
