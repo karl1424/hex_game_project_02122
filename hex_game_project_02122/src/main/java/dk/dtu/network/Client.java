@@ -47,12 +47,14 @@ public class Client {
     public void checkForLobbyClosed() { // Player 2 needs to stop listening for a lobby closing after exitin the lobby
                                         // himself
         try {
-            connectionManager.receiveCloseLobby();
-            Platform.runLater(() -> {
-                gamePanel.getMenuManager().getPrimaryStage().getScene().setRoot(gamePanel.getMenuManager());
-                lobbyMessageHandler.stopReceivingMessages();
-                gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
-            });
+            boolean close = connectionManager.receiveCloseLobby();
+            if (!close) {
+                Platform.runLater(() -> {
+                    gamePanel.getMenuManager().getPrimaryStage().getScene().setRoot(gamePanel.getMenuManager());
+                    lobbyMessageHandler.stopReceivingMessages();
+                    gamePanel.getMenuManager().getOnlineGameMenu().goToOnlineSetup();
+                });
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

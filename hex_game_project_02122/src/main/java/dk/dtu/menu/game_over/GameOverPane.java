@@ -100,7 +100,7 @@ public class GameOverPane extends StackPane {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.getOnlineGameMenu().getClient().sendToLobby();
-            manager.getOnlineGameMenu().getClient().getConnectionManager().shutDownLobby();
+            manager.getOnlineGameMenu().getClient().getConnectionManager().shutDownLobby(true);
             PauseTransition pause = new PauseTransition(Duration.millis(200));
             pause.setOnFinished(_ -> {
                 manager.getOnlineGameMenu().onHost(

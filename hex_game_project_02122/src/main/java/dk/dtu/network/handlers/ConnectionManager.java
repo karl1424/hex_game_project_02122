@@ -62,15 +62,16 @@ public class ConnectionManager {
         client.createHandlers();
     }
 
-    public void receiveCloseLobby() throws InterruptedException {
-        lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
+    public boolean receiveCloseLobby() throws InterruptedException {
+        Object[] lobbyClose = lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()), new FormalField(Boolean.class));
         lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
         System.out.println("Lobby has been closed");
+        return (boolean) lobbyClose[1];
     }
 
-    public void shutDownLobby() {
+    public void shutDownLobby(boolean toLobby) {
         try {
-            lobby.put(TupleTag.CLOSE_LOBBY.value());
+            lobby.put(TupleTag.CLOSE_LOBBY.value(), toLobby);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

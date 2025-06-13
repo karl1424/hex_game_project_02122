@@ -57,8 +57,9 @@ public class LobbyHandler implements Runnable {
 
     private void checkCloseLobby() {
         try {
-            lobbySpace.get(new ActualField(TupleTag.CLOSE_LOBBY.value()));
-            lobbySpace.put(TupleTag.LOBBY_CLOSED.value());
+            Object[] closeLobby = lobbySpace.get(new ActualField(TupleTag.CLOSE_LOBBY.value()), new FormalField(Boolean.class));
+            System.out.println("TEST: " + ((boolean) closeLobby[1]));
+            lobbySpace.put(TupleTag.LOBBY_CLOSED.value(), (boolean) closeLobby[1]);
             long startTime = System.currentTimeMillis();
             boolean acknowledged = false;
             while (System.currentTimeMillis() - startTime < 2000) {
