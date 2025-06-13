@@ -9,9 +9,9 @@ import dk.dtu.main.Coordinate;
 //Click on continue when VSCode says build failed
 
 public class MCTStest {
-    private static final int GAMES = 500;
-    private static final int ITERATIONS = 10000;
-    private static final int BOARD_SIZE = 3;
+    private static final int GAMES = 100;
+    private static final int ITERATIONS = 5000;
+    private static final int BOARD_SIZE = 7;
 
     public static void main(String[] args) {
         int player1Wins = 0;
@@ -28,11 +28,11 @@ public class MCTStest {
                 player2Wins++;
             }
 
-            if ((i + 1) % 100 == 0) {
+            if ((i + 1) % 20 == 0) {
                 long batchEnd = System.nanoTime(); // Sluttid for batch
                 long durationNs = batchEnd - batchStart;
                 double durationMs = durationNs / 1_000_000.0;
-                double avgTimePerGame = durationMs / 100.0;
+                double avgTimePerGame = durationMs / 20.0;
 
                 int gamesCompleted = i + 1;
                 System.out.println("Completed " + gamesCompleted + " games:");
@@ -40,7 +40,7 @@ public class MCTStest {
                         String.format("%.1f", (player1Wins * 100.0 / gamesCompleted)) + "%)");
                 System.out.println("Player 2 wins: " + player2Wins + " (" +
                         String.format("%.1f", (player2Wins * 100.0 / gamesCompleted)) + "%)");
-                System.out.println("Time for last 100 games: " + String.format("%.1f", durationMs) + " ms");
+                System.out.println("Time for last 20 games: " + String.format("%.1f", durationMs) + " ms");
                 System.out.println("Average time per game: " + String.format("%.2f", avgTimePerGame) + " ms\n");
 
                 batchStart = System.nanoTime(); // Genstart tiden til næste batch
