@@ -22,15 +22,14 @@ public class GameCommunicationHandler {
         running = true;
         new Thread(() -> {
             int opponent = gamePanel.getPlayerNumber() == 1 ? 2 : 1;
+            System.out.println("Receiving from " + opponent);
             while (running) {
-                if (!gamePanel.getTurn()) {
-                    try {
-                        Object[] spot = lobby.get(new FormalField(Integer.class), new FormalField(Integer.class),
-                                new ActualField(opponent));
-                        onSpotReceived.accept(spot);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
+                try {
+                    Object[] spot = lobby.get(new FormalField(Integer.class), new FormalField(Integer.class),
+                            new ActualField(opponent));
+                    onSpotReceived.accept(spot);
+                } catch (InterruptedException e) {
+                    break;
                 }
                 try {
                     Thread.sleep(100);

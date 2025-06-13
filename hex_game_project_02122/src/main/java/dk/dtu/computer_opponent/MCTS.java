@@ -43,7 +43,7 @@ public class MCTS {
             rootNode.selectAction(gameBoard);
         }
 
-        // MCTSNode.printTimingStats();
+        //MCTSNode.printTimingStats();
 
         MCTSNode bestChild = null;
         int mostVisits = -1;

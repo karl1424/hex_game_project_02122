@@ -5,13 +5,15 @@ import java.util.List;
 import dk.dtu.main.Coordinate;
 
 public class MCTStest {
-    private static final int GAMES = 1000;
-    private static final int ITERATIONS = 5000;
+    private static final int GAMES = 500;
+    private static final int ITERATIONS = 10000;
     private static final int BOARD_SIZE = 3;
 
     public static void main(String[] args) {
         int player1Wins = 0;
         int player2Wins = 0;
+
+        long batchStart = System.nanoTime(); // Starttid for de første 100 spil
 
         for (int i = 0; i < GAMES; i++) {
             int winner = playGame();
@@ -23,13 +25,21 @@ public class MCTStest {
             }
 
             if ((i + 1) % 100 == 0) {
+                long batchEnd = System.nanoTime(); // Sluttid for batch
+                long durationNs = batchEnd - batchStart;
+                double durationMs = durationNs / 1_000_000.0;
+                double avgTimePerGame = durationMs / 100.0;
+
                 int gamesCompleted = i + 1;
                 System.out.println("Completed " + gamesCompleted + " games:");
                 System.out.println("Player 1 wins: " + player1Wins + " (" +
                         String.format("%.1f", (player1Wins * 100.0 / gamesCompleted)) + "%)");
                 System.out.println("Player 2 wins: " + player2Wins + " (" +
                         String.format("%.1f", (player2Wins * 100.0 / gamesCompleted)) + "%)");
-                System.out.println();
+                System.out.println("Time for last 100 games: " + String.format("%.1f", durationMs) + " ms");
+                System.out.println("Average time per game: " + String.format("%.2f", avgTimePerGame) + " ms\n");
+
+                batchStart = System.nanoTime(); // Genstart tiden til næste batch
             }
         }
 
