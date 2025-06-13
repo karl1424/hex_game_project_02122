@@ -22,15 +22,11 @@ public class LobbyMessageHandler {
 
     public void receiveMessage() {
         receiving = true;
-        System.out.println("Start to receive messages");
         new Thread(() -> {
             while (receiving) {
                 try {
                     Object[] msg = lobby.get(new FormalField(String.class), new ActualField(!isHost), new FormalField(Boolean.class));
-                    System.out.println("Got something");
-                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage( ((boolean) msg[2] ? "" : "Other: ") + (String) msg[0]);
-                    System.out.println("Should print: " + msg[2] + msg[0]);
-                    lobby.put(msg[0], msg[1], msg[2], "old");
+                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage( ((boolean) msg[2] ? "" : "Other: ") + (String) msg[0]);                    lobby.put(msg[0], msg[1], msg[2], "old");
                 } catch (InterruptedException ignored) {}
             }
         }).start();

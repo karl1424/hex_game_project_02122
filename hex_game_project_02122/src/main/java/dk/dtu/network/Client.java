@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.jspace.ActualField;
-import org.jspace.FormalField;
 
 import dk.dtu.main.GamePanel;
 import dk.dtu.network.handlers.ClientState;
 import dk.dtu.network.handlers.ConnectionManager;
 import dk.dtu.network.handlers.GameCommunicationHandler;
 import dk.dtu.network.handlers.LobbyMessageHandler;
-import dk.dtu.network.tags.SpaceTag;
+import dk.dtu.network.handlers.Player2Connection;
 import dk.dtu.network.tags.TupleTag;
 import javafx.application.Platform;
 
@@ -22,6 +21,7 @@ public class Client {
     private ClientState clientState;
     private LobbyMessageHandler lobbyMessageHandler;
     private GameCommunicationHandler gameCommunicationHandler;
+    private Player2Connection player2Connection;
 
     public Client(GamePanel gamePanel) {
         this.gamePanel = gamePanel;
@@ -40,40 +40,13 @@ public class Client {
             return;
         }
         connectionManager.connectToLobby(connectionManager.getLobbyID());
-        new Thread(() -> lookForP2()).start();
-    }
-
-    public void lookForP2() {
-        try {
-            while (true) {
-                Object[] start = connectionManager.getLobby().get(new FormalField(Boolean.class));
-                if ((boolean) start[0]) {
-                    gameCommunicationHandler.sendGameSettings(gamePanel);
-                    clientState.setCanStart(true);
-                } else {
-                    clientState.setCanStart(false);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void sendLeftPlayer2() {
-        try {
-            connectionManager.getLobby().put(SpaceTag.LOBBY.value(), TupleTag.LEFT.value());
-            connectionManager.getLobby().put(TupleTag.PLAYER_LEFT.value(), clientState.isHost(), true);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new Thread(() -> player2Connection.lookForP2()).start();
     }
 
     public void checkForLobbyClosed() { // Player 2 needs to stop listening for a lobby closing after exitin the lobby
                                         // himself
         try {
-            connectionManager.getLobby().get(new ActualField(TupleTag.LOBBY_CLOSED.value()));
-            connectionManager.getLobby().put(TupleTag.ACKNOWLEDGE_CLOSE.value());
-            System.out.println("Lobby has been closed");
+            connectionManager.receiveCloseLobby();
             Platform.runLater(() -> {
                 gamePanel.getMenuManager().getPrimaryStage().getScene().setRoot(gamePanel.getMenuManager());
                 lobbyMessageHandler.stopReceivingMessages();
@@ -84,24 +57,9 @@ public class Client {
         }
     }
 
-    public void shutDownLobby() {
-        try {
-            connectionManager.getLobby().put(TupleTag.CLOSE_LOBBY.value());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getLobbyID() throws UnknownHostException {
-        if (clientState.isOffline()) {
-            throw new UnknownHostException();
-        }
-        return connectionManager.getLobbyID() + "";
-    }
-
     public void sendToLobby() {
         try {
-            connectionManager.getLobby().put("to lobby");
+            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -110,7 +68,7 @@ public class Client {
     public void receiveToLobby() {
         new Thread(() -> {
             try {
-                connectionManager.getLobby().get(new ActualField("to lobby"));
+                connectionManager.getLobby().get(new ActualField(TupleTag.TO_LOBBY.value()));
                 Thread.sleep(500);
                 System.out.println("I HAVE RECEIVED");
                 Platform.runLater(() -> {
@@ -123,6 +81,13 @@ public class Client {
             } catch (Exception ignored) {
             }
         }).start();
+    }
+
+    public String getLobbyID() throws UnknownHostException {
+        if (clientState.isOffline()) {
+            throw new UnknownHostException();
+        }
+        return connectionManager.getLobbyID() + "";
     }
 
     public ClientState getClientState() {
@@ -141,9 +106,14 @@ public class Client {
         return gameCommunicationHandler;
     }
 
+    public Player2Connection getPlayer2Connection(){
+        return player2Connection;
+    }
+
     public void createHandlers() {
         this.lobbyMessageHandler = new LobbyMessageHandler(connectionManager.getLobby(), gamePanel,
                 clientState.isHost());
         this.gameCommunicationHandler = new GameCommunicationHandler(connectionManager.getLobby());
+        this.player2Connection = new Player2Connection(connectionManager, clientState, gameCommunicationHandler, gamePanel);
     }
 }

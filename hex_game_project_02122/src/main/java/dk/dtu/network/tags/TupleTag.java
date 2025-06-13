@@ -18,6 +18,7 @@ public enum TupleTag {
     LOBBY_CLOSED("lobby has been closed"),
     ACKNOWLEDGE_CLOSE("acknowledge close"),
     CLOSE_LOBBY("CLOSE LOBBY"),
+    TO_LOBBY("to lobby"),
 
     OCCUPIED("occupied");
 

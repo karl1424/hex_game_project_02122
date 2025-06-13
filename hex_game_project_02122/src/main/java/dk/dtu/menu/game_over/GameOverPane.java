@@ -52,18 +52,21 @@ public class GameOverPane extends StackPane {
         getChildren().addAll(overlay, popup);
     }
 
-/*     public void showOnlineSetup() {
-        if (gamePanel.isOnline == true) {
-            if (!gamePanel.getClient().getClientState().isHost()) {
-                System.out.println("player 2 left");
-                gamePanel.getClient().sendLeftPlayer2();
-            } else {
-                gamePanel.getClient().shutDownLobby();
-            }
-            gamePanel.getClient().getClientState().setHost(false);
-        }
-        // goToOnlineSetup();
-    } */
+    /*
+     * public void showOnlineSetup() {
+     * System.out.println("HEJ");
+     * if (gamePanel.isOnline == true) {
+     * if (!gamePanel.getClient().getClientState().isHost()) {
+     * System.out.println("player 2 left");
+     * gamePanel.getClient().getPlayer2Connection().sendLeftPlayer2();
+     * } else {
+     * gamePanel.getClient().getConnectionManager().shutDownLobby();
+     * }
+     * gamePanel.getClient().getClientState().setHost(false);
+     * }
+     * //goToOnlineSetup();
+     * }
+     */
 
     public void setWinner(int winner) {
         resultLabel.setText("Player " + winner + " wins!");
@@ -77,10 +80,12 @@ public class GameOverPane extends StackPane {
             gamePanel.resetGame();
         });
         mainBtn.setOnAction(_ -> {
+            // showOnlineSetup();
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.showMainMenu();
+
         });
     }
 
@@ -93,7 +98,7 @@ public class GameOverPane extends StackPane {
             gamePanel.getChildren().remove(manager.gameOverPanel);
             manager.getPrimaryStage().getScene().setRoot(manager);
             manager.getOnlineGameMenu().getClient().sendToLobby();
-            manager.getOnlineGameMenu().getClient().shutDownLobby();
+            manager.getOnlineGameMenu().getClient().getConnectionManager().shutDownLobby();
             PauseTransition pause = new PauseTransition(Duration.millis(200));
             pause.setOnFinished(_ -> {
                 manager.getOnlineGameMenu().onHost(

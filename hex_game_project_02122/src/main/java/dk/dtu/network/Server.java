@@ -10,7 +10,6 @@ import dk.dtu.network.handlers.LobbyHandler;
 import dk.dtu.network.tags.SpaceTag;
 import dk.dtu.network.tags.TupleTag;
 
-
 public class Server {
     public static Map<Integer, LobbyHandler> lobbyHandlers = new ConcurrentHashMap<>();
     public static SpaceRepository serverSpace;

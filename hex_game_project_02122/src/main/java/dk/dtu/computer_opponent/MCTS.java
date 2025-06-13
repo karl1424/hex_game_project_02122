@@ -107,6 +107,10 @@ public class MCTS {
         return null;
     }
 
+    public void setSimulationGame(SimulationGame simBoard) {
+        this.simBoard = simBoard;
+    }
+
     private Coordinate findWinningMove() {
         List<Coordinate> availableMoves = gameBoard.getAvailableMoves();
 

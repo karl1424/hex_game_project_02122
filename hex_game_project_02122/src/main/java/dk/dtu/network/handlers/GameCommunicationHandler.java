@@ -111,6 +111,7 @@ public class GameCommunicationHandler {
     public void updateBoardSize(String key, int size) throws InterruptedException {
         lobby.put(key, size);
     }
+
     public void updateStartTurn(String key, int playerStart) throws InterruptedException {
         lobby.put(key, playerStart);
     }
