@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.jspace.ActualField;
+import org.jspace.FormalField;
 
 import dk.dtu.main.GamePanel;
 import dk.dtu.network.handlers.ClientState;
@@ -82,7 +83,13 @@ public class Client {
             }
         }).start();
     }
-
+    public void sendToLobbyPlayer2() {
+        try {
+            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value(),0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public String getLobbyID() throws UnknownHostException {
         if (clientState.isOffline()) {
             throw new UnknownHostException();

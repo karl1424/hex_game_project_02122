@@ -108,6 +108,9 @@ public class GameOverPane extends StackPane {
         });
 
         mainBtn.setOnAction(_ -> {
+            if (!manager.getOnlineGameMenu().getClient().getClientState().isHost()) {
+                manager.getOnlineGameMenu().getClient().sendToLobbyPlayer2();
+            }
             manager.onlinePanel.getChildren().clear();
             gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();
             manager.getPrimaryStage().getScene().setRoot(manager);

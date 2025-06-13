@@ -1,38 +1,39 @@
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\main_menu\MainMenuPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Hexagon.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\LobbyMessageHandler.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\NativeWrapper.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\Server.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\game_over\GameOver.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\main_menu\MainMenu.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineSetupPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SmallBoardStrategy.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoard.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Main.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineGameMenu.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Coordinate.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GamePanel.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\JoinPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\GameCommunicationHandler.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\player_vs_player\LocalGameMenu.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTSNode.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\LobbyHandler.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\Client.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\ConnectionManager.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GUI.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTS.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\ComputerManager.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SimulationGame.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\player_vs_player\LocalGamePane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoardLogic.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuManager.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\ClientState.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\LobbyPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\computer_opponent\ComputerSetUpMenu.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTStest.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\game_over\GameOverPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\computer_opponent\ComputerSetupPane.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\tags\SpaceTag.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\network\tags\TupleTag.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuPanel.java
-c:\Users\karla\Documents\Code\02122 Fagprojekt\hex_game_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\Help.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\NativeWrapper.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\player_vs_player\LocalGamePane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Hexagon.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\Player2Connection.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTStest.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\LobbyPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GUI.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\LobbyHandler.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\LobbyMessageHandler.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTSNode.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Main.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SmallBoardStrategy.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\SimulationGame.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoard.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\GameCommunicationHandler.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\Client.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\tags\TupleTag.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineGameMenu.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\main_menu\MainMenuPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GamePanel.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\tags\SpaceTag.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\Help.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\main_menu\MainMenu.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\player_vs_player\LocalGameMenu.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\ComputerManager.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuManager.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\GameBoardLogic.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\computer_opponent\MCTS.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\Server.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\computer_opponent\ComputerSetUpMenu.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\main\Coordinate.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\ConnectionManager.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\JoinPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\game_over\GameOverPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\network\handlers\ClientState.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\game_over\GameOver.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\online\OnlineSetupPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\local\computer_opponent\ComputerSetupPane.java
+c:\Users\bjark\Documents\Fag-Projekt\hex_game_project_02122\hex_game_project_02122\src\main\java\dk\dtu\menu\MenuPanel.java

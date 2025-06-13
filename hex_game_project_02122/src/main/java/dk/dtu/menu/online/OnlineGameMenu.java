@@ -96,8 +96,9 @@ public class OnlineGameMenu extends MenuPanel {
         client.getConnectionManager().setLobbyID(lobbyID);
         gamePanel.isOnline = true;
         gamePanel.getChildren().remove(manager.gameOverPanel);
-        manager.getPrimaryStage().getScene().setRoot(manager);
         showLobby();
+        manager.getPrimaryStage().getScene().setRoot(manager);
+    
 
         client.getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
             initGame(sizeBoard, numberPlayer);
