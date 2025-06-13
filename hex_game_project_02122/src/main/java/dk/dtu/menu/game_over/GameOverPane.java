@@ -93,6 +93,8 @@ public class GameOverPane extends StackPane {
         againBtn.setText("Go to Lobby");
         if (!manager.getOnlineGameMenu().getClient().getClientState().isHost()) {
             againBtn.setDisable(true);
+        } else {
+            againBtn.setDisable(false);
         }
         againBtn.setOnAction(_ -> {
             gamePanel.getChildren().remove(manager.gameOverPanel);

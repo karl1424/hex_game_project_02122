@@ -79,6 +79,7 @@ public class GamePanel extends Pane {
             delay.play();
 
             if (isOnline) {
+                System.out.println("IS HOST: " + menuManager.getClient().getClientState().isHost());
                 menuManager.gameOverPanel.setOnline();
                 if (!menuManager.getClient().getClientState().isHost()) {
                     menuManager.getClient().receiveToLobby();
