@@ -23,7 +23,8 @@ public class ComputerManager {
         smallBoardStrategy = new SmallBoardStrategy(gameBoard, playerNumber, gui);
         mcts = new MCTS(gameBoard, playerNumber, gui, difficulty);
         useSmallBoardStrategyHard = (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && difficulty == 10000);
-        if (nativeTest) wrapper = new NativeWrapper();
+        if (nativeTest)
+            wrapper = new NativeWrapper();
     }
 
     public void makeMove() {
@@ -31,23 +32,23 @@ public class ComputerManager {
             System.out.println("Game is won by Player " + gameBoard.getWinner());
             return;
         }
-        if (nativeTest) {
+        if (useSmallBoardStrategyHard && playerNumber == 1) {
+            smallBoardStrategy.makeMove();
+        } else if (nativeTest) {
             int[][] tempBoard = new int[gameBoard.getBoardN()][gameBoard.getBoardM()];
             for (int i = 0; i < gameBoard.getBoardN(); i++) {
                 for (int j = 0; j < gameBoard.getBoardM(); j++) {
                     tempBoard[i][j] = gameBoard.getBoard()[i][j].getState();
                 }
             }
-            
+
             long startTime = System.currentTimeMillis();
             int[] move = wrapper.runAlgorithm(tempBoard, playerNumber, difficulty);
             System.out.println("FROM C++ : x: " + move[0] + ", y: " + move[1]);
             long endTime = System.currentTimeMillis();
-            System.out.println("MCTS with C++ completed " + difficulty + " iterations in " + (endTime - startTime) + "ms");
+            System.out.println(
+                    "MCTS with C++ completed " + difficulty + " iterations in " + (endTime - startTime) + "ms");
             gameBoard.updateSpot(move[0], move[1], playerNumber);
-        }
-        else if (useSmallBoardStrategyHard && playerNumber == 1) {
-            smallBoardStrategy.makeMove();
         } else {
             long startTime = System.currentTimeMillis();
             mcts.makeMove();

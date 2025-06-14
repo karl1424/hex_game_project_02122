@@ -148,4 +148,8 @@ public class SimulationGame {
     public int getboardN() {
         return boardN;
     }
+
+    public int getWinner() {
+        return winner;
+    }
 }
