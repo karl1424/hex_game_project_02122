@@ -1,11 +1,13 @@
 package dk.dtu.menu.online;
 
 import dk.dtu.menu.Help;
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -109,9 +111,8 @@ public class LobbyPane extends BorderPane {
         chatArea.setPrefHeight(130);
         chatArea.setMaxWidth(260);
         chatArea.setStyle(
-            "-fx-focus-color: transparent;" +
-            "-fx-faint-focus-color: transparent;"
-        );
+                "-fx-focus-color: transparent;" +
+                        "-fx-faint-focus-color: transparent;");
 
         VBox chatBox = new VBox(0);
         chatBox.setAlignment(Pos.CENTER);
@@ -178,6 +179,10 @@ public class LobbyPane extends BorderPane {
     public void showLobbyNotFull() {
         errorLabel.setText("Lobby is not full");
         errorLabel.setVisible(true);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(_ -> errorLabel.setVisible(false));
+        pause.play();
     }
 
     public void appendMessage(String message) {

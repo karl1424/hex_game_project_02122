@@ -35,6 +35,7 @@ public class OnlineGameMenu extends MenuPanel {
             if (!client.getClientState().isHost()) {
                 System.out.println("player 2 left");
                 client.getPlayer2Connection().sendLeftPlayer2();
+                client.sendToMainMenu();
             } else {
                 client.getConnectionManager().shutDownLobby(false);
             }

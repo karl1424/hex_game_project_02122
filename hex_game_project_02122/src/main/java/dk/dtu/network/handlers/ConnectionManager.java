@@ -66,6 +66,7 @@ public class ConnectionManager {
         Object[] lobbyClose = lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()), new FormalField(Boolean.class));
         lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
         System.out.println("Lobby has been closed");
+        System.out.println((boolean) lobbyClose[1]);
         return (boolean) lobbyClose[1];
     }
 

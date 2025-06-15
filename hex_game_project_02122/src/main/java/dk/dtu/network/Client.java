@@ -62,7 +62,7 @@ public class Client {
 
     public void sendToLobby() {
         try {
-            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value());
+            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value(), 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -71,27 +71,41 @@ public class Client {
     public void receiveToLobby() {
         new Thread(() -> {
             try {
-                connectionManager.getLobby().get(new ActualField(TupleTag.TO_LOBBY.value()));
-                Thread.sleep(500);
-                System.out.println("I HAVE RECEIVED");
-                Platform.runLater(() -> {
-                    try {
-                        gamePanel.getMenuManager().getOnlineGameMenu().onJoinLobby(getLobbyID());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
+                Object[] toLobby = connectionManager.getLobby().get(new ActualField(TupleTag.TO_LOBBY.value()),
+                        new FormalField(Integer.class));
+                if ((int) toLobby[1] == 1) {
+                    Thread.sleep(500);
+                    System.out.println("I HAVE RECEIVED");
+                    Platform.runLater(() -> {
+                        try {
+                            gamePanel.getMenuManager().getOnlineGameMenu().onJoinLobby(getLobbyID());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
             } catch (Exception ignored) {
             }
         }).start();
     }
+
     public void sendToLobbyPlayer2() {
         try {
-            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value(),0);
+            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value(), 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+    public void sendToMainMenu() {
+        System.out.println("SENDING LEFT");
+        try {
+            connectionManager.getLobby().put(TupleTag.LOBBY_CLOSED.value(), true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String getLobbyID() throws UnknownHostException {
         if (clientState.isOffline()) {
             throw new UnknownHostException();
@@ -115,7 +129,7 @@ public class Client {
         return gameCommunicationHandler;
     }
 
-    public Player2Connection getPlayer2Connection(){
+    public Player2Connection getPlayer2Connection() {
         return player2Connection;
     }
 
@@ -123,6 +137,7 @@ public class Client {
         this.lobbyMessageHandler = new LobbyMessageHandler(connectionManager.getLobby(), gamePanel,
                 clientState.isHost());
         this.gameCommunicationHandler = new GameCommunicationHandler(connectionManager.getLobby());
-        this.player2Connection = new Player2Connection(connectionManager, clientState, gameCommunicationHandler, gamePanel);
+        this.player2Connection = new Player2Connection(connectionManager, clientState, gameCommunicationHandler,
+                gamePanel);
     }
 }
