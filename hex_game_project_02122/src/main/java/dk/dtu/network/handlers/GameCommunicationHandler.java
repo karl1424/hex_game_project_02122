@@ -92,7 +92,6 @@ public class GameCommunicationHandler {
                 }
 
             } catch (InterruptedException e) {
-
             }
         }).start();
     }

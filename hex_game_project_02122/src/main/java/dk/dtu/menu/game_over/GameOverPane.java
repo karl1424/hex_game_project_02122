@@ -52,22 +52,6 @@ public class GameOverPane extends StackPane {
         getChildren().addAll(overlay, popup);
     }
 
-    /*
-     * public void showOnlineSetup() {
-     * System.out.println("HEJ");
-     * if (gamePanel.isOnline == true) {
-     * if (!gamePanel.getClient().getClientState().isHost()) {
-     * System.out.println("player 2 left");
-     * gamePanel.getClient().getPlayer2Connection().sendLeftPlayer2();
-     * } else {
-     * gamePanel.getClient().getConnectionManager().shutDownLobby();
-     * }
-     * gamePanel.getClient().getClientState().setHost(false);
-     * }
-     * //goToOnlineSetup();
-     * }
-     */
-
     public void setWinner(int winner) {
         resultLabel.setText("Player " + winner + " wins!");
         resultLabel.setTextFill(winner == 1 ? Color.RED : Color.BLUE);
@@ -111,7 +95,7 @@ public class GameOverPane extends StackPane {
 
         mainBtn.setOnAction(_ -> {
             if (!manager.getOnlineGameMenu().getClient().getClientState().isHost()) {
-                manager.getOnlineGameMenu().getClient().sendToLobbyPlayer2();
+                manager.getOnlineGameMenu().getClient().getPlayer2Connection().preventP2ReentryToLobby();
             }
             manager.onlinePanel.getChildren().clear();
             gamePanel.getClient().getGameCommunicationHandler().stopReceivingSpots();

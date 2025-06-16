@@ -31,7 +31,7 @@ public class Server {
         serverSpace = new SpaceRepository();
         serverSpace.addGate(connectionManager.getUri(""));
         serverSpace.add(SpaceTag.LOBBY_REQUEST.value(), new SequentialSpace());
-        System.out.println("server up");
+        System.out.println("The server is running");
     }
 
     public static void waitingForHost() {

@@ -3,24 +3,17 @@ package dk.dtu.network.handlers;
 import org.jspace.FormalField;
 
 import dk.dtu.main.GamePanel;
-import dk.dtu.network.tags.SpaceTag;
 import dk.dtu.network.tags.TupleTag;
 
 public class Player2Connection {
 
     private ConnectionManager connectionManager;
-    private ClientState clientState;
-    private GameCommunicationHandler gameCommunicationHandler;
-    private GamePanel gamePanel;
     
-    public Player2Connection(ConnectionManager connectionManager, ClientState clientState, GameCommunicationHandler gameCommunicationHandler, GamePanel gamePanel){
+    public Player2Connection(ConnectionManager connectionManager){
         this.connectionManager = connectionManager;
-        this.clientState = clientState;
-        this.gameCommunicationHandler = gameCommunicationHandler;
-        this.gamePanel = gamePanel;
     }
 
-    public void lookForP2() {
+    public void lookForP2(GamePanel gamePanel, ClientState clientState, GameCommunicationHandler gameCommunicationHandler) {
         try {
             while (true) {
                 Object[] start = connectionManager.getLobby().get(new FormalField(Boolean.class));
@@ -36,10 +29,17 @@ public class Player2Connection {
         }
     }
 
-    public void sendLeftPlayer2() {
+    public void preventP2ReentryToLobby() {
         try {
-            connectionManager.getLobby().put(SpaceTag.LOBBY.value(), TupleTag.LEFT.value());
-            connectionManager.getLobby().put(TupleTag.PLAYER_LEFT.value(), clientState.isHost(), true);
+            connectionManager.getLobby().put(TupleTag.TO_LOBBY.value(), 0);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopP2HostExitListener() {
+        try {
+            connectionManager.getLobby().put(TupleTag.LOBBY_CLOSED.value(), true);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

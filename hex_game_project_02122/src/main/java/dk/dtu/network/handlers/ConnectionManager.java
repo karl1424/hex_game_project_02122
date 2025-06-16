@@ -70,6 +70,15 @@ public class ConnectionManager {
         return (boolean) lobbyClose[1];
     }
 
+    public void notifyHostLeftLobby(ClientState clientState) {
+        try {
+            lobby.put(SpaceTag.LOBBY.value(), TupleTag.LEFT.value());
+            lobby.put(TupleTag.PLAYER_LEFT.value(), clientState.isHost(), true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void shutDownLobby(boolean toLobby) {
         try {
             lobby.put(TupleTag.CLOSE_LOBBY.value(), toLobby);
