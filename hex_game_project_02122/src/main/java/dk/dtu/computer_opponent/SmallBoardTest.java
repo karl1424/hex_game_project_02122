@@ -85,7 +85,7 @@ public class SmallBoardTest {
         }
         game.checkWin();
 
-        if (game.winner == 2 & BOARD_SIZE == 3) {
+        if (game.winner == 2) {
             game.printBoard();
             System.out.println();
             for (int[] c : playerMoves) {
