@@ -7,7 +7,6 @@ import dk.dtu.main.GamePanel;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.menu.MenuPanel;
 import dk.dtu.network.Client;
-import dk.dtu.network.tags.SpaceTag;
 import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 
@@ -38,6 +37,7 @@ public class OnlineGameMenu extends MenuPanel {
                 client.sendToMainMenu();
             } else {
                 client.getConnectionManager().shutDownLobby(false);
+                client.getClientState().setCanStart(false);
             }
             client.getClientState().setHost(false);
         }
