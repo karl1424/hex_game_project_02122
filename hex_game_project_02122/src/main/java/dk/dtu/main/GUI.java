@@ -2,12 +2,15 @@ package dk.dtu.main;
 
 import java.util.List;
 
-import dk.dtu.computer_opponent.ComputerManager;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class GUI extends Pane {
     private static final int SCREEN_WIDTH = 600;
@@ -15,15 +18,23 @@ public class GUI extends Pane {
     private static final int MAX_DIMENSION = 350;
     private static double HEX_RADIUS;
 
-    private GameBoard gameBoard;
-    private GamePanel gamePanel;
-    private ComputerManager computerOpponent;
-
     private Hexagon[][] hexagons;
 
     public GUI(int GRID_WIDTH, int GRID_HEIGHT, GameBoard gameBoard, GamePanel gamePanel) {
-        this.gameBoard = gameBoard;
-        this.gamePanel = gamePanel;
+        if (gamePanel.isOnline) {
+            Label label = new Label(gamePanel.getTurn() ? "You start" : "Opponent starts");
+            label.setFont(Font.font("Arial", FontWeight.BOLD, 30));
+            label.setLayoutY(20);
+
+            label.layoutBoundsProperty().addListener((_, _, newVal) -> {
+                label.setLayoutX((SCREEN_WIDTH - newVal.getWidth()) / 2);
+            });
+
+            getChildren().add(label);
+            PauseTransition delay = new PauseTransition(Duration.seconds(3));
+            delay.setOnFinished(_ -> getChildren().remove(label));
+            delay.play();
+        }
         hexagons = new Hexagon[gameBoard.getBoardM()][gameBoard.getBoardN()];
         HEX_RADIUS = MAX_DIMENSION / (Math.sqrt(3) * GRID_WIDTH);
         setPrefSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -33,7 +44,6 @@ public class GUI extends Pane {
             for (int col = -GRID_WIDTH / 2; col <= GRID_WIDTH / 2; col++) {
                 int xCor = col + GRID_HEIGHT / 2;
                 int yCor = row + GRID_WIDTH / 2;
-                String key = xCor + "," + yCor;
                 Hexagon hexagon = new Hexagon(col, row, boardOffset, HEX_RADIUS, xCor, yCor, gamePanel, gameBoard);
                 getChildren().add(hexagon.getHexGroup());
 
@@ -61,10 +71,9 @@ public class GUI extends Pane {
         Color originalColor = playerColor;
 
         Timeline timeline = new Timeline();
-        int totalCycles = 6; 
-        Duration cycleDuration = Duration.millis(200); 
+        int totalCycles = 6;
+        Duration cycleDuration = Duration.millis(200);
 
-        
         for (int i = 0; i < totalCycles; i++) {
             Duration time = cycleDuration.multiply(i);
             Color targetColor = (i % 2 == 0) ? flashColor : originalColor;
@@ -73,7 +82,7 @@ public class GUI extends Pane {
                 int x = coord.getX();
                 int y = coord.getY();
 
-                KeyFrame keyFrame = new KeyFrame(time, e -> {
+                KeyFrame keyFrame = new KeyFrame(time, _ -> {
                     if (hexagons[x][y] != null) {
                         hexagons[x][y].setFill(targetColor);
                     }
@@ -84,9 +93,5 @@ public class GUI extends Pane {
 
         timeline.setCycleCount(1);
         timeline.play();
-    }
-
-    public void setComputerOpponent(ComputerManager comp) {
-        this.computerOpponent = comp;
     }
 }

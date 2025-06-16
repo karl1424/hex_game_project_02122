@@ -49,7 +49,6 @@ public class GamePanel extends Pane {
         if (computerPlayer != 0) {
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
                 computerOpponent = new ComputerManager(gameBoard, computerPlayer, gui, difficulty);
-                gui.setComputerOpponent(computerOpponent);
 
                 // Let computer go first if it's player 1
                 if (computerOpponent.getPlayerNumber() == 1) {
@@ -62,7 +61,6 @@ public class GamePanel extends Pane {
 
         } else {
             computerOpponent = null;
-            gui.setComputerOpponent(null);
         }
     }
 
