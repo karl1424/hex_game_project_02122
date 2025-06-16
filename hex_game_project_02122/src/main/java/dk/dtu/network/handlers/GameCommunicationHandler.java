@@ -23,7 +23,6 @@ public class GameCommunicationHandler {
         running = true;
         new Thread(() -> {
             int opponent = gamePanel.getPlayerNumber() == 1 ? 2 : 1;
-            System.out.println("Receiving from " + opponent);
             while (running) {
                 try {
                     Object[] spot = lobby.get(new FormalField(Integer.class), new FormalField(Integer.class),
@@ -82,14 +81,11 @@ public class GameCommunicationHandler {
                     String tag = (String) info[0];
                     int value = (int) info[1];
 
-                    switch (tag) {
-                        case "board size": // Can we change??+
-                            handler.onStart(TupleTag.BOARD_SIZE.value(), value);
-                            break;
-                        case "playerStart":
-                            handler.onStart(TupleTag.PLAYER_START.value(), value);
-                            break;
-                        default:
+                    if (tag.equals(TupleTag.BOARD_SIZE.value())) {
+                        handler.onStart(TupleTag.BOARD_SIZE.value(), value);
+                    } else if (tag.equals(TupleTag.PLAYER_START.value())) {
+                        handler.onStart(TupleTag.PLAYER_START.value(), value);
+                    } else {
                     }
                 }
 

@@ -85,7 +85,7 @@ public class Client {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }    
+    }
 
     public String getLobbyID() throws UnknownHostException {
         if (clientState.isOffline()) {

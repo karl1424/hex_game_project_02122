@@ -7,14 +7,14 @@ public enum TupleTag {
     CONNECTION("connection"),
     CONNECTED("connected"),
     NOT_CONNECTED("not connected"),
-    START_GAME("start game"),
 
+    START_GAME("start game"),
     PLAYER_START("playerStart"),
     BOARD_SIZE("board size"),
 
     PLAYER_LEFT("PLAYER LEFT"),
     LEFT("Left"),
-    
+
     LOBBY_CLOSED("lobby has been closed"),
     ACKNOWLEDGE_CLOSE("acknowledge close"),
     CLOSE_LOBBY("CLOSE LOBBY"),
