@@ -64,7 +64,7 @@ public class SmallBoardTest {
         int totalMoves = availableMoves.size();
         int moveCount = 0;
         SmallBoardStrategy smallBoardStrategy = new SmallBoardStrategy(game, 1);
-        MCTS mctsPlayer2 = new MCTS(null, 2, ITERATIONS);
+        MCTS mctsPlayer2 = new MCTS((SimulationGame) null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
             Coordinate moveMade = null;

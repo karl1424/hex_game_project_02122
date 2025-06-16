@@ -9,7 +9,6 @@ import dk.dtu.main.Coordinate;
 import dk.dtu.main.GameBoard;
 
 public class MCTSNode {
-    private static int counter = 0;
     private Coordinate move;
     private MCTSNode parent;
     private List<MCTSNode> children;
