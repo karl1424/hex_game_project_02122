@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 public class GameCommunicationHandler {
     private final RemoteSpace lobby;
     private boolean running = false;
+    private boolean flag = false;
 
     public GameCommunicationHandler(RemoteSpace lobby) {
         this.lobby = lobby;
@@ -69,10 +70,11 @@ public class GameCommunicationHandler {
         void onStart(String tag, int value);
     }
 
-    public void getGameSettings(GameInfoHandler handler) {
+    public void getGameSettings(GameInfoHandler handler, ClientState clientState) {
         new Thread(() -> {
+            flag = true;
             try {
-                while (true) {
+                while (flag) {
                     Object[] info = lobby.get(
                             new FormalField(String.class),
                             new FormalField(Integer.class));
@@ -114,4 +116,9 @@ public class GameCommunicationHandler {
     public void updateStartTurn(String key, int playerStart) throws InterruptedException {
         lobby.put(key, playerStart);
     }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
 }

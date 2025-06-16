@@ -32,6 +32,7 @@ public class OnlineGameMenu extends MenuPanel {
         System.out.println("HEJ");
         if (gamePanel.isOnline == true) {
             if (!client.getClientState().isHost()) {
+                client.getPlayer2Connection().stopP2SettingListener();
                 System.out.println("player 2 left");
                 client.getConnectionManager().notifyHostLeftLobby(client.getClientState());
                 client.getPlayer2Connection().stopP2HostExitListener();
@@ -127,7 +128,7 @@ public class OnlineGameMenu extends MenuPanel {
                     pane.player2CheckBox.setSelected(true);
                 }
             }
-        });
+        }, client.getClientState());
         client.getLobbyMessageHandler().receiveOldMessages();
         Platform.runLater(() -> {
             try {

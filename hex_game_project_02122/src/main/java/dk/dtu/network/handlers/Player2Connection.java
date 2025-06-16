@@ -1,6 +1,7 @@
 package dk.dtu.network.handlers;
 
 import org.jspace.FormalField;
+import org.jspace.Tuple;
 
 import dk.dtu.main.GamePanel;
 import dk.dtu.network.tags.TupleTag;
@@ -40,6 +41,17 @@ public class Player2Connection {
     public void stopP2HostExitListener() {
         try {
             connectionManager.getLobby().put(TupleTag.LOBBY_CLOSED.value(), true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopP2SettingListener() {
+        try {
+            System.out.println("SEND BOARD SIZE AND PLAYER START");
+            connectionManager.getClient().getGameCommunicationHandler().setFlag(false);
+            connectionManager.getLobby().put(TupleTag.BOARD_SIZE.value(), 7);
+            connectionManager.getLobby().put(TupleTag.PLAYER_START.value(), 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -98,4 +98,8 @@ public class ConnectionManager {
     public RemoteSpace getLobby() {
         return lobby;
     }
+
+    public Client getClient() {
+        return client;
+    }
 }
