@@ -49,10 +49,10 @@ public class LobbyPane extends BorderPane {
 
         HBox playerBox = new HBox(50);
         playerBox.setAlignment(Pos.CENTER);
-        Label playerLabel = Help.createLabel("Player", 18, true);
+        Label playerLabel = Help.createLabel("Who starts?", 18, true);
 
-        player1CheckBox = Help.creatCheckBox("1", true);
-        player2CheckBox = Help.creatCheckBox("2", false);
+        player1CheckBox = Help.creatCheckBox(parent.getClient().getClientState().isHost() ? "You" : "Opponent", true);
+        player2CheckBox = Help.creatCheckBox(parent.getClient().getClientState().isHost() ? "Opponent" : "You", false);
 
         player1CheckBox.setOnAction(_ -> {
             player1CheckBox.setSelected(true);
@@ -177,7 +177,7 @@ public class LobbyPane extends BorderPane {
     }
 
     public void showLobbyNotFull() {
-        errorLabel.setText("Lobby is not full");
+        errorLabel.setText("Missing opponent player");
         errorLabel.setVisible(true);
 
         PauseTransition pause = new PauseTransition(Duration.seconds(3));

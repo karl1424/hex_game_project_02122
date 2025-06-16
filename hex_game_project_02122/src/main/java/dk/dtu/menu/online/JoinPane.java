@@ -1,10 +1,12 @@
 package dk.dtu.menu.online;
 
+import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -76,7 +78,7 @@ public class JoinPane extends BorderPane {
             } catch (IllegalStateException e) {
                 makeLabel("Lobby is full");
             } catch (NumberFormatException e) {
-                makeLabel("Write a Lobby ID");
+                makeLabel("Not a valid Lobby ID");
             }
         });
 
@@ -85,5 +87,9 @@ public class JoinPane extends BorderPane {
     private void makeLabel(String text) {
         errorLabel.setText(text);
         errorLabel.setVisible(true);
+
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(_ -> errorLabel.setVisible(false));
+        pause.play();
     }
 }

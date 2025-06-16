@@ -2,7 +2,7 @@ package dk.dtu.network.tags;
 
 public enum SpaceTag {
     PROTOCOL("tcp://"),
-    SERVER_IP("localhost"),
+    SERVER_IP("10.209.196.133"),
     SERVER_PORT("31145"),
     LOBBY_REQUEST("lobbyRequests"),
     SERVER("server"),
