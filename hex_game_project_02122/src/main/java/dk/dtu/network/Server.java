@@ -37,7 +37,8 @@ public class Server {
     public static void waitingForHost() {
         try {
             connectionManager.performHandshakeServer(SpaceTag.SERVER.value(), lobbyRequests);
-            Object[] request = lobbyRequests.get(new ActualField(TupleTag.HOST.value()), new FormalField(Integer.class));
+            Object[] request = lobbyRequests.get(new ActualField(TupleTag.HOST.value()),
+                    new FormalField(Integer.class));
             if ((int) request[1] == 0) {
                 createLobby();
             } else {
@@ -67,17 +68,17 @@ public class Server {
             lobbyHandlers.put(oldLobbyID, tempLobbyHandler);
             new Thread(tempLobbyHandler).start();
             lobbyRequests.put(SpaceTag.LOBBY.value(), oldLobbyID);
-            System.out.println("Old Lobby ID: " + lobbyHandlers.get(oldLobbyID).getLobbyId() + " have been created ");
+            System.out.println("Old Lobby ID: " + lobbyHandlers.get(oldLobbyID).getLobbyId() + " have been recreated ");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static LobbyHandler getSpecificLobbyHandler(int lobbyID){
+    public static LobbyHandler getSpecificLobbyHandler(int lobbyID) {
         return lobbyHandlers.get(lobbyID);
     }
 
-    public Map<Integer, LobbyHandler> getLobbyHandlers(){
+    public Map<Integer, LobbyHandler> getLobbyHandlers() {
         return lobbyHandlers;
     }
 }

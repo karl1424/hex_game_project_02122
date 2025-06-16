@@ -25,9 +25,13 @@ public class LobbyMessageHandler {
         new Thread(() -> {
             while (receiving) {
                 try {
-                    Object[] msg = lobby.get(new FormalField(String.class), new ActualField(!isHost), new FormalField(Boolean.class));
-                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage( ((boolean) msg[2] ? "" : "Opponent: ") + (String) msg[0]);                    lobby.put(msg[0], msg[1], msg[2], "old");
-                } catch (InterruptedException ignored) {}
+                    Object[] msg = lobby.get(new FormalField(String.class), new ActualField(!isHost),
+                            new FormalField(Boolean.class));
+                    gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane()
+                            .appendMessage(((boolean) msg[2] ? "" : "Opponent: ") + (String) msg[0]);
+                    lobby.put(msg[0], msg[1], msg[2], "old");
+                } catch (InterruptedException ignored) {
+                }
             }
         }).start();
     }
@@ -37,10 +41,11 @@ public class LobbyMessageHandler {
     }
 
     public void receiveOldMessages() throws InterruptedException {
-        List<Object[]> oldMessages = lobby.queryAll(new FormalField(String.class), new FormalField(Boolean.class), new FormalField(Boolean.class), new ActualField("old"));
+        List<Object[]> oldMessages = lobby.queryAll(new FormalField(String.class), new FormalField(Boolean.class),
+                new FormalField(Boolean.class), new ActualField("old"));
         for (Object[] msg : oldMessages) {
             String prefix = (boolean) msg[2] ? "" : ((boolean) msg[1] ? "Opponent: " : "You: ");
             gamePanel.getMenuManager().getOnlineGameMenu().getLobbyPane().appendMessage(prefix + (String) msg[0]);
         }
     }
-} 
+}

@@ -9,7 +9,7 @@ public class LobbyHandler implements Runnable {
     public int lobbyID;
     private SpaceRepository serverSpace;
     private RemoteSpace lobbySpace;
-    private boolean player2; // Used to check if the lobby is full
+    private boolean player2InLobby;
     private volatile boolean running = true;
 
     private ConnectionManager connectionManager;
@@ -22,32 +22,32 @@ public class LobbyHandler implements Runnable {
 
     public void run() {
         serverSpace.add(lobbyID + SpaceTag.LOBBY.value(), new SequentialSpace());
-        new Thread(() -> getConnect()).start();
+        new Thread(() -> createLobby()).start();
     }
 
-    public void getConnect() {
+    public void createLobby() {
         try {
             lobbySpace = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
             connectionManager.performHandshakeServer(SpaceTag.LOBBY.value(), lobbySpace);
             System.out.println("The host has joined Lobby: " + lobbyID);
             new Thread(() -> checkCloseLobby()).start();
             while (running) {
-                Object[] player2Status = lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()), new FormalField(String.class));
+                Object[] player2Status = lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()),
+                        new FormalField(String.class));
                 if (player2Status[1].equals(TupleTag.TRYTOCONNECT.value())) {
                     if (!checkOccupied(lobbySpace)) {
                         lobbySpace.put(TupleTag.OCCUPIED.value());
                         lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
-                        System.out.println("Player 2 has joined Lobby: " + lobbyID);                        
+                        System.out.println("Player 2 has joined Lobby: " + lobbyID);
                         lobbySpace.put(true); // Boolean to start
-                        player2 = true;
+                        player2InLobby = true;
                     } else {
-                        System.out.println("Occupied");
                         lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.NOT_CONNECTED.value());
                     }
                 } else {
                     lobbySpace.get(new ActualField(TupleTag.OCCUPIED.value()));
                     lobbySpace.put(false); // boolean not ready to start
-                    player2 = false;
+                    player2InLobby = false;
                 }
             }
         } catch (Exception e) {
@@ -57,8 +57,8 @@ public class LobbyHandler implements Runnable {
 
     private void checkCloseLobby() {
         try {
-            Object[] closeLobby = lobbySpace.get(new ActualField(TupleTag.CLOSE_LOBBY.value()), new FormalField(Boolean.class));
-            System.out.println("TEST: " + ((boolean) closeLobby[1]));
+            Object[] closeLobby = lobbySpace.get(new ActualField(TupleTag.CLOSE_LOBBY.value()),
+                    new FormalField(Boolean.class));
             lobbySpace.put(TupleTag.LOBBY_CLOSED.value(), (boolean) closeLobby[1]);
             long startTime = System.currentTimeMillis();
             boolean acknowledged = false;
@@ -98,5 +98,9 @@ public class LobbyHandler implements Runnable {
 
     public int getLobbyId() {
         return lobbyID;
+    }
+
+    public boolean isPlayer2InLobby() {
+        return player2InLobby;
     }
 }
