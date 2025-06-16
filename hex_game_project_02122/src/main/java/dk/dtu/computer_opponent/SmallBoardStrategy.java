@@ -5,22 +5,19 @@ import java.util.List;
 import java.util.Random;
 
 import dk.dtu.main.Coordinate;
-import dk.dtu.main.GUI;
 import dk.dtu.main.GameBoard;
 
 public class SmallBoardStrategy {
     private GameBoard gameBoard;
     private SimulationGame sim;
     private int playerNumber;
-    private GUI gui;
     private Coordinate lastHumanMove = null;
     private List<Coordinate> computerMoves = new ArrayList<>();
     private Random rand;
 
-    public SmallBoardStrategy(GameBoard gameBoard, int playerNumber, GUI gui) {
+    public SmallBoardStrategy(GameBoard gameBoard, int playerNumber) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
-        this.gui = gui;
         this.rand = new Random();
     }
 

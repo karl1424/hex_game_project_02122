@@ -1,13 +1,11 @@
 package dk.dtu.computer_opponent;
 
-import dk.dtu.main.GUI;
 import dk.dtu.main.GameBoard;
 import dk.dtu.main.NativeWrapper;
 
 public class ComputerManager {
     private GameBoard gameBoard;
     private int playerNumber;
-    private GUI gui;
     private SmallBoardStrategy smallBoardStrategy;
     private MCTS mcts;
     private int difficulty;
@@ -15,13 +13,12 @@ public class ComputerManager {
     private NativeWrapper wrapper;
     private boolean nativeTest = true;
 
-    public ComputerManager(GameBoard gameBoard, int playerNumber, GUI gui, int difficulty) {
+    public ComputerManager(GameBoard gameBoard, int playerNumber, int difficulty) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
-        this.gui = gui;
         this.difficulty = difficulty;
-        smallBoardStrategy = new SmallBoardStrategy(gameBoard, playerNumber, gui);
-        mcts = new MCTS(gameBoard, playerNumber, gui, difficulty);
+        smallBoardStrategy = new SmallBoardStrategy(gameBoard, playerNumber);
+        mcts = new MCTS(gameBoard, playerNumber, difficulty);
         useSmallBoardStrategyHard = (gameBoard.getBoardM() == 3 && gameBoard.getBoardN() == 3 && difficulty == 10000);
         if (nativeTest)
             wrapper = new NativeWrapper();

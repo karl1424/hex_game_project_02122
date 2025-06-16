@@ -1,23 +1,19 @@
 package dk.dtu.computer_opponent;
 
 import java.util.List;
-
 import dk.dtu.main.Coordinate;
-import dk.dtu.main.GUI;
 import dk.dtu.main.GameBoard;
 
 public class MCTS {
     private GameBoard gameBoard;
     private SimulationGame simBoard;
     private int playerNumber;
-    private GUI gui;
 
     private int iterations;
 
-    public MCTS(GameBoard gameBoard, int playerNumber, GUI gui, int iterations) {
+    public MCTS(GameBoard gameBoard, int playerNumber, int iterations) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
-        this.gui = gui;
         this.iterations = iterations;
     }
 
@@ -43,7 +39,7 @@ public class MCTS {
             rootNode.selectAction(gameBoard);
         }
 
-        //MCTSNode.printTimingStats();
+        // MCTSNode.printTimingStats();
 
         MCTSNode bestChild = null;
         int mostVisits = -1;
