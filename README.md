@@ -5,22 +5,23 @@ We are using
 - Apache Maven 3.9.9
 - g++ 15.1.0
 - Visual Studio Code
+But later versions might work as well.
 
-You can donwload Java from Oracle. Remember to add the jdk-23 folder (NOT the bin) to the JAVA_HOME system variable.
+You can download Java from Oracle. Remember to add the jdk-23 folder (NOT the bin) to the JAVA_HOME system variable.
 
 You can download Maven from the following website: https://maven.apache.org/download.cgi
-Download the zip-file and unpack the content. Add the bin folder to your PATH-variables.
+Download the bin.zip-file and unpack the content. Add the bin folder to your PATH-variables.
 
 To download jSpace go to: https://github.com/pSpaces/jSpace
 Download the zip file. Unpack the content and add the bin folder to your PATH-variables.
-Open the terminal and navigate into the unpacked folder named jSpace-master. Here you should run the following commands:
+Open the terminal and navigate into the unpacked folder named jSpace-master containing the pom.xml file. Here you should run the following commands:
 - mvn clean verify
 - mvn install
 
 To download C++ go to: https://winlibs.com/
 Click on "Download it here". Unpack the content and add the bin folder to your PATH-variables.
 
-Open the project in your Visual Studio Code. Install the extension packs "Maven for Java" and "Extension Pack for Java".
+Open the project in your Visual Studio Code. Install the extension pack "Extension Pack for Java".
 
 
 To run the project without Online Multiplayer go to the following in the left side bar:
@@ -30,7 +31,7 @@ MAVEN > project_02122 > Plugins > javafx > run
 To run the project with Online Multiplayer (localhost) find Server.java in the package network. Right click on Server.java and Run Java.
 The server is now running. Now do as in the previous step and run the project. To run another instance of the program copy the command
 to run the first instance and paste into a new terminal.
-To run with an online server go to SpaceTag.java in the network/tags and change SERVER_IP to your IP-address as a String.
+To run with an online server go to SpaceTag.java in the network/tags and change SERVER_IP to your IPv4 address as a String.
 
 
 To run the project using the C++ version of MCTS go to ComputerManager.java in the package computer_opponent.
