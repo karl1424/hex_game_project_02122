@@ -13,6 +13,9 @@ public class ComputerManager {
     private NativeWrapper wrapper;
     private boolean nativeTest = false;
 
+    private boolean testTime = false;
+    private long startTime;
+
     public ComputerManager(GameBoard gameBoard, int playerNumber, int difficulty) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
@@ -26,7 +29,6 @@ public class ComputerManager {
 
     public void makeMove() {
         if (gameBoard.getWinner() != 0) {
-            System.out.println("Game is won by Player " + gameBoard.getWinner());
             return;
         }
         if (useSmallBoardStrategyHard && playerNumber == 1) {
@@ -39,18 +41,18 @@ public class ComputerManager {
                 }
             }
 
-            long startTime = System.currentTimeMillis();
+            if (testTime)
+                startTestTime();
             int[] move = wrapper.runAlgorithm(tempBoard, playerNumber, difficulty);
-            System.out.println("FROM C++ : x: " + move[0] + ", y: " + move[1]);
-            long endTime = System.currentTimeMillis();
-            System.out.println(
-                    "MCTS with C++ completed " + difficulty + " iterations in " + (endTime - startTime) + "ms");
+            if (testTime)
+                printTesTime();
             gameBoard.updateSpot(move[0], move[1], playerNumber);
         } else {
-            long startTime = System.currentTimeMillis();
+            if (testTime)
+                startTestTime();
             mcts.makeMove();
-            long endTime = System.currentTimeMillis();
-            System.out.println("MCTS completed " + difficulty + " iterations in " + (endTime - startTime) + "ms");
+            if (testTime)
+                printTesTime();
         }
     }
 
@@ -60,6 +62,15 @@ public class ComputerManager {
 
     public int getPlayerNumber() {
         return playerNumber;
+    }
+
+    private void startTestTime() {
+        startTime = System.currentTimeMillis();
+    }
+
+    private void printTesTime() {
+        long endTime = System.currentTimeMillis();
+        System.out.println("MCTS completed " + difficulty + " iterations in " + (endTime - startTime) + "ms");
     }
 
 }

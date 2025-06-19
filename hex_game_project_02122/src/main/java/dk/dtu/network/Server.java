@@ -55,7 +55,7 @@ public class Server {
             lobbyHandlers.put(lobbyID, tempLobbyHandler); // Store the lobbys in a list - lobbyHandler handler
             new Thread(tempLobbyHandler).start();
             lobbyRequests.put(SpaceTag.LOBBY.value(), lobbyID);
-            System.out.println("Lobby ID: " + lobbyHandlers.get(lobbyID).getLobbyId() + " have been created ");
+            System.out.println("Lobby ID: " + lobbyHandlers.get(lobbyID).getLobbyId() + " has been created ");
             lobbyID++;
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class Server {
             lobbyHandlers.put(oldLobbyID, tempLobbyHandler);
             new Thread(tempLobbyHandler).start();
             lobbyRequests.put(SpaceTag.LOBBY.value(), oldLobbyID);
-            System.out.println("Old Lobby ID: " + lobbyHandlers.get(oldLobbyID).getLobbyId() + " have been recreated ");
+            System.out.println("Old Lobby ID: " + lobbyHandlers.get(oldLobbyID).getLobbyId() + " has been recreated ");
         } catch (Exception e) {
             e.printStackTrace();
         }

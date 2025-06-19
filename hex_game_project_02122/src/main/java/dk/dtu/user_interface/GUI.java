@@ -59,9 +59,6 @@ public class GUI extends Pane {
         Hexagon hex = hexagons[x][y];
         if (hex != null) {
             hex.setFill(color);
-            System.out.println("Updated hexagon color at " + x + ", " + y);
-        } else {
-            System.out.println("Warning: No hexagon found at key " + x + ", " + y);
         }
     }
 

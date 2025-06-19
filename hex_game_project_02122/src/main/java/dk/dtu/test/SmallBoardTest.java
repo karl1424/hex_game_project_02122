@@ -20,7 +20,7 @@ public class SmallBoardTest {
         int player1Wins = 0;
         int player2Wins = 0;
 
-        long batchStart = System.nanoTime(); // Starttid for de første 100 spil
+        long batchStart = System.nanoTime();
 
         for (int i = 0; i < GAMES; i++) {
             int winner = playGame();
@@ -32,7 +32,7 @@ public class SmallBoardTest {
             }
 
             if ((i + 1) % 100 == 0) {
-                long batchEnd = System.nanoTime(); // Sluttid for batch
+                long batchEnd = System.nanoTime();
                 long durationNs = batchEnd - batchStart;
                 double durationMs = durationNs / 1_000_000.0;
                 double avgTimePerGame = durationMs / 100.0;
@@ -46,7 +46,7 @@ public class SmallBoardTest {
                 System.out.println("Time for last 100 games: " + String.format("%.1f", durationMs) + " ms");
                 System.out.println("Average time per game: " + String.format("%.2f", avgTimePerGame) + " ms\n");
 
-                batchStart = System.nanoTime(); // Genstart tiden til næste batch
+                batchStart = System.nanoTime();
             }
         }
 
@@ -76,7 +76,7 @@ public class SmallBoardTest {
             } else if (currentPlayer == 2) {
                 mctsPlayer2.setSimulationGame(game);
                 moveMade = mctsPlayer2.makeMoveInTest();
-                smallBoardStrategy.setLastHumanMove(moveMade.getX(),moveMade.getY());
+                smallBoardStrategy.setLastHumanMove(moveMade.getX(), moveMade.getY());
             }
             game.makeMove(moveMade, currentPlayer);
             availableMoves.remove(moveMade);
@@ -95,9 +95,6 @@ public class SmallBoardTest {
                 System.out.println(Arrays.toString(c));
             }
         }
-
-        // System.out.println();
-        // System.out.println("Player " + game.winner + " wins");
         return game.winner;
     }
 }

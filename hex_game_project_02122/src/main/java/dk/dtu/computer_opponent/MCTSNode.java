@@ -79,7 +79,6 @@ public class MCTSNode {
     }
 
     public void selectAction(SimulationGame gameBoard) {
-
         List<MCTSNode> visited = new LinkedList<>();
         MCTSNode current = this;
         visited.add(current);
@@ -151,7 +150,6 @@ public class MCTSNode {
                 bestValue = uctScore;
             }
         }
-
         return selected;
     }
 

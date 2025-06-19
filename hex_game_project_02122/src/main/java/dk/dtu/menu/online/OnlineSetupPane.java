@@ -7,10 +7,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 
-
 public class OnlineSetupPane extends VBox {
     Label serverIsDownLabel;
-    
+
     public OnlineSetupPane(OnlineGameMenu parent) {
         super(20);
         setAlignment(Pos.CENTER);

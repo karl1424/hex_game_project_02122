@@ -12,6 +12,8 @@ public class MCTS {
 
     private int iterations;
 
+    private boolean debug = false;
+
     public MCTS(GameBoard gameBoard, int playerNumber, int iterations) {
         this.gameBoard = gameBoard;
         this.playerNumber = playerNumber;
@@ -29,8 +31,6 @@ public class MCTS {
 
         if (winningMove != null) {
             gameBoard.updateSpot(winningMove.getX(), winningMove.getY(), playerNumber);
-            System.out.println("Computer (Player " + playerNumber + ") found winning move at: " +
-                    winningMove.getX() + ", " + winningMove.getY());
             return;
         }
 
@@ -55,10 +55,11 @@ public class MCTS {
         if (bestChild != null && bestChild.getMove() != null) {
             Coordinate bestMove = bestChild.getMove();
             gameBoard.updateSpot(bestMove.getX(), bestMove.getY(), playerNumber);
-            System.out.println("Computer (Player " + playerNumber + ") chooses move at: " + bestMove.getX() + ", "
-                    + bestMove.getY() +
-                    " (Visits: " + bestChild.getVisits() +
-                    ", Win ratio: " + (bestChild.getWins() / (double) bestChild.getVisits()) + ")");
+            if (debug)
+                System.out.println("Computer (Player " + playerNumber + ") chooses move at: " + bestMove.getX() + ", "
+                        + bestMove.getY() +
+                        " (Visits: " + bestChild.getVisits() +
+                        ", Win ratio: " + (bestChild.getWins() / (double) bestChild.getVisits()) + ")");
         }
     }
 
@@ -89,7 +90,6 @@ public class MCTS {
             Coordinate bestMove = bestChild.getMove();
             return bestMove;
         }
-
         return null;
     }
 
@@ -116,7 +116,6 @@ public class MCTS {
                 return move;
             }
         }
-
         return null;
     }
 

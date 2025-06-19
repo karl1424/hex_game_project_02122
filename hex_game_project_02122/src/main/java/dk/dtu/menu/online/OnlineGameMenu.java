@@ -29,11 +29,9 @@ public class OnlineGameMenu extends MenuPanel {
     }
 
     public void showOnlineSetup() {
-        System.out.println("HEJ");
         if (gamePanel.isOnline == true) {
             if (!client.getClientState().isHost()) {
                 client.getPlayer2Connection().stopP2SettingListener();
-                System.out.println("player 2 left");
                 client.getConnectionManager().notifyHostLeftLobby(client.getClientState());
                 client.getPlayer2Connection().stopP2HostExitListener();
             } else {
@@ -81,7 +79,6 @@ public class OnlineGameMenu extends MenuPanel {
             goToOnlineSetup();
             onlinePane.serverIsDown();
         }
-
     }
 
     public void onJoin() {
@@ -100,16 +97,14 @@ public class OnlineGameMenu extends MenuPanel {
         gamePanel.getChildren().remove(manager.gameOverPanel);
         showLobby();
         manager.getPrimaryStage().getScene().setRoot(manager);
-    
 
         client.getGameCommunicationHandler().getStartGame((sizeBoard, numberPlayer) -> {
             initGame(sizeBoard, numberPlayer);
         });
         client.getGameCommunicationHandler().getGameSettings((tag, value) -> {
-            System.out.println("tag, value: " + tag + value);
             if (tag.equals("board size")) {
                 for (CheckBox cb : pane.checkBoxes) {
-                    cb.setSelected(false); // Clear all selections
+                    cb.setSelected(false);
                 }
                 if (value == 3) {
                     pane.sizeSmallCheckBox.setSelected(true);
@@ -140,7 +135,6 @@ public class OnlineGameMenu extends MenuPanel {
         });
         new Thread(() -> client.checkForLobbyClosed()).start();
         client.getLobbyMessageHandler().receiveMessage();
-        
     }
 
     public void onstartGame() throws InterruptedException {
@@ -153,7 +147,6 @@ public class OnlineGameMenu extends MenuPanel {
         } else {
             pane.showLobbyNotFull();
         }
-
     }
 
     public void onSend(String message) throws InterruptedException {
@@ -181,11 +174,11 @@ public class OnlineGameMenu extends MenuPanel {
         return pane;
     }
 
-    public int getBoardSize(){
+    public int getBoardSize() {
         return pane.sizeSmallCheckBox.isSelected() ? 3 : pane.sizeLargeCheckBox.isSelected() ? 11 : 7;
     }
 
-    public int getPlayerStart(){
+    public int getPlayerStart() {
         return pane.player1CheckBox.isSelected() ? 1 : 2;
     }
 }

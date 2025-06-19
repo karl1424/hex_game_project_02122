@@ -58,14 +58,12 @@ public class ConnectionManager {
         if (!performHandshakeClients(SpaceTag.LOBBY.value(), lobby)) {
             throw new IllegalStateException();
         }
-        System.out.println("Connection to Lobby: " + lobbyID + " Succesfull!");
         client.createHandlers();
     }
 
     public boolean receiveCloseLobby() throws InterruptedException {
         Object[] lobbyClose = lobby.get(new ActualField(TupleTag.LOBBY_CLOSED.value()), new FormalField(Boolean.class));
         lobby.put(TupleTag.ACKNOWLEDGE_CLOSE.value());
-        System.out.println("Lobby has been closed");
         System.out.println((boolean) lobbyClose[1]);
         return (boolean) lobbyClose[1];
     }

@@ -28,5 +28,4 @@ public class Main extends Application {
         primaryStage.show();
         gamePanel.requestFocus();
     }
-
 }

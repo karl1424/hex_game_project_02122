@@ -10,7 +10,8 @@
 
 class MCTSNode;
 
-class MCTS {
+class MCTS
+{
 public:
     MCTS(std::vector<std::vector<int>>, int, int);
     ~MCTS();
@@ -23,7 +24,7 @@ private:
     int playerNumber;
     std::vector<std::vector<int>> board;
     Move findWinningMove();
-    MCTSNode* root = nullptr;
+    MCTSNode *root = nullptr;
 };
 
 #endif

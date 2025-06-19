@@ -8,7 +8,7 @@ import javafx.scene.text.FontWeight;
 
 public class Help {
 
-    public static Button createButton(String text,double width, double height, boolean bold) {
+    public static Button createButton(String text, double width, double height, boolean bold) {
         Button button = new Button(text);
         button.setPrefWidth(width);
         button.setPrefHeight(height);
@@ -30,10 +30,8 @@ public class Help {
         titleLabel.setFont(Font.font("Consolas", FontWeight.BOLD, fontSize > 0 ? fontSize : 60));
         titleLabel.setStyle(
                 "-fx-text-fill: linear-gradient(from 0% 0% to 100% 0%, red 10%, blue 60%);" +
-                "-fx-effect: dropshadow(gaussian, black, 4, 0.7, 0, 0);" +
-                "-fx-padding: 20 0 40 0;"
-        );
-        
+                        "-fx-effect: dropshadow(gaussian, black, 4, 0.7, 0, 0);" +
+                        "-fx-padding: 20 0 40 0;");
         return titleLabel;
     }
 
@@ -44,5 +42,4 @@ public class Help {
         checkBox.setFocusTraversable(false);
         return checkBox;
     }
-
 }

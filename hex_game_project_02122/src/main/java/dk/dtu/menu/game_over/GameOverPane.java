@@ -64,7 +64,6 @@ public class GameOverPane extends StackPane {
             gamePanel.resetGame();
         });
         mainBtn.setOnAction(_ -> {
-            // showOnlineSetup();
             gamePanel.isOnline = false;
             manager.onlinePanel.getChildren().clear();
             manager.getPrimaryStage().getScene().setRoot(manager);

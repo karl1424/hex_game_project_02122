@@ -29,7 +29,7 @@ public class GameBoardLogic {
 
     public boolean exploreNeighbors(Coordinate start, int turn) {
 
-        //Hexagon neighbors
+        // Hexagon neighbors
         int[] directionsX = { 0, 0, -1, 1, -1, 1 };
         int[] directionsY = { 1, -1, 0, 0, 1, -1 };
 
@@ -67,7 +67,8 @@ public class GameBoardLogic {
                 }
             }
 
-            if (BFSDebug) System.out.println("Processing: " + current);
+            if (BFSDebug)
+                System.out.println("Processing: " + current);
 
             for (int i = 0; i < 6; i++) {
                 int neighborX = current.getX() + directionsX[i];
@@ -86,12 +87,12 @@ public class GameBoardLogic {
             }
 
             if (reachedStartEdge && reachedEndEdge) {
-                if (BFSDebug) System.out.println("Winning Path Found!");
+                if (BFSDebug)
+                    System.out.println("Winning Path Found!");
                 reconstructPath(parentMap, startEdgeCoordinate, endEdgeCoordinate);
                 return true;
             }
         }
-
         return false;
     }
 
@@ -128,54 +129,38 @@ public class GameBoardLogic {
             if (gamePanel.getIsOnline()) {
                 gameBoard.pickSpot(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getPlayerNumber());
                 gamePanel.sendCoordinates(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getPlayerNumber());
-                System.out.println("Player number: " + gamePanel.getPlayerNumber());
             } else {
                 gameBoard.pickSpot(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getCurrentPlayerTurn());
             }
             hexagon.setFill(gamePanel.getCurrentPlayerTurn() == 1 ? Color.RED : Color.BLUE);
-
-            System.out.println("Human move at: " + hexagon.getXCor() + ", " + hexagon.getYCor());
-
             ComputerManager comp = gamePanel.getComputerOpponent();
             if (comp != null) {
                 comp.setLastHumanMove(hexagon.getXCor(), hexagon.getYCor());
             }
 
-            System.out.println("Board after human move:");
-            gameBoard.printBoard();
+            // gameBoard.printBoard();
             gamePanel.changeTurn();
 
             if (gameBoard.getWinner() == 0 && comp != null) {
-
                 if (!gamePanel.getTurn() && gameBoard.getWinner() == 0) {
                     new Thread(() -> {
                         comp.makeMove();
-
                         Platform.runLater(() -> {
-                            System.out.println("Board after computer move:");
-                            gameBoard.printBoard();
+                            // gameBoard.printBoard();
                             gamePanel.changeTurn();
                         });
                     }).start();
                 }
-
-            } else if (gameBoard.getWinner() != 0) {
-                System.out.println("Game over! Player " + gameBoard.getWinner() + " wins!");
             }
         }
     }
 
     public boolean checkWinningMove(Coordinate move, int playerNumber) {
         int originalState = board[move.getX()][move.getY()].getState();
-
         board[move.getX()][move.getY()].setState(playerNumber);
-
         boolean isWinning = exploreNeighbors(move, playerNumber);
-
         board[move.getX()][move.getY()].setState(originalState);
-
         winningPath.clear();
-
         return isWinning;
     }
 

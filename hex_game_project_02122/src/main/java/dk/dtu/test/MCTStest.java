@@ -19,7 +19,7 @@ public class MCTStest {
         int player1Wins = 0;
         int player2Wins = 0;
 
-        long batchStart = System.nanoTime(); // Starttid for de første 100 spil
+        long batchStart = System.nanoTime();
 
         for (int i = 0; i < GAMES; i++) {
             int winner = playGame();
@@ -30,11 +30,11 @@ public class MCTStest {
                 player2Wins++;
             }
 
-            if ((i + 1) % 20 == 0) {
-                long batchEnd = System.nanoTime(); // Sluttid for batch
+            if ((i + 1) % 100 == 0) {
+                long batchEnd = System.nanoTime();
                 long durationNs = batchEnd - batchStart;
                 double durationMs = durationNs / 1_000_000.0;
-                double avgTimePerGame = durationMs / 20.0;
+                double avgTimePerGame = durationMs / 100.0;
 
                 int gamesCompleted = i + 1;
                 System.out.println("Completed " + gamesCompleted + " games:");
@@ -42,10 +42,10 @@ public class MCTStest {
                         String.format("%.1f", (player1Wins * 100.0 / gamesCompleted)) + "%)");
                 System.out.println("Player 2 wins: " + player2Wins + " (" +
                         String.format("%.1f", (player2Wins * 100.0 / gamesCompleted)) + "%)");
-                System.out.println("Time for last 20 games: " + String.format("%.1f", durationMs) + " ms");
+                System.out.println("Time for last 100 games: " + String.format("%.1f", durationMs) + " ms");
                 System.out.println("Average time per game: " + String.format("%.2f", avgTimePerGame) + " ms\n");
 
-                batchStart = System.nanoTime(); // Genstart tiden til næste batch
+                batchStart = System.nanoTime();
             }
         }
 
@@ -66,7 +66,7 @@ public class MCTStest {
         int totalMoves = availableMoves.size();
         int moveCount = 0;
         MCTS mctsPlayer1 = new MCTS((SimulationGame) null, 1, ITERATIONS);
-        MCTS mctsPlayer2 = new MCTS( (SimulationGame) null, 2, ITERATIONS);
+        MCTS mctsPlayer2 = new MCTS((SimulationGame) null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
             MCTS mcts = (currentPlayer == 1) ? mctsPlayer1 : mctsPlayer2;
@@ -89,9 +89,6 @@ public class MCTStest {
                 System.out.println(Arrays.toString(c));
             }
         }
-
-        // System.out.println();
-        // System.out.println("Player " + game.winner + " wins");
         return game.winner;
     }
 }

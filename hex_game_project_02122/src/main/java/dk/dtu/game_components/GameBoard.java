@@ -48,9 +48,6 @@ public class GameBoard {
         boolean win = logic.exploreNeighbors(start, turn);
         if (win) {
             setWinner(turn);
-            System.out.println("Player " + turn + " wins!");
-        } else {
-            System.out.println("No winning path");
         }
         Platform.runLater(() -> getGamePanel().checkGameOver());
     }

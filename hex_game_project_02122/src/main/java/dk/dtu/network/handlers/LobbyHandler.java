@@ -29,7 +29,7 @@ public class LobbyHandler implements Runnable {
         try {
             lobbySpace = connectionManager.establishConnectionToRemoteSpace(lobbyID + SpaceTag.LOBBY.value());
             connectionManager.performHandshakeServer(SpaceTag.LOBBY.value(), lobbySpace);
-            System.out.println("The host has joined Lobby: " + lobbyID);
+            // System.out.println("The host has joined Lobby: " + lobbyID);
             new Thread(() -> checkCloseLobby()).start();
             while (running) {
                 Object[] player2Status = lobbySpace.get(new ActualField(SpaceTag.LOBBY.value()),
@@ -38,7 +38,7 @@ public class LobbyHandler implements Runnable {
                     if (!checkOccupied(lobbySpace)) {
                         lobbySpace.put(TupleTag.OCCUPIED.value());
                         lobbySpace.put(TupleTag.CONNECTION.value(), TupleTag.CONNECTED.value());
-                        System.out.println("Player 2 has joined Lobby: " + lobbyID);
+                        // System.out.println("Player 2 has joined Lobby: " + lobbyID);
                         lobbySpace.put(true); // Boolean to start
                         player2InLobby = true;
                     } else {
@@ -61,18 +61,12 @@ public class LobbyHandler implements Runnable {
                     new FormalField(Boolean.class));
             lobbySpace.put(TupleTag.LOBBY_CLOSED.value(), (boolean) closeLobby[1]);
             long startTime = System.currentTimeMillis();
-            boolean acknowledged = false;
             while (System.currentTimeMillis() - startTime < 2000) {
                 Object[] ack = lobbySpace.getp(new ActualField(TupleTag.ACKNOWLEDGE_CLOSE.value()));
                 if (ack != null) {
-                    acknowledged = true;
                     break;
                 }
                 Thread.sleep(100);
-            }
-
-            if (!acknowledged) {
-                System.out.println("No acknowledge close received in 2 seconds, continuing anyway.");
             }
 
             serverSpace.remove(lobbyID + SpaceTag.LOBBY.value());

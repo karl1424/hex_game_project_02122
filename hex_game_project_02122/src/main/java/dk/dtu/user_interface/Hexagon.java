@@ -83,7 +83,6 @@ public class Hexagon extends Polygon {
                 e.printStackTrace();
             }
         });
-
     }
 
     private void drawEdge(double[] p1, double[] p2, Color color) {
@@ -102,10 +101,11 @@ public class Hexagon extends Polygon {
         super.setFill(color);
     }
 
-    public int getYCor(){
+    public int getYCor() {
         return yCor;
     }
-    public int getXCor(){
+
+    public int getXCor() {
         return xCor;
     }
 }

@@ -64,9 +64,11 @@ public class ComputerSetupPane extends BorderPane {
         for (CheckBox cb : checkBoxes) {
             cb.setOnAction(_ -> {
                 for (CheckBox other : checkBoxes) {
-                    if (other != cb) other.setSelected(false);
+                    if (other != cb)
+                        other.setSelected(false);
                 }
-                if (!cb.isSelected()) cb.setSelected(true);
+                if (!cb.isSelected())
+                    cb.setSelected(true);
             });
         }
 
@@ -83,14 +85,17 @@ public class ComputerSetupPane extends BorderPane {
         for (CheckBox cb : difficultyCheckBoxes) {
             cb.setOnAction(_ -> {
                 for (CheckBox other : difficultyCheckBoxes) {
-                    if (other != cb) other.setSelected(false);
+                    if (other != cb)
+                        other.setSelected(false);
                 }
-                if (!cb.isSelected()) cb.setSelected(true);
+                if (!cb.isSelected())
+                    cb.setSelected(true);
             });
         }
-        difficultyBox.getChildren().addAll(difficultyLabel, difficultyEasyCheckBox, difficultyMediumCheckBox, difficultyHardCheckBox);
+        difficultyBox.getChildren().addAll(difficultyLabel, difficultyEasyCheckBox, difficultyMediumCheckBox,
+                difficultyHardCheckBox);
 
-        centerContent.getChildren().addAll(playerBox, sizeBox,difficultyBox);
+        centerContent.getChildren().addAll(playerBox, sizeBox, difficultyBox);
         setCenter(centerContent);
 
         HBox buttonBox = new HBox(30);
@@ -102,8 +107,9 @@ public class ComputerSetupPane extends BorderPane {
             int player = player1CheckBox.isSelected() ? 2 : 1;
             int size = sizeSmallCheckBox.isSelected() ? 3 : sizeLargeCheckBox.isSelected() ? 11 : 7;
             int number = player1CheckBox.isSelected() ? 1 : 2;
-            int difficulty = difficultyEasyCheckBox.isSelected() ? 2000 : difficultyHardCheckBox.isSelected() ? 10000 : 5000;
-            manager.startGame(size, player, number,difficulty);
+            int difficulty = difficultyEasyCheckBox.isSelected() ? 2000
+                    : difficultyHardCheckBox.isSelected() ? 10000 : 5000;
+            manager.startGame(size, player, number, difficulty);
         });
 
         backBtn.setOnAction(_ -> manager.showMainMenu());

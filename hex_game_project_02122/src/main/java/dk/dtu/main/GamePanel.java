@@ -37,7 +37,6 @@ public class GamePanel extends Pane {
         this.computerPlayer = computerPlayer;
         this.playerNumber = playerNumber;
         this.difficulty = difficulty;
-        // isPlayerOneTurn = true;
         startGame();
     }
 
@@ -46,8 +45,7 @@ public class GamePanel extends Pane {
         gameBoard = new GameBoard(gridSize, gridSize, this);
         gui = new GUI(gridSize, gridSize, gameBoard, this);
         getChildren().add(gui);
-        System.out.println("Initial empty board:");
-        gameBoard.printBoard();
+        // gameBoard.printBoard();
         if (computerPlayer != 0) {
             Timeline delay = new Timeline(new KeyFrame(Duration.seconds(0.2), _ -> {
                 computerOpponent = new ComputerManager(gameBoard, computerPlayer, difficulty);
@@ -60,7 +58,6 @@ public class GamePanel extends Pane {
             }));
             delay.setCycleCount(1);
             delay.play();
-
         } else {
             computerOpponent = null;
         }
@@ -79,7 +76,6 @@ public class GamePanel extends Pane {
             delay.play();
 
             if (isOnline) {
-                System.out.println("IS HOST: " + menuManager.getClient().getClientState().isHost());
                 menuManager.gameOverPanel.setOnline();
                 if (!menuManager.getClient().getClientState().isHost()) {
                     menuManager.getClient().receiveToLobby();
@@ -119,7 +115,7 @@ public class GamePanel extends Pane {
     }
 
     public void resetGame() {
-        gameInit(gridSize, computerPlayer, playerNumber,difficulty);
+        gameInit(gridSize, computerPlayer, playerNumber, difficulty);
     }
 
     public MenuManager getMenuManager() {
@@ -131,9 +127,7 @@ public class GamePanel extends Pane {
     }
 
     public void beginGettingCoordinates() {
-        System.out.println("Player: " + playerNumber + "Has started recieving spots");
         client.getGameCommunicationHandler().getSpot(this, spot -> {
-            System.out.println("Got spot: " + spot[0] + ", " + spot[1]);
             getGameBoard().updateSpot((int) spot[0], (int) spot[1], playerNumber == 1 ? 2 : 1);
             changeTurn();
         });
@@ -146,5 +140,4 @@ public class GamePanel extends Pane {
     public Client getClient() {
         return client;
     }
-
 }

@@ -30,10 +30,8 @@ public class SmallBoardStrategy {
     public void makeMove() {
         if (gameBoard.getBoard()[1][1].getState() == 0) {
             gameBoard.updateSpot(1, 1, playerNumber);
-            System.out.println("Computer takes center move at: " + 1 + ", " + 1);
             computerMoves.add(new Coordinate(1, 1, playerNumber));
-            System.out.println("Board after computer's first move:");
-            gameBoard.printBoard();
+            // gameBoard.printBoard();
             return;
         }
         List<Coordinate> candidateMoves = possibleMoves();
@@ -56,7 +54,7 @@ public class SmallBoardStrategy {
                     return move;
                 }
             }
-            
+
             List<Coordinate> availableMoves = sim.getAvailableMoves();
             if (!availableMoves.isEmpty()) {
                 int i = rand.nextInt(availableMoves.size());
@@ -65,42 +63,11 @@ public class SmallBoardStrategy {
                 return move;
             }
         }
-
-        return null; 
+        return null;
     }
 
-
-    public void makeRandomMove() {
-        if (gameBoard.getBoard()[1][1].getState() == 0) {
-            gameBoard.updateSpot(1, 1, playerNumber);
-            System.out.println("Computer takes center move at: " + 1 + ", " + 1);
-            computerMoves.add(new Coordinate(1, 1, playerNumber));
-            System.out.println("Board after computer's first move:");
-            gameBoard.printBoard();
-            return;
-        }
-
-        List<Coordinate> emptySpots = new ArrayList<>();
-        for (int x = 0; x < gameBoard.getBoardM(); x++) {
-            for (int y = 0; y < gameBoard.getBoardN(); y++) {
-                if (gameBoard.getBoard()[x][y].getState() == 0) {
-                    emptySpots.add(gameBoard.getBoard()[x][y]);
-                }
-            }
-        }
-
-        if (!emptySpots.isEmpty()) {
-            int i = rand.nextInt(emptySpots.size());
-            Coordinate spot = emptySpots.get(i);
-            gameBoard.updateSpot(spot.getX(), spot.getY(), playerNumber);
-            System.out.println("Computer placed random move at: " + spot.getX() + ", " + spot.getY());
-        }
-    }
-
-    /**
-     * Scans the entire board (using x as the first coordinate and y as the second)
-     * for empty cells that connects to at least one of computer opponent's move.
-     */
+    // Scans the entire board (using x as the first coordinate and y as the second)
+    // for empty cells that connects to at least one of computer opponent's move.
     private List<Coordinate> possibleMoves() {
         List<Coordinate> candidates = new ArrayList<>();
         for (int x = 0; x < gameBoard.getBoardN(); x++) {
@@ -173,14 +140,6 @@ public class SmallBoardStrategy {
                 filteredMoves.add(candidate);
             }
         }
-
-        // System.out.println("Filtered " + filteredMoves.size() + " moves that are
-        // adjacent to the last human move");
-
-        // if (filteredMoves.isEmpty()) {
-        //     System.out.println("No moves adjacent to last human move, returning all candidates");
-        //     return candidates;
-        // }
         return filteredMoves;
     }
 
@@ -217,7 +176,6 @@ public class SmallBoardStrategy {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -252,7 +210,6 @@ public class SmallBoardStrategy {
                 return move;
             }
         }
-
         return null;
     }
 
@@ -262,6 +219,5 @@ public class SmallBoardStrategy {
 
     public void setLastHumanMove(int x, int y) {
         lastHumanMove = new Coordinate(x, y, playerNumber == 1 ? 2 : 1);
-        // System.out.println("Recorded last human move at: (" + x + "," + y + ")");
     }
 }

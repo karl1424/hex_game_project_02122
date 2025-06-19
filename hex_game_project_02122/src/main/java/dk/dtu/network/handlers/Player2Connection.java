@@ -8,12 +8,13 @@ import dk.dtu.network.tags.TupleTag;
 public class Player2Connection {
 
     private ConnectionManager connectionManager;
-    
-    public Player2Connection(ConnectionManager connectionManager){
+
+    public Player2Connection(ConnectionManager connectionManager) {
         this.connectionManager = connectionManager;
     }
 
-    public void lookForP2(GamePanel gamePanel, ClientState clientState, GameCommunicationHandler gameCommunicationHandler) {
+    public void lookForP2(GamePanel gamePanel, ClientState clientState,
+            GameCommunicationHandler gameCommunicationHandler) {
         try {
             while (true) {
                 Object[] start = connectionManager.getLobby().get(new FormalField(Boolean.class));

@@ -88,7 +88,6 @@ public class GameCommunicationHandler {
                     } else {
                     }
                 }
-
             } catch (InterruptedException e) {
             }
         }).start();
@@ -116,5 +115,4 @@ public class GameCommunicationHandler {
     public void setFlag(boolean flag) {
         this.flag = flag;
     }
-
 }
