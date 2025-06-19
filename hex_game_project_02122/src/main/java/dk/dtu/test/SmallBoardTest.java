@@ -6,7 +6,6 @@ import java.util.List;
 
 import dk.dtu.computer_opponent.MCTS;
 import dk.dtu.computer_opponent.SimulationGame;
-import dk.dtu.computer_opponent.SmallBoardStrategy;
 import dk.dtu.game_components.Coordinate;
 
 //Click on continue when VSCode says build failed
@@ -66,17 +65,17 @@ public class SmallBoardTest {
         List<Coordinate> availableMoves = game.getAvailableMoves();
         int totalMoves = availableMoves.size();
         int moveCount = 0;
-        SmallBoardStrategy smallBoardStrategy = new SmallBoardStrategy(game, 1);
+        SmallBoardStrategyTest smallBoardStrategyTest = new SmallBoardStrategyTest(game, 1);
         MCTS mctsPlayer2 = new MCTS((SimulationGame) null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
             Coordinate moveMade = null;
             if (currentPlayer == 1) {
-                moveMade = smallBoardStrategy.makeMoveInTest();
+                moveMade = smallBoardStrategyTest.makeMoveInTest();
             } else if (currentPlayer == 2) {
                 mctsPlayer2.setSimulationGame(game);
                 moveMade = mctsPlayer2.makeMoveInTest();
-                smallBoardStrategy.setLastHumanMove(moveMade.getX(), moveMade.getY());
+                smallBoardStrategyTest.setLastHumanMove(moveMade.getX(), moveMade.getY());
             }
             game.makeMove(moveMade, currentPlayer);
             availableMoves.remove(moveMade);

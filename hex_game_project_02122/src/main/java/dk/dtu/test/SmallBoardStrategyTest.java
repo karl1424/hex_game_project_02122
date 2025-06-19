@@ -1,43 +1,57 @@
-package dk.dtu.computer_opponent;
+package dk.dtu.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import dk.dtu.computer_opponent.SimulationGame;
 import dk.dtu.game_components.Coordinate;
-import dk.dtu.game_components.GameBoard;
 
-public class SmallBoardStrategy {
-    private GameBoard gameBoard;
+public class SmallBoardStrategyTest {
+    private SimulationGame sim;
     private int playerNumber;
     private Coordinate lastHumanMove = null;
     private List<Coordinate> computerMoves = new ArrayList<>();
+    private Random rand;
 
-    public SmallBoardStrategy(GameBoard gameBoard, int playerNumber) {
-        this.gameBoard = gameBoard;
+    public SmallBoardStrategyTest(SimulationGame sim, int playerNumber) {
+        this.sim = sim;
         this.playerNumber = playerNumber;
+        this.rand = new Random();
     }
 
-    public void makeMove() {
-        if (gameBoard.getBoard()[1][1].getState() == 0) {
-            gameBoard.updateSpot(1, 1, playerNumber);
+    public Coordinate makeMoveInTest() {
+        if (sim.getBoard()[1][1].getState() == 0) {
             computerMoves.add(new Coordinate(1, 1, playerNumber));
-            // gameBoard.printBoard();
-            return;
+            return new Coordinate(1, 1, playerNumber);
+        } else {
+            List<Coordinate> candidateMoves = possibleMovesIntest();
+            List<Coordinate> priorityMoves = nearHuman(candidateMoves);
+            if (!priorityMoves.isEmpty()) {
+                Coordinate move = firstValidMoveInTest(priorityMoves);
+                if (move != null) {
+                    return move;
+                }
+            }
+
+            List<Coordinate> availableMoves = sim.getAvailableMoves();
+            if (!availableMoves.isEmpty()) {
+                int i = rand.nextInt(availableMoves.size());
+                Coordinate move = availableMoves.get(i);
+                computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
+                return move;
+            }
         }
-        List<Coordinate> candidateMoves = possibleMoves();
-        List<Coordinate> priorityMoves = nearHuman(candidateMoves);
-        if (!priorityMoves.isEmpty() && firstValidMove(priorityMoves)) {
-            return;
-        }
+        return null;
     }
 
     // Scans the entire board (using x as the first coordinate and y as the second)
     // for empty cells that connects to at least one of computer opponent's move.
-    private List<Coordinate> possibleMoves() {
+    private List<Coordinate> possibleMovesIntest() {
         List<Coordinate> candidates = new ArrayList<>();
-        for (int x = 0; x < gameBoard.getBoardN(); x++) {
-            for (int y = 0; y < gameBoard.getBoardM(); y++) {
-                if (gameBoard.getBoard()[x][y].getState() == 0) {
+        for (int x = 0; x < sim.getboardN(); x++) {
+            for (int y = 0; y < sim.getboardN(); y++) {
+                if (sim.getBoard()[x][y].getState() == 0) {
                     if (isLinkedToAI(x, y)) {
                         candidates.add(new Coordinate(x, y, playerNumber));
                     }
@@ -94,9 +108,9 @@ public class SmallBoardStrategy {
         return filteredMoves;
     }
 
-    private boolean firstValidMove(List<Coordinate> moves) {
-        if (gameBoard.getWinner() != 0) {
-            return false;
+    private Coordinate firstValidMoveInTest(List<Coordinate> moves) {
+        if (sim.getWinner() != 0) {
+            return null;
         }
 
         int[][] priorityCoords = {
@@ -110,10 +124,9 @@ public class SmallBoardStrategy {
 
             for (Coordinate move : moves) {
                 if (move.getX() == priorityX && move.getY() == priorityY) {
-                    if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                        gameBoard.updateSpot(move.getX(), move.getY(), playerNumber);
+                    if (sim.getBoard()[move.getX()][move.getY()].getState() == 0) {
                         computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
-                        return true;
+                        return move;
 
                     }
                 }
@@ -121,13 +134,12 @@ public class SmallBoardStrategy {
         }
 
         for (Coordinate move : moves) {
-            if (gameBoard.getBoard()[move.getX()][move.getY()].getState() == 0) {
-                gameBoard.updateSpot(move.getX(), move.getY(), playerNumber);
+            if (sim.getBoard()[move.getX()][move.getY()].getState() == 0) {
                 computerMoves.add(new Coordinate(move.getX(), move.getY(), playerNumber));
-                return true;
+                return move;
             }
         }
-        return false;
+        return null;
     }
 
     public int getPlayerNumber() {
