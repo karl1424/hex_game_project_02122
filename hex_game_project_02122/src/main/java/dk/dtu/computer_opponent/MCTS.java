@@ -1,8 +1,9 @@
 package dk.dtu.computer_opponent;
 
 import java.util.List;
-import dk.dtu.main.Coordinate;
-import dk.dtu.main.GameBoard;
+
+import dk.dtu.game_components.Coordinate;
+import dk.dtu.game_components.GameBoard;
 
 public class MCTS {
     private GameBoard gameBoard;

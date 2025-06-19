@@ -1,7 +1,10 @@
-package dk.dtu.main;
+package dk.dtu.user_interface;
 
 import java.util.List;
 
+import dk.dtu.game_components.Coordinate;
+import dk.dtu.game_components.GameBoard;
+import dk.dtu.main.GamePanel;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;

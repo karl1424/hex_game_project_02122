@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-import dk.dtu.main.Coordinate;
-import dk.dtu.main.GameBoard;
+import dk.dtu.game_components.Coordinate;
+import dk.dtu.game_components.GameBoard;
 
 public class MCTSNode {
     private Coordinate move;

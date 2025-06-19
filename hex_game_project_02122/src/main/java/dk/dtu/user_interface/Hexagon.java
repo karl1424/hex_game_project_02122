@@ -1,5 +1,7 @@
-package dk.dtu.main;
+package dk.dtu.user_interface;
 
+import dk.dtu.game_components.GameBoard;
+import dk.dtu.main.GamePanel;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -7,9 +9,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.StrokeLineCap;
 
 public class Hexagon extends Polygon {
-    int col, row, xCor, yCor;
-    double boardOffset, HEX_RADIUS;
-    String key;
+    private int col, row, xCor, yCor;
+    private double boardOffset, HEX_RADIUS;
 
     GamePanel gamePanel;
     GameBoard gameBoard;
@@ -24,7 +25,6 @@ public class Hexagon extends Polygon {
         this.HEX_RADIUS = HEX_RADIUS;
         this.xCor = xCor;
         this.yCor = yCor;
-        key = xCor + "," + yCor;
         this.gamePanel = gamePanel;
         this.gameBoard = gameBoard;
         createHexagon();
@@ -100,5 +100,12 @@ public class Hexagon extends Polygon {
 
     public void setFill(Color color) {
         super.setFill(color);
+    }
+
+    public int getYCor(){
+        return yCor;
+    }
+    public int getXCor(){
+        return xCor;
     }
 }

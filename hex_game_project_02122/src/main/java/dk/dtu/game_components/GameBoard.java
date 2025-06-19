@@ -1,7 +1,10 @@
-package dk.dtu.main;
+package dk.dtu.game_components;
 
 import javafx.application.Platform;
 import java.util.List;
+
+import dk.dtu.main.GamePanel;
+import dk.dtu.user_interface.Hexagon;
 
 public class GameBoard {
     private final Coordinate[][] board;

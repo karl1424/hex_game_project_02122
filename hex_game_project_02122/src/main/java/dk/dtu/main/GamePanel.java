@@ -1,8 +1,10 @@
 package dk.dtu.main;
 
 import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.game_components.GameBoard;
 import dk.dtu.menu.MenuManager;
 import dk.dtu.network.Client;
+import dk.dtu.user_interface.GUI;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

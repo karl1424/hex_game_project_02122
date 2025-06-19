@@ -1,6 +1,6 @@
 package dk.dtu.computer_opponent;
 
-import dk.dtu.main.GameBoard;
+import dk.dtu.game_components.GameBoard;
 import dk.dtu.main.NativeWrapper;
 
 public class ComputerManager {

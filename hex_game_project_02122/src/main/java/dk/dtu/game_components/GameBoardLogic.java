@@ -1,6 +1,8 @@
-package dk.dtu.main;
+package dk.dtu.game_components;
 
 import dk.dtu.computer_opponent.ComputerManager;
+import dk.dtu.main.GamePanel;
+import dk.dtu.user_interface.Hexagon;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import java.util.*;
@@ -120,23 +122,23 @@ public class GameBoardLogic {
 
     public void handleHexagonPressed(Hexagon hexagon) throws InterruptedException {
         GamePanel gamePanel = gameBoard.getGamePanel();
-        if (gameBoard.getWinner() != 0 || board[hexagon.xCor][hexagon.yCor].getState() != 0)
+        if (gameBoard.getWinner() != 0 || board[hexagon.getXCor()][hexagon.getYCor()].getState() != 0)
             return;
         if (gamePanel.getTurn() || (gamePanel.getComputerPlayer() == 0 && !gamePanel.getIsOnline())) {
             if (gamePanel.getIsOnline()) {
-                gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
-                gamePanel.sendCoordinates(hexagon.xCor, hexagon.yCor, gamePanel.getPlayerNumber());
+                gameBoard.pickSpot(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getPlayerNumber());
+                gamePanel.sendCoordinates(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getPlayerNumber());
                 System.out.println("Player number: " + gamePanel.getPlayerNumber());
             } else {
-                gameBoard.pickSpot(hexagon.xCor, hexagon.yCor, gamePanel.getCurrentPlayerTurn());
+                gameBoard.pickSpot(hexagon.getXCor(), hexagon.getYCor(), gamePanel.getCurrentPlayerTurn());
             }
             hexagon.setFill(gamePanel.getCurrentPlayerTurn() == 1 ? Color.RED : Color.BLUE);
 
-            System.out.println("Human move at: " + hexagon.xCor + ", " + hexagon.yCor);
+            System.out.println("Human move at: " + hexagon.getXCor() + ", " + hexagon.getYCor());
 
             ComputerManager comp = gamePanel.getComputerOpponent();
             if (comp != null) {
-                comp.setLastHumanMove(hexagon.xCor, hexagon.yCor);
+                comp.setLastHumanMove(hexagon.getXCor(), hexagon.getYCor());
             }
 
             System.out.println("Board after human move:");

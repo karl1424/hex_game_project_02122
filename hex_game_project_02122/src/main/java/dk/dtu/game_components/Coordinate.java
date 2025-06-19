@@ -1,4 +1,4 @@
-package dk.dtu.main;
+package dk.dtu.game_components;
 import java.util.*;
 
 public class Coordinate {

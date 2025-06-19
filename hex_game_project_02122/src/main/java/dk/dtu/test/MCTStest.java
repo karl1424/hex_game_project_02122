@@ -1,15 +1,17 @@
-package dk.dtu.computer_opponent;
+package dk.dtu.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dk.dtu.main.Coordinate;
+import dk.dtu.computer_opponent.MCTS;
+import dk.dtu.computer_opponent.SimulationGame;
+import dk.dtu.game_components.Coordinate;
 
 //Click on continue when VSCode says build failed
 
-public class SmallBoardTest {
-    private static final int GAMES = 10000;
+public class MCTStest {
+    private static final int GAMES = 1000;
     private static final int ITERATIONS = 5000;
     private static final int BOARD_SIZE = 3;
 
@@ -28,11 +30,11 @@ public class SmallBoardTest {
                 player2Wins++;
             }
 
-            if ((i + 1) % 100 == 0) {
+            if ((i + 1) % 20 == 0) {
                 long batchEnd = System.nanoTime(); // Sluttid for batch
                 long durationNs = batchEnd - batchStart;
                 double durationMs = durationNs / 1_000_000.0;
-                double avgTimePerGame = durationMs / 100.0;
+                double avgTimePerGame = durationMs / 20.0;
 
                 int gamesCompleted = i + 1;
                 System.out.println("Completed " + gamesCompleted + " games:");
@@ -40,7 +42,7 @@ public class SmallBoardTest {
                         String.format("%.1f", (player1Wins * 100.0 / gamesCompleted)) + "%)");
                 System.out.println("Player 2 wins: " + player2Wins + " (" +
                         String.format("%.1f", (player2Wins * 100.0 / gamesCompleted)) + "%)");
-                System.out.println("Time for last 100 games: " + String.format("%.1f", durationMs) + " ms");
+                System.out.println("Time for last 20 games: " + String.format("%.1f", durationMs) + " ms");
                 System.out.println("Average time per game: " + String.format("%.2f", avgTimePerGame) + " ms\n");
 
                 batchStart = System.nanoTime(); // Genstart tiden til næste batch
@@ -63,18 +65,13 @@ public class SmallBoardTest {
         List<Coordinate> availableMoves = game.getAvailableMoves();
         int totalMoves = availableMoves.size();
         int moveCount = 0;
-        SmallBoardStrategy smallBoardStrategy = new SmallBoardStrategy(game, 1);
-        MCTS mctsPlayer2 = new MCTS((SimulationGame) null, 2, ITERATIONS);
+        MCTS mctsPlayer1 = new MCTS((SimulationGame) null, 1, ITERATIONS);
+        MCTS mctsPlayer2 = new MCTS( (SimulationGame) null, 2, ITERATIONS);
 
         while (moveCount < totalMoves) {
-            Coordinate moveMade = null;
-            if (currentPlayer == 1) {
-                moveMade = smallBoardStrategy.makeMoveInTest();
-            } else if (currentPlayer == 2) {
-                mctsPlayer2.setSimulationGame(game);
-                moveMade = mctsPlayer2.makeMoveInTest();
-                smallBoardStrategy.setLastHumanMove(moveMade.getX(),moveMade.getY());
-            }
+            MCTS mcts = (currentPlayer == 1) ? mctsPlayer1 : mctsPlayer2;
+            mcts.setSimulationGame(game);
+            Coordinate moveMade = mcts.makeMoveInTest();
             game.makeMove(moveMade, currentPlayer);
             availableMoves.remove(moveMade);
             moveCount++;
